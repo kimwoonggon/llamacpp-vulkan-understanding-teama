@@ -2,6 +2,8 @@
 
 GGUF 모델 하나를 읽어 파일 구획, 메타데이터와 텐서를 콘솔에 출력합니다. 같은 결과를 검색 가능한 단일 HTML로 저장할 수 있습니다. 가중치에서는 각 텐서의 처음 16바이트만 읽습니다.
 
+팀 Qwen2.5-1.5B FP16 실행 결과 · [SVG 연산 지도](results/qwen2-model-map.svg) · [콘솔 출력](results/qwen-fp16.txt) · [대화형 HTML](results/qwen-fp16.html). HTML은 내려받아 브라우저로 열면 됩니다.
+
 ## Visual Studio에서 실행
 
 1. Visual Studio 2022의 **C++를 사용한 데스크톱 개발**과 CMake 3.24 이상을 설치합니다.

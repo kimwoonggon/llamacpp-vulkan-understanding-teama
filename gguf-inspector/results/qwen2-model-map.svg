@@ -1,0 +1,56 @@
+<svg id="qwen-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 606" role="group" aria-labelledby="map-title map-desc" width="1080" height="606">
+<title id="map-title">Qwen2 토큰 처리와 블록 내부 연산</title>
+<desc id="map-desc">위쪽은 임베딩에서 다음 토큰 점수까지의 경로입니다. 아래는 한 블록의 어텐션과 순방향 신경망, 두 잔차 연결입니다.</desc>
+<style>
+#qwen-map text{font:600 16px 'Segoe UI','Malgun Gothic',sans-serif;fill:#18382e}
+#qwen-map .heading{font-size:18px}#qwen-map .note{font-size:13px;fill:#4d645a}
+#qwen-map .op{cursor:pointer}#qwen-map .op text{text-anchor:middle;pointer-events:none}
+#qwen-map .small{font-size:13px;font-weight:400}#qwen-map .op rect{stroke:#739688;fill:#fff}
+#qwen-map .att rect{fill:#e6f4ef;stroke:#70a993}#qwen-map .ff rect{fill:#eef0fc;stroke:#9a9dc5}
+#qwen-map .merge rect{fill:#fff4db;stroke:#c3a15a}
+#qwen-map .op:hover rect,#qwen-map .op:focus rect,#qwen-map .active rect{stroke:#124d3d;stroke-width:3}
+#qwen-map .wire{fill:none;stroke:#577569;stroke-width:1.8;marker-end:url(#tip)}
+#qwen-map .skip{stroke-dasharray:6 4;stroke:#927639}
+</style><defs><marker id="tip" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="#577569"/></marker></defs>
+<rect width="1080" height="606" fill="#ffffff"/>
+<text x="28" y="33" class="heading">모델 전체 경로</text>
+<path class="wire" d="M144 84H186"/><path class="wire" d="M355 84H397"/><path class="wire" d="M609 84H651"/><path class="wire" d="M815 84H857"/>
+<g class="op neutral" data-op="input" aria-label="입력 토큰" transform="translate(28 58)"><rect width="116" height="52" rx="9"/><text x="58" y="22">입력 토큰</text><text class="small" x="58" y="41">token ID</text></g>
+<g class="op att" data-op="embed" aria-label="임베딩 조회" transform="translate(188 58)"><rect width="167" height="52" rx="9"/><text x="83" y="22">임베딩 조회</text><text class="small" x="83" y="41">1536차원 벡터</text></g>
+<g class="op ff" data-op="block" aria-label="Transformer 블록" transform="translate(399 58)"><rect width="210" height="52" rx="9"/><text x="105" y="22">Transformer 블록</text><text class="small" x="105" y="41">28개 순서대로</text></g>
+<g class="op neutral" data-op="final" aria-label="최종 RMSNorm" transform="translate(653 58)"><rect width="162" height="52" rx="9"/><text x="81" y="22">최종 RMSNorm</text><text class="small" x="81" y="41">output_norm</text></g>
+<g class="op neutral" data-op="head" aria-label="다음 토큰 점수" transform="translate(859 58)"><rect width="193" height="52" rx="9"/><text x="96" y="22">다음 토큰 점수</text><text class="small" x="96" y="41">출력 투영 · logits</text></g>
+<rect x="12" y="136" width="1056" height="453" rx="14" fill="#f7faf8" stroke="#c7d9cf"/>
+<text x="32" y="167" class="heading" id="block-title">blk.0 내부</text>
+<text x="32" y="196" class="note">Self-attention · 이전 토큰의 정보를 읽어 현재 벡터에 합칩니다.</text>
+<path class="wire" d="M51 298H93"/><path class="wire skip" d="M52 298V216H993V269"/>
+<text x="796" y="210" class="note">블록 입력을 더함</text>
+<path class="wire" d="M229 298H250V249H274"/><path class="wire" d="M229 298H274"/>
+<path class="wire" d="M229 298H250V353H274"/>
+<path class="wire" d="M421 249H449V280H484"/><path class="wire" d="M421 301H484"/>
+<path class="wire" d="M421 353H449V320H484"/>
+<path class="wire" d="M683 298H722"/><path class="wire" d="M893 298H944"/>
+<path class="wire" d="M993 324V391H52V479H93"/>
+<text x="552" y="384" class="note">어텐션 결과가 FFN의 입력이 됩니다.</text>
+<text x="68" y="414" class="note">Feed-forward · 각 토큰의 특징을 확장하고 필요한 성분을 골라냅니다.</text>
+<path class="wire skip" d="M52 479V554H993V508"/>
+<text x="806" y="575" class="note">FFN 입력을 더함</text>
+<path class="wire" d="M229 479H250V449H274"/><path class="wire" d="M229 479H250V512H274"/>
+<path class="wire" d="M421 449H453V466H484"/><path class="wire" d="M421 512H453V492H484"/>
+<path class="wire" d="M683 479H722"/><path class="wire" d="M893 479H944"/>
+<circle cx="52" cy="298" r="4" fill="#577569"/><circle cx="52" cy="479" r="4" fill="#577569"/>
+<g class="op att" data-op="attn_norm" aria-label="RMSNorm" transform="translate(95 272)"><rect width="134" height="52" rx="9"/><text x="67" y="22">RMSNorm</text><text class="small" x="67" y="41">attn_norm</text></g>
+<g class="op att" data-op="attn_q" aria-label="Q · 질의" transform="translate(276 221)"><rect width="145" height="52" rx="9"/><text x="72" y="22">Q · 질의</text><text class="small" x="72" y="41">Q 투영 + RoPE</text></g>
+<g class="op att" data-op="attn_k" aria-label="K · 키" transform="translate(276 277)"><rect width="145" height="52" rx="9"/><text x="72" y="22">K · 키</text><text class="small" x="72" y="41">K 투영 + RoPE</text></g>
+<g class="op att" data-op="attn_v" aria-label="V · 값" transform="translate(276 333)"><rect width="145" height="52" rx="9"/><text x="72" y="22">V · 값</text><text class="small" x="72" y="41">V 투영</text></g>
+<g class="op att" data-op="attention" aria-label="인과적 어텐션" transform="translate(486 272)"><rect width="197" height="52" rx="9"/><text x="98" y="22">인과적 어텐션</text><text class="small" x="98" y="41">Q 12 · KV 2 헤드</text></g>
+<g class="op att" data-op="attn_output" aria-label="출력 투영" transform="translate(724 272)"><rect width="169" height="52" rx="9"/><text x="84" y="22">출력 투영</text><text class="small" x="84" y="41">attn_output</text></g>
+<g class="op merge" data-op="add1" aria-label="＋" transform="translate(946 272)"><rect width="94" height="52" rx="9"/><text x="47" y="22">＋</text><text class="small" x="47" y="41">잔차 합</text></g>
+<g class="op ff" data-op="ffn_norm" aria-label="RMSNorm" transform="translate(95 453)"><rect width="134" height="52" rx="9"/><text x="67" y="22">RMSNorm</text><text class="small" x="67" y="41">ffn_norm</text></g>
+<g class="op ff" data-op="ffn_gate" aria-label="Gate + SiLU" transform="translate(276 423)"><rect width="145" height="52" rx="9"/><text x="72" y="22">Gate + SiLU</text><text class="small" x="72" y="41">ffn_gate</text></g>
+<g class="op ff" data-op="ffn_up" aria-label="Up · 확장" transform="translate(276 486)"><rect width="145" height="52" rx="9"/><text x="72" y="22">Up · 확장</text><text class="small" x="72" y="41">ffn_up</text></g>
+<g class="op ff" data-op="multiply" aria-label="원소별 곱" transform="translate(486 453)"><rect width="197" height="52" rx="9"/><text x="98" y="22">원소별 곱</text><text class="small" x="98" y="41">SwiGLU · 8960차원</text></g>
+<g class="op ff" data-op="ffn_down" aria-label="Down · 축소" transform="translate(724 453)"><rect width="169" height="52" rx="9"/><text x="84" y="22">Down · 축소</text><text class="small" x="84" y="41">ffn_down · 1536차원</text></g>
+<g class="op merge" data-op="add2" aria-label="＋" transform="translate(946 453)"><rect width="94" height="52" rx="9"/><text x="47" y="22">＋</text><text class="small" x="47" y="41">잔차 합</text></g>
+<text x="32" y="575" class="note">블록 출력 → 다음 블록의 입력 · 마지막 블록 출력 → 최종 RMSNorm</text>
+</svg>
