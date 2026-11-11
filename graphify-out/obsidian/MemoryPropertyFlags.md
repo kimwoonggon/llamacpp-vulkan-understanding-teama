@@ -1,0 +1,16 @@
+---
+source_file: ""
+type: "code"
+community: "ggml-vulkan-types · 37"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/ggml-vulkan-types__37
+---
+
+# MemoryPropertyFlags
+
+## Connections
+- [[vk_buffer_struct]] - `references` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/ggml-vulkan-types__37

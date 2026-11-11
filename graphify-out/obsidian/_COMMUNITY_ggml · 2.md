@@ -1,0 +1,214 @@
+---
+type: community
+cohesion: 0.02
+members: 152
+---
+
+# ggml · 2
+
+**Cohesion:** 0.02 - loosely connected
+**Members:** 152 nodes
+
+## Members
+- [[_Unwind_Reason_Code]] - code
+- [[alloca]] - concept
+- [[assert]] - concept
+- [[dlfcn]] - concept
+- [[errno]] - concept
+- [[execinfo]] - concept
+- [[float]] - concept
+- [[ggml.c]] - code - ggml/src/ggml.c
+- [[ggml_abort()]] - code - ggml/src/ggml.c
+- [[ggml_abs_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_bf16_t]] - code
+- [[ggml_bf16_to_fp32()]] - code - ggml/src/ggml.c
+- [[ggml_bf16_to_fp32_row()]] - code - ggml/src/ggml.c
+- [[ggml_calloc()]] - code - ggml/src/ggml.c
+- [[ggml_can_fuse_subgraph_ext()]] - code - ggml/src/ggml.c
+- [[ggml_ceil_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_commit()]] - code - ggml/src/ggml.c
+- [[ggml_cycles()]] - code - ggml/src/ggml.c
+- [[ggml_cycles_per_ms()]] - code - ggml/src/ggml.c
+- [[ggml_dsv4_hc_pre()]] - code - ggml/src/ggml.c
+- [[ggml_dsv4_hc_pre_gated()]] - code - ggml/src/ggml.c
+- [[ggml_dsv4_hc_pre_impl()]] - code - ggml/src/ggml.c
+- [[ggml_elu_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_exp_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_expm1_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_flash_attn_ext_get_prec()]] - code - ggml/src/ggml.c
+- [[ggml_flash_attn_ext_set_prec()]] - code - ggml/src/ggml.c
+- [[ggml_floor_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_fp16_t]] - code
+- [[ggml_fp16_to_fp32()]] - code - ggml/src/ggml.c
+- [[ggml_fp16_to_fp32_row()]] - code - ggml/src/ggml.c
+- [[ggml_fp32_to_bf16()]] - code - ggml/src/ggml.c
+- [[ggml_fp32_to_bf16_row()]] - code - ggml/src/ggml.c
+- [[ggml_fp32_to_bf16_row_ref()]] - code - ggml/src/ggml.c
+- [[ggml_fp32_to_fp16()]] - code - ggml/src/ggml.c
+- [[ggml_fp32_to_fp16_row()]] - code - ggml/src/ggml.c
+- [[ggml_ftype_to_ggml_type()]] - code - ggml/src/ggml.c
+- [[ggml_geglu()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_erf()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_erf_split()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_erf_swapped()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_quick()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_quick_split()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_quick_swapped()]] - code - ggml/src/ggml.c
+- [[ggml_geglu_swapped()]] - code - ggml/src/ggml.c
+- [[ggml_gelu_erf_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_gelu_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_gelu_quick_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_get_data()]] - code - ggml/src/ggml.c
+- [[ggml_get_data_f32()]] - code - ggml/src/ggml.c
+- [[ggml_get_mem_buffer()]] - code - ggml/src/ggml.c
+- [[ggml_get_mem_size()]] - code - ggml/src/ggml.c
+- [[ggml_get_no_alloc()]] - code - ggml/src/ggml.c
+- [[ggml_get_tensor()]] - code - ggml/src/ggml.c
+- [[ggml_get_type_traits()]] - code - ggml/src/ggml.c
+- [[ggml_glu()]] - code - ggml/src/ggml.c
+- [[ggml_glu_impl()]] - code - ggml/src/ggml.c
+- [[ggml_glu_split()]] - code - ggml/src/ggml.c
+- [[ggml_graph_add_node()]] - code - ggml/src/ggml.c
+- [[ggml_graph_get_tensor()]] - code - ggml/src/ggml.c
+- [[ggml_graph_next_uid()]] - code - ggml/src/ggml.c
+- [[ggml_graph_nodes()]] - code - ggml/src/ggml.c
+- [[ggml_guid_matches()]] - code - ggml/src/ggml.c
+- [[ggml_guid_t_2]] - code
+- [[ggml_hash_map_free()]] - code - ggml/src/ggml.c
+- [[ggml_hash_set_free()]] - code - ggml/src/ggml.c
+- [[ggml_is_constant()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_0()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_1()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_2()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_m_n()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_to_1()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_to_2()]] - code - ggml/src/ggml.c
+- [[ggml_is_contiguous_to_3()]] - code - ggml/src/ggml.c
+- [[ggml_is_view()]] - code - ggml/src/ggml.c
+- [[ggml_log_callback]] - code
+- [[ggml_log_callback_default()]] - code - ggml/src/ggml.c
+- [[ggml_log_get()]] - code - ggml/src/ggml.c
+- [[ggml_log_internal()]] - code - ggml/src/ggml.c
+- [[ggml_log_internal_v()]] - code - ggml/src/ggml.c
+- [[ggml_log_set()]] - code - ggml/src/ggml.c
+- [[ggml_malloc()]] - code - ggml/src/ggml.c
+- [[ggml_mul_mat_set_hint()]] - code - ggml/src/ggml.c
+- [[ggml_mul_mat_set_prec()]] - code - ggml/src/ggml.c
+- [[ggml_n_dims()]] - code - ggml/src/ggml.c
+- [[ggml_neg_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_node_list_find_tensor()]] - code - ggml/src/ggml.c
+- [[ggml_print_backtrace()]] - code - ggml/src/ggml.c
+- [[ggml_print_backtrace_symbols()]] - code - ggml/src/ggml.c
+- [[ggml_print_object()]] - code - ggml/src/ggml.c
+- [[ggml_print_objects()]] - code - ggml/src/ggml.c
+- [[ggml_quantize_chunk()]] - code - ggml/src/ggml.c
+- [[ggml_quantize_free()]] - code - ggml/src/ggml.c
+- [[ggml_quantize_init()]] - code - ggml/src/ggml.c
+- [[ggml_quantize_requires_imatrix()]] - code - ggml/src/ggml.c
+- [[ggml_quants]] - concept
+- [[ggml_reglu()]] - code - ggml/src/ggml.c
+- [[ggml_reglu_swapped()]] - code - ggml/src/ggml.c
+- [[ggml_relu_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_reset()]] - code - ggml/src/ggml.c
+- [[ggml_rope_set_offset()]] - code - ggml/src/ggml.c
+- [[ggml_rope_yarn_corr_dim()]] - code - ggml/src/ggml.c
+- [[ggml_rope_yarn_corr_dims()]] - code - ggml/src/ggml.c
+- [[ggml_round_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_row_size()]] - code - ggml/src/ggml.c
+- [[ggml_set()]] - code - ggml/src/ggml.c
+- [[ggml_set_1d()]] - code - ggml/src/ggml.c
+- [[ggml_set_1d_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_set_2d()]] - code - ggml/src/ggml.c
+- [[ggml_set_2d_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_set_impl()]] - code - ggml/src/ggml.c
+- [[ggml_set_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_set_no_alloc()]] - code - ggml/src/ggml.c
+- [[ggml_sgn_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_sigmoid_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_silu_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_softplus_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_status_to_string()]] - code - ggml/src/ggml.c
+- [[ggml_step_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_swiglu()]] - code - ggml/src/ggml.c
+- [[ggml_swiglu_swapped()]] - code - ggml/src/ggml.c
+- [[ggml_tanh_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_threading]] - concept
+- [[ggml_threadpool_params_default()]] - code - ggml/src/ggml.c
+- [[ggml_threadpool_params_init()]] - code - ggml/src/ggml.c
+- [[ggml_threadpool_params_match()]] - code - ggml/src/ggml.c
+- [[ggml_time_ms()]] - code - ggml/src/ggml.c
+- [[ggml_trunc_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_type_sizef()]] - code - ggml/src/ggml.c
+- [[ggml_unary_inplace()]] - code - ggml/src/ggml.c
+- [[ggml_unravel_index()]] - code - ggml/src/ggml.c
+- [[ggml_used_mem()]] - code - ggml/src/ggml.c
+- [[ggml_version]] - concept
+- [[ggml_version()]] - code - ggml/src/ggml.c
+- [[hbwmalloc]] - concept
+- [[inttypes]] - concept
+- [[llama_model_get_tok_embd()]] - code - src/llama-model.cpp
+- [[mach]] - concept
+- [[malloc]] - concept
+- [[math]] - concept
+- [[prctl]] - concept
+- [[signal]] - concept
+- [[stdarg]] - concept
+- [[stdint]] - concept
+- [[stdio]] - concept
+- [[stdlib]] - concept
+- [[syscall]] - concept
+- [[targetconditionals]] - concept
+- [[time]] - concept
+- [[unwind]] - concept
+- [[unwind_callback()]] - code - ggml/src/ggml.c
+- [[va_list]] - code
+
+## Live Query (requires Dataview plugin)
+
+```dataview
+TABLE source_file, type FROM #community/ggml__2
+SORT file.name ASC
+```
+
+## Connections to other communities
+- 76 edges to [[_COMMUNITY_ggml · 6]]
+- 65 edges to [[_COMMUNITY_ggml · 5]]
+- 42 edges to [[_COMMUNITY_ggml · 16]]
+- 33 edges to [[_COMMUNITY_ggml · 22]]
+- 21 edges to [[_COMMUNITY_ggml-vulkan · 12]]
+- 17 edges to [[_COMMUNITY_ggml · 39]]
+- 17 edges to [[_COMMUNITY_ggml · 44]]
+- 14 edges to [[_COMMUNITY_ggml · 34]]
+- 14 edges to [[_COMMUNITY_ggml · 50]]
+- 11 edges to [[_COMMUNITY_ggml · 55]]
+- 11 edges to [[_COMMUNITY_ggml · 59]]
+- 10 edges to [[_COMMUNITY_llama-graph · 31]]
+- 9 edges to [[_COMMUNITY_ggml-vulkan · 10]]
+- 8 edges to [[_COMMUNITY_ggml · 64]]
+- 7 edges to [[_COMMUNITY_ggml-backend · 11]]
+- 5 edges to [[_COMMUNITY_vulkan-shaders-gen · 9]]
+- 4 edges to [[_COMMUNITY_외부 참조 · 26]]
+- 4 edges to [[_COMMUNITY_ggml-vulkan · 8]]
+- 3 edges to [[_COMMUNITY_ggml-backend · 14]]
+- 3 edges to [[_COMMUNITY_ggml-vulkan · 3]]
+- 3 edges to [[_COMMUNITY_ggml-backend · 24]]
+- 2 edges to [[_COMMUNITY_ggml-backend · 27]]
+- 2 edges to [[_COMMUNITY_ggml-vulkan-types · 7]]
+- 2 edges to [[_COMMUNITY_ggml-vulkan · 17]]
+- 2 edges to [[_COMMUNITY_외부 참조 · 15]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 40]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 67]]
+- 1 edge to [[_COMMUNITY_llama-graph · 18]]
+- 1 edge to [[_COMMUNITY_외부 참조 · 81]]
+- 1 edge to [[_COMMUNITY_llama-graph · 20]]
+- 1 edge to [[_COMMUNITY_llama-context · 77]]
+- 1 edge to [[_COMMUNITY_외부 참조 · 76]]
+- 1 edge to [[_COMMUNITY_llama-context · 28]]
+- 1 edge to [[_COMMUNITY_llama-context · 4]]
+
+## Top bridge nodes
+- [[ggml.c]] - degree 496, connects to 31 communities
+- [[llama_model_get_tok_embd()]] - degree 8, connects to 4 communities
+- [[ggml_row_size()]] - degree 7, connects to 3 communities
+- [[ggml_glu_impl()]] - degree 23, connects to 2 communities
+- [[ggml_set_impl()]] - degree 10, connects to 2 communities

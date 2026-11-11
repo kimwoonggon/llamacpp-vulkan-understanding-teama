@@ -1,0 +1,60 @@
+const {chromium}=require('C:/Users/gerard/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs');
+const assert=require('assert/strict');
+const path=require('path');
+(async()=>{
+const out=path.resolve(__dirname,'../graphify-out');
+const map=JSON.parse(fs.readFileSync(path.join(out,'source-map.json'),'utf8'));
+const browser=await chromium.launch({channel:'msedge',headless:true});
+const page=await browser.newPage({viewport:{width:1500,height:1000}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.route('https://**/*',route=>route.abort());
+await page.goto('file:///'+path.join(out,'graph.html').replaceAll('\\','/'));
+await page.waitForSelector('.source-title');
+await page.waitForFunction(()=>!!document.querySelector('#graph canvas'));
+const checked=[];
+for(const [label,line] of [['llama_decode()',4326],['ggml_mul_mat()',3341],['ggml_vk_mul_mat()',6980]]){
+ const n=Object.values(map.nodes).find(n=>n.label===label&&n.line===line);
+ assert(n,`missing ${label}`);
+ await page.selectOption('#guide-picker',n.id);
+ assert.equal(await page.locator('.source-title').textContent(),label);
+ assert((await page.locator('.source-location').first().textContent()).includes('L'+line));
+ const exact=await page.locator('.code-line.target').textContent();
+ assert.equal(exact,String(line)+map.sources[n.file][line-1]);
+ assert((await page.locator('.source-actions a').getAttribute('href')).includes(map.commit+'/'+n.file+'#L'+line));
+ checked.push({label,line,file:n.file});
+}
+await page.screenshot({path:path.join(out,'graphify-code-preview.png'),fullPage:true});
+const candidate=Object.values(map.nodes).find(n=>n.kind==='unresolved'&&map.links.some(e=>e.target===n.id&&e.line));
+assert(candidate,'need unresolved sample');
+await page.evaluate(id=>focusNode(id),candidate.id);
+assert((await page.locator('#info-content').textContent()).includes('정의 위치 미확인'));
+const evidence=page.locator('[data-evidence-file]').first();
+const ef=await evidence.getAttribute('data-evidence-file'),el=Number(await evidence.getAttribute('data-evidence-line'));
+await evidence.click();
+assert.equal(await page.locator('.code-line.target').textContent(),String(el)+map.sources[ef][el-1]);
+await page.locator('#restore-definition').click();
+await page.locator('#search').fill('ggml_vk_mul_mat');
+await page.locator('#search-results .search-item').filter({hasText:'ggml_vk_mul_mat()'}).first().click();
+assert.equal(await page.locator('.source-title').textContent(),'ggml_vk_mul_mat()');
+await page.locator('#copy-file').click();
+await page.waitForFunction(()=>document.getElementById('source-status').textContent.length>0);
+assert((await page.locator('#source-status').textContent()).includes('복사했습니다'));
+const localCount=await page.evaluate(()=>nodesDS.get().filter(n=>!n.hidden).length);
+assert(localCount>1&&localCount<Object.keys(map.nodes).length);
+await page.locator('#all-view').click();
+assert.equal(await page.evaluate(()=>nodesDS.get().filter(n=>!n.hidden).length),Object.keys(map.nodes).length);
+await page.locator('#local-view').click();
+await page.setViewportSize({width:390,height:844});
+await page.screenshot({path:path.join(out,'graphify-mobile-preview.png'),fullPage:true});
+const sizes=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth}));
+assert(sizes.scroll<=sizes.width,'mobile page overflow '+JSON.stringify(sizes));
+assert.deepEqual(errors,[]);
+for(const n of Object.values(map.nodes))if(n.line){
+ assert(n.line>=1&&n.end>=n.line&&n.end<=map.sources[n.file].length);
+ assert(fs.existsSync(n.absolute));
+}
+for(const [f,lines] of Object.entries(map.sources))assert.deepEqual(fs.readFileSync(path.join(map.root,f),'utf8').split(/\r?\n/).filter((s,i,a)=>i<a.length-1||s!==''),lines);
+const result={passed:true,checked,unresolvedExample:candidate.label,evidence:{file:ef,line:el},localCount,mapped:map.mapped,unresolved:map.unresolved,pageErrors:errors,offline:true,mobile:sizes};
+fs.writeFileSync(path.join(out,'ui-verification.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

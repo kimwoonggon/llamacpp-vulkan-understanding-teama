@@ -1,0 +1,17 @@
+---
+source_file: "ggml/src/ggml-vulkan/ggml-vulkan-types.h"
+type: "code"
+community: "ggml-vulkan-types · 1"
+location: "L706"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/ggml-vulkan-types__1
+---
+
+# float_controls_rte_fp16
+
+## Connections
+- [[vk_device_struct]] - `defines` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/ggml-vulkan-types__1

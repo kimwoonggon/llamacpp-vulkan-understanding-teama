@@ -1,0 +1,86 @@
+{
+  "commit": "e6ab7c1a41054a888ada952eab4c886444c2f5ad",
+  "sourceRoot": "D:\\llama-vulkan-lab\\llama.cpp",
+  "files": [
+    {
+      "file": "examples/simple/simple.cpp",
+      "sha256": "4b9ca4299e1f630324d0df32a1de8f94361fcf0c262b889e947b6fd04440f935",
+      "lines": 223
+    },
+    {
+      "file": "src/llama-context.cpp",
+      "sha256": "7ee46fc870765842117c05928c2be6595b72f03636b05760d43974d56ff153ea",
+      "lines": 4412
+    },
+    {
+      "file": "src/llama-model.cpp",
+      "sha256": "bcf2437289fca083c34c9259811972abab8f42c8fe1ec83285e1e7dc6dcdb4d0",
+      "lines": 3359
+    },
+    {
+      "file": "src/models/qwen2.cpp",
+      "sha256": "1a9583580e9d753d60cfa45e5697a243d225aeaa0bf2d834946723aef0516287",
+      "lines": 154
+    },
+    {
+      "file": "src/llama-graph.cpp",
+      "sha256": "1be5f9a8cd5702bed68fdccb09e4902c6b6efbd36f72f3afbc6cd71489e5b23b",
+      "lines": 3915
+    },
+    {
+      "file": "ggml/src/ggml.c",
+      "sha256": "18c8002c4bfdcfe73e238564a528ac528a8e06710d8580c7483eff7e84b396af",
+      "lines": 8167
+    },
+    {
+      "file": "ggml/src/ggml-backend.cpp",
+      "sha256": "d67dd319e7c1205934c95abd9b0006d0df46837c084f157b41369a9969a46b97",
+      "lines": 2513
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "sha256": "8fe8d4ad3d29740f46ce8ba574e74d3a99f6a1913f8a568db003170123b10fe5",
+      "lines": 16264
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+      "sha256": "297b9def219df07377e16fd7567a9efd29afd17be3b1cbfcd4da4f765ef2ba00",
+      "lines": 282
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/ggml-vulkan-types.h",
+      "sha256": "e91c0242d16c4f24b709b1a8366ec41ad33e346a458782fac79c33196d8fce2f",
+      "lines": 1433
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+      "sha256": "a08242c4e0f6331887859436d69f0e04b6b8750a86f9360063333dbc87e394cf",
+      "lines": 1431
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mm.comp",
+      "sha256": "4c3f8c491300e21236e6267e9eed70dc43081317a477d9706d2278775ada3dcd",
+      "lines": 559
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mm_cm2.comp",
+      "sha256": "e7f95f54a6eca414e13e855b3ee91634da6734898624062875d9b047678c9731",
+      "lines": 779
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp",
+      "sha256": "74515be2221dd0ce08f788ad69864746c3a2db663a02db28dbddbeac5a8d310c",
+      "lines": 264
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mm_funcs.glsl",
+      "sha256": "a0949733353bc3c33fb9d81f7ec34096e406005ffa2bc3537e977d097ced569d",
+      "lines": 717
+    },
+    {
+      "file": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec_base.glsl",
+      "sha256": "3e9e7798c5977a2f9aefcf365b466e3e64d3a2c23e6795b85ed82cc5895e65c2",
+      "lines": 230
+    }
+  ]
+}

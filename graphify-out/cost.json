@@ -1,0 +1,21 @@
+{
+  "runs": [
+    {
+      "date": "2026-11-10T15:11:00.164497+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 11,
+      "reusedAst": true
+    },
+    {
+      "date": "2026-11-10T15:12:31.494505+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 11,
+      "reusedAst": true
+    }
+  ],
+  "total_input_tokens": 0,
+  "total_output_tokens": 0,
+  "scope": "AST extraction only; conversation tokens not measured"
+}

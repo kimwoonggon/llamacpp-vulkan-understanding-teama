@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.24)
+project(matmul_demo LANGUAGES CXX)
+set(LAB "${CMAKE_CURRENT_SOURCE_DIR}/..")
+add_executable(matmul-demo main.cpp)
+target_include_directories(matmul-demo PRIVATE "${LAB}/llama.cpp/ggml/include")
+target_link_directories(matmul-demo PRIVATE "${LAB}/build/llama.cpp/ggml/src/Debug")
+target_link_libraries(matmul-demo PRIVATE ggml ggml-base)

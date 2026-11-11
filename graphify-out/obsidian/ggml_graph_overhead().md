@@ -1,0 +1,18 @@
+---
+source_file: "ggml/src/ggml.c"
+type: "code"
+community: "ggml · 34"
+location: "L7473"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/ggml__34
+---
+
+# ggml_graph_overhead()
+
+## Connections
+- [[ggml.c]] - `contains` [EXTRACTED]
+- [[ggml_graph_overhead_custom()]] - `calls` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/ggml__34

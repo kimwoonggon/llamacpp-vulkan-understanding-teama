@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>프롬프트에서 다음 토큰까지 · llama.cpp 코드 강의</title>
+<style>
+:root{--ink:#172e32;--dim:#4c6466;--teal:#00695d;--mint:#b5f0d3;--paper:#f5f5ed;--line:#c7d2c8;--white:#fffef8;--deep:#0c3435;--mono:"IBM Plex Mono",Consolas,"Malgun Gothic",monospace;--sans:Inter,"Segoe UI","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:22px}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 var(--sans);word-break:keep-all;overflow-wrap:break-word}button,select,input{font:inherit}button,a,select{touch-action:manipulation}button,select{cursor:pointer}button{color:inherit}a{color:var(--teal);text-underline-offset:3px}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,[role=button]:focus-visible{outline:3px solid #de890b;outline-offset:3px}button:disabled{opacity:.45;cursor:default}.wrap{width:min(1240px,calc(100% - 88px));margin:auto}h1,h2,h3,h4,p,pre,figure{margin:0}h1,h2,h3{letter-spacing:-.055em;line-height:1.2}code,.mono{font-family:var(--mono)}.top{background:var(--paper);border-bottom:1px solid var(--line)}.topin{display:flex;align-items:center;justify-content:space-between;min-height:60px;gap:16px}.brand{font-weight:750;display:flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;letter-spacing:-.035em}.icon{width:27px;height:27px}.top nav{display:flex;gap:23px}.top nav a{color:var(--dim);font-size:13px;text-decoration:none}.top nav a:hover{text-decoration:underline}
+.hero{color:#eff9ed;background-color:var(--deep);background-image:linear-gradient(90deg,#b5f0d308 1px,transparent 1px),linear-gradient(#b5f0d308 1px,transparent 1px);background-size:34px 34px}.hero-grid{min-height:280px;display:grid;grid-template-columns:1fr .8fr;gap:6%;align-items:center;padding-block:40px}.eyebrow,.mini{font:700 11px/1.5 var(--mono);letter-spacing:.08em}.eyebrow{color:var(--mint);margin-bottom:12px}.hero h1{font-size:clamp(36px,4.4vw,65px);line-height:1.11;color:#f4f6eb}.hero h1 em{font-style:normal;color:#b2edce}.hero p{font-size:14px;color:#d0e3d5;margin-top:16px;max-width:560px}.terminal{background:#09282bcc;border:1px solid #547670;border-radius:12px;padding:17px 19px;min-width:0}.term-head{display:flex;justify-content:space-between;gap:10px;color:#bdd9ca;font:12px var(--mono);padding-bottom:11px;border-bottom:1px solid #395b56}.term-prompt{font:clamp(15px,1.6vw,22px)/1.55 var(--mono);color:#eaf1e8;margin:14px 0;word-break:normal}.term-output{color:#123b31;background:#b6f3d2;box-decoration-break:clone;-webkit-box-decoration-break:clone}.term-key{display:flex;gap:14px;color:#c1d8cb;font-size:11px}.swatch{display:inline-block;width:9px;height:9px;border-radius:2px;background:#e9eee9;margin-right:5px}.swatch.mint{background:#9ef0bd}.section{margin-top:42px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:17px}.section h2{font-size:clamp(25px,3vw,37px)}.section-head p{color:var(--dim);font-size:14px;margin-top:6px}.seq{font:600 12px var(--mono);color:var(--teal);margin:0 8px 0 0;vertical-align:middle}.pill,.btn,.tab,select{border:1px solid var(--line);background:var(--white);border-radius:7px;padding:7px 12px;font-size:13px;font-weight:600;line-height:1.4}.btn:hover,.tab:hover,select:hover{border-color:var(--teal)}.btn.primary,.tab[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}.btn.slim{padding:5px 9px}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;align-items:center;color:var(--dim)}.legend i{display:inline-block;width:22px;height:2px;background:var(--teal);vertical-align:middle;margin-right:5px}.legend i.dash{background:none;border-top:2px dashed #926b22}
+.atlas{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden}.atlasbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:14px;padding:12px 18px;background:#fafbf5;flex-wrap:wrap}.atlasbar select{max-width:100%}.map-scroll{padding:6px 8px 0;overflow-x:auto}.map-scroll svg{display:block;width:100%;min-width:750px}.node{cursor:pointer}.node rect{fill:#fffef7;stroke:#aac1b6;stroke-width:1.2}.node:hover rect,.node:focus-visible rect{stroke:var(--teal);stroke-width:2.5}.node text{pointer-events:none}.node .title{fill:var(--ink);font:700 15px var(--sans)}.node .tag{fill:#506d66;font:11px var(--mono)}.node .count{fill:#466c61;font:600 10px var(--mono)}.node.active rect{fill:#075c52;stroke:#075c52}.node.active .title,.node.active .tag,.node.active .count{fill:#fff}.route{fill:none;stroke:#4e8174;stroke-width:1.5;stroke-linejoin:round}.route.alt{stroke:#966420;stroke-dasharray:5 4}.route-label{font:11px var(--sans);fill:#714c12;paint-order:stroke;stroke:var(--white);stroke-width:4px;stroke-linejoin:round}
+.inspector{border-top:1px solid var(--line);padding:22px;scroll-margin-top:14px;background:#fdfdf6}.detail-head,.btns,.steps,.srcbar{display:flex;align-items:center;gap:8px}.detail-head{justify-content:space-between;gap:20px}.stepmeta{color:var(--teal);font:600 11px var(--mono);margin-bottom:6px}.detail-head h3{font-size:27px}.lesson{color:var(--dim);font-size:14px;margin:9px 0 16px}.dep{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:14px 0 17px}.dep b,.dep span{font:600 12px/1.4 var(--mono);padding:6px 9px;border-radius:5px;background:#e7efea}.dep b{background:#193f42;color:white}.dep em{color:var(--teal);font-style:normal}.detail-body{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);gap:16px}.pane{min-width:0;border:1px solid var(--line);border-radius:9px;background:#fff}.paneheader{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-bottom:1px solid var(--line);color:var(--dim);font:12px var(--mono);gap:8px}.c-pane{background:#122e34;color:#edf5ed;border-color:#24484a}.c-pane .paneheader{color:#c3ded5;border-color:#3f5856}.code-scroll{overflow:auto;max-height:340px;tab-size:4;font:12.5px/1.85 var(--mono);padding:9px 0 13px;white-space:pre}.cline{display:block;width:max-content;min-width:100%;padding-right:14px}.cline.hi{background:#2c524c;box-shadow:inset 3px 0 #b4e482}.ln{display:inline-block;user-select:none;color:#93aba9;width:45px;text-align:right;padding-right:11px;background:inherit;position:sticky;left:0}.tokstr{color:#e9d693}.tokcomment{color:#a8c6b6}.tokfunc{color:#97dddf}.tokkw{color:#f0bcb3}.jump-src{color:#b2efcf;text-decoration:underline;cursor:pointer;border:0;background:none;font-size:12px}.contract{padding:12px 15px 15px}.tabs{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 10px}.tab{font:11.5px var(--mono);padding:6px 8px}.purpose{font-size:14px;font-weight:650;margin:8px 0}.args{width:100%;border-collapse:collapse;font-size:12px}.args th,.args td{padding:6px 3px;text-align:left;border-bottom:1px solid #dce5dd;vertical-align:top}.args th{color:var(--dim);font-weight:550}.args code{font-size:11.5px;overflow-wrap:anywhere}.out{display:grid;grid-template-columns:66px 1fr;gap:5px 10px;font-size:13px;margin:12px 0 0}.out dt{font-weight:700;color:var(--teal)}.out dd{margin:0}.extra{margin-top:12px;color:var(--dim);font-size:13px}.extra a{margin-left:7px}
+.lab{background:#edf2e9;border:1px solid var(--line);border-radius:14px;padding:22px}.lab-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.lab-tools label{margin-left:auto}.sliderline{display:flex;align-items:center;gap:12px;margin:14px 0 16px}.sliderline input{width:100%;accent-color:var(--teal)}.frameidx{font:12px var(--mono);white-space:nowrap}.frame{border-left:3px solid var(--teal);padding-left:12px;margin-bottom:16px}.frame h3{font-size:20px}.frame p{color:var(--dim);font-size:13px;margin:4px 0}.state-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr);gap:14px}.state{padding:15px;border:1px solid var(--line);border-radius:8px;background:var(--white);min-width:0}.state h4{font:650 14px var(--mono);margin-bottom:8px}.state-note{font-size:12px;color:var(--dim);margin-bottom:9px}.vector{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:5px}.cell{min-width:0;border:1px solid #c2d6c9;border-radius:4px;line-height:1.3;padding:5px 6px;background:#eff7ec}.cell small,.cell b,.cell code{display:block}.cell small{font:9px var(--mono);color:var(--dim)}.cell b{font:700 14px var(--mono);margin:3px 0}.cell code{font-size:10px;white-space:pre}.cell.wait{background:#f7f7f2;color:#64706b;border-style:dashed}.cell.now{border:2px solid #1c7963;padding:4px 5px;background:#d2f2d9}.ram{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;margin:0;font-size:12px}.ram dt{font:12px var(--mono);color:var(--dim)}.ram dd{font-weight:650;margin:0;word-break:break-word}.console{background:#123539;color:#e9f5eb;border-radius:8px;padding:13px 16px;margin-top:14px}.console .mini{color:#aedac5}.console-output{font:16px/1.7 var(--mono);min-height:2em;white-space:pre-wrap;word-break:normal}.console-output .generated{color:#acffc7}.cursor{border-right:2px solid #a2e1ba}.raw{border:1px solid var(--line);border-radius:12px;background:var(--white);overflow:hidden}.raw summary{padding:15px 18px;font-weight:700;cursor:pointer}.srcbar{flex-wrap:wrap;padding:11px 15px;border-top:1px solid var(--line)}.raw pre{max-height:520px;background:#122e34;color:#e6f0ea}.foot{border-top:1px solid var(--line);padding:18px 0 35px;color:var(--dim);font-size:12px;margin-top:32px}.foot a{margin-right:10px}.mobilehint{display:none}
+@media(max-width:850px){.wrap{width:calc(100% - 32px)}.hero-grid{gap:20px}.detail-body,.state-grid{grid-template-columns:1fr}.lab-tools label{margin:0}.top nav{gap:12px}.section{margin-top:30px}.mobilehint{display:inline;font-size:11px;color:var(--dim)}}
+@media(max-width:620px){.topin{min-height:50px}.brand{font-size:14px;gap:5px}.icon{width:20px}.top nav a{font-size:11px}.hero-grid{grid-template-columns:1fr;padding-block:26px}.hero h1{font-size:38px}.hero p{font-size:13px}.term-prompt{font-size:15px}.terminal{padding:12px}.section-head{align-items:start;flex-direction:column;gap:8px}.inspector,.lab{padding:13px}.atlasbar{padding:10px}.detail-head{align-items:flex-start;gap:10px}.detail-head h3{font-size:22px}.btns{flex-shrink:0}.btn{padding:6px 9px}.lab-tools{gap:5px}.lab-tools select{font-size:12px}.state-grid{gap:8px}.wrap{width:calc(100% - 24px)}.vector{grid-template-columns:repeat(4,minmax(0,1fr))}.section h2{font-size:27px}.code-scroll{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.follow-toggle{display:inline-flex;align-items:center;gap:9px;position:relative;cursor:pointer;white-space:nowrap;font-size:14px;font-weight:700;padding:7px 0;align-self:center}
+.follow-toggle input{position:absolute;inset:0;z-index:1;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}.switch-track{display:block;width:35px;height:20px;border-radius:20px;background:#788583;position:relative}.switch-track::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;background:white;border-radius:50%}
+.follow-toggle input:checked+.switch-track{background:var(--teal)}.follow-toggle input:checked+.switch-track::after{left:18px}.follow-toggle input:focus-visible+.switch-track{outline:3px solid #de890b;outline-offset:3px}
+.workbench{display:grid;gap:12px;align-items:stretch;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr);grid-template-areas:"vector vars" "console console"}
+.workbench.with-code{grid-template-columns:minmax(0,1.03fr) minmax(0,1fr);grid-template-areas:"vector source" "vars source" "console source"}
+.token-state{grid-area:vector}.variable-state{grid-area:vars}.workbench .console{grid-area:console;margin:0}.with-code .ram{grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr)}
+.follow-pane{grid-area:source;min-width:0;align-self:start;color:#e3f1eb;background:#132f34;border:1px solid #274d4b;border-radius:9px;overflow:hidden}
+.follow-pane[hidden]{display:none}.follow-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 14px;border-bottom:1px solid #365657;font:13px var(--mono)}
+.follow-head strong{font-weight:600;color:#bdf3d1}.follow-list{padding:9px 0;min-height:clamp(185px,20vw,250px);font:13px/1.6 var(--mono)}
+.trace-row{display:grid;grid-template-columns:3.4em minmax(0,1fr);padding:3px 12px 3px 0;color:#c3d2cd}.trace-row code{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;min-width:0}
+.trace-num{font-variant-numeric:tabular-nums;text-align:right;padding-right:10px;color:#97afa8;user-select:none}.trace-hot{background:#285446;color:#f4fff4;box-shadow:inset 3px 0 #adecac}.trace-hot .trace-num{color:#c3fac8;font-weight:700}
+.follow-result{display:grid;gap:4px;padding:12px 15px;border-top:1px solid #365657;background:#0c262b;color:#b9edcf;font-size:12px}.follow-result code{font-size:13px;color:#f1f8ef;overflow-wrap:anywhere}
+@media(max-width:850px){.workbench,.workbench.with-code{grid-template-columns:minmax(0,1fr)}.workbench{grid-template-areas:"vector" "vars" "console"}.workbench.with-code{grid-template-areas:"vector" "source" "vars" "console"}.follow-list{min-height:0}.follow-toggle{align-self:flex-start}}
+@media(max-width:480px){.with-code .ram{grid-template-columns:auto 1fr}.follow-list{font-size:12px}}
+</style></head><body>
+<header class="top"><div class="wrap topin"><a class="brand" href="#top"><svg aria-hidden="true" class="icon" viewBox="0 0 28 28"><path d="M5 19L14 6L23 19H5" stroke="#126858" stroke-width="2" fill="none"/><g fill="#126858"><circle cx="5" cy="19" r="3.5"/><circle cx="14" cy="6" r="3.5"/><circle cx="23" cy="19" r="3.5"/></g></svg>llama.cpp 코드 강의</a><nav aria-label="강의 목차"><a href="#map">흐름 지도</a><a href="#lab">토큰 재생</a><a href="#source">소스 원문</a></nav></div></header>
+<main id="top"><section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">SIMPLE.CPP　/　C++ 추론 실습</div><h1>프롬프트 한 줄이<br><em>다음 토큰</em>이 되기까지</h1><p>함수에 들어간 값, 반환된 값, 메모리에 기록된 값을 한 문장의 실행 순서로 읽습니다.</p></div><div class="terminal"><div class="term-head"><span>실행 결과 · stdout</span><span>Qwen2.5 · F16</span></div><div id="term" class="term-prompt"></div><div class="term-key"><span><i class="swatch"></i>입력 13토큰</span><span><i class="swatch mint"></i>생성 3토큰</span></div></div></div></section>
+<div class="wrap">
+<section class="section" id="map"><div class="section-head"><div><h2><span class="seq">01 /</span>실행 흐름 지도</h2><p>노드를 고르면 아래에 해당 코드와 함수 인자가 열립니다. 화살표는 호출이 나타나는 순서를 따라갑니다.</p></div></div>
+<div class="atlas"><div class="atlasbar"><label><select id="pick" aria-label="단계 바로가기"></select></label><div class="legend"><span><i></i>실행 순서</span><span><i class="dash"></i>반복 · 탈출</span><span class="mobilehint">좌우로 지도 이동</span></div></div><div class="map-scroll"><svg id="diagram" viewBox="0 0 1080 398" aria-label="프롬프트 선언부터 자원 해제까지 20개 단계" role="group"></svg></div>
+<article class="inspector" id="detail"><div class="detail-head"><div><div class="stepmeta" id="meta"></div><h3 id="stitle"></h3></div><div class="btns"><button class="btn" id="prev">← 이전</button><button class="btn primary" id="next">다음 →</button></div></div><p class="lesson" id="lesson"></p><div class="dep" id="deps"></div>
+<div class="detail-body"><div class="pane c-pane"><div class="paneheader"><span id="codelabel"></span><button id="showline" class="jump-src">원문 보기 ↗</button></div><pre class="code-scroll" id="code"></pre></div><div class="pane contract"><div class="tabs" id="ftabs"></div><div id="fbody"></div></div></div><div class="extra" id="extra"></div><button class="btn" id="to-value" style="margin-top:14px">이 단계의 실행값 보기 ↓</button></article></div></section>
+<section class="section" id="lab"><div class="section-head"><div><h2><span class="seq">02 /</span>토큰이 바뀌는 순간</h2><p>벡터와 출력이 바뀌는 순간을 해당 C++ 실행문과 함께 보세요.</p></div><label class="follow-toggle"><input type="checkbox" role="switch" id="follow-toggle" aria-controls="follow-pane" checked><span class="switch-track" aria-hidden="true"></span>코드 따라보기</label></div><div class="lab"><div class="lab-tools"><button class="btn" id="back">← 한 칸</button><button class="btn primary" id="play">▶ 재생</button><button class="btn" id="forward">한 칸 →</button><button class="btn" id="reset">처음</button><button class="btn" id="to-code">단계 설명 ↑</button><label><select id="labjump" aria-label="재생 구간 바로가기"></select></label></div>
+<div class="sliderline"><input aria-label="실행 프레임" type="range" id="slider" min="0" value="0"><span id="findex" class="frameidx"></span></div><div class="frame"><h3 id="frame-title"></h3><p id="frame-note"></p><a id="hr-frame" class="btn" href="hr-ggml-graph-lecture.html#walk" hidden>HR · 이 호출의 GGML 그래프 열기 →</a></div>
+<div class="workbench with-code" id="workbench"><div class="state token-state"><h4>prompt_tokens</h4><p class="state-note">인덱스 · 토큰 ID · 텍스트 조각　<span class="mono">␠</span>는 공백입니다.</p><div id="vec" class="vector"></div></div><div class="state variable-state"><h4>이번 호출의 변수</h4><dl id="vars" class="ram"></dl></div>
+<div class="console"><span class="mini">stdout · 누적 출력</span><div class="console-output"><span id="echo-out"></span><span class="generated" id="gen-out"></span><span class="cursor"></span></div></div>
+<aside class="follow-pane" id="follow-pane" aria-label="현재 프레임의 C++ 코드">
+<div class="follow-head"><span>simple.cpp</span><strong id="follow-loc"></strong></div>
+<div class="follow-list" id="follow-list" aria-label="원본 줄 번호와 실행문"></div>
+<div class="follow-result"><span>이 프레임의 값</span><code id="follow-value"></code></div>
+</aside></div></div></section>
+<section class="section" id="source"><div class="section-head"><div><h2><span class="seq">03 /</span>코드 원문 대조</h2><p>붙여넣은 본문은 86행부터입니다. 프롬프트 선언과 명령 인수 처리는 같은 실습 파일의 앞부분을 연결했습니다.</p></div></div>
+<details class="raw" id="raw"><summary>simple.cpp 원문 펼치기</summary><div class="srcbar"><button id="paste-tab" class="btn">붙여넣은 본문 · 86–223</button><button id="pre-tab" class="btn">앞부분 · 1–85</button><span id="raw-cap" class="mono"></span></div><pre id="rawcode" class="code-scroll"></pre></details></section>
+<footer class="foot">실행 환경　Qwen2.5-1.5B-Instruct FP16 · RTX 2070 SUPER · Vulkan · greedy · <code>-ngl 99 -n 3</code><br>기준 커밋 <code>e6ab7c1</code> · 표시된 ID와 출력은 이 PC에서 실행해 관찰한 값입니다. 재생 화면은 이 기록을 단계별로 보여줍니다.<br><a href="hr-ggml-graph-lecture.html">HR · Qwen2.5 그래프 강의</a><a href="graphify-out/graph.html">Graphify 코드 지도</a><a href="llama.cpp/examples/simple/simple.cpp">로컬 C++ 소스</a></footer>
+</div></main><script id="run-data" type="application/json">{"prompt": "The capital of South Korea is Seoul. The capital of France is", "tokens": [[785, "The"], [6722, " capital"], [315, " of"], [4882, " South"], [11862, " Korea"], [374, " is"], [50189, " Seoul"], [13, "."], [576, " The"], [6722, " capital"], [315, " of"], [9625, " France"], [374, " is"]], "generated": [[12095, " Paris"], [13, "."], [576, " The"]], "scores": [[12095, "22.61946"], [13, "26.09576"], [576, "20.33444"]], "batches": [[0, 13, 0], [13, 1, 1], [14, 1, 2]], "stdout": "The capital of South Korea is Seoul. The capital of France is Paris. The", "commit": "e6ab7c1a41054a888ada952eab4c886444c2f5ad", "lines": ["#include \"llama.h\"", "#include <clocale>", "#include <cstdio>", "#include <cstring>", "#include <string>", "#include <vector>", "", "static void print_usage(int, char ** argv) {", "    printf(\"\\nexample usage:\\n\");", "    printf(\"\\n    %s -m model.gguf [-n n_predict] [-ngl n_gpu_layers] [prompt]\\n\", argv[0]);", "    printf(\"\\n\");", "}", "", "int main(int argc, char ** argv) {", "    std::setlocale(LC_NUMERIC, \"C\");", "", "    // -m: 로드할 GGUF 파일 경로", "    std::string model_path;", "    // 옵션 뒤에 붙인 문자열: 생성의 시작점이 되는 프롬프트", "    std::string prompt = \"Hello my name is\";", "    // -ngl: GPU에 배치할 모델 레이어 수", "    int ngl = 99;", "    // -n: 생성할 최대 토큰 수", "    int n_predict = 32;", "", "    // argv[1]부터 옵션을 읽는다. -m은 경로, -n과 -ngl은 정수로 저장한다.", "", "    {", "        int i = 1;", "        for (; i < argc; i++) {", "            if (strcmp(argv[i], \"-m\") == 0) {", "                if (i + 1 < argc) {", "                    model_path = argv[++i];", "                } else {", "                    print_usage(argc, argv);", "                    return 1;", "                }", "            } else if (strcmp(argv[i], \"-n\") == 0) {", "                if (i + 1 < argc) {", "                    try {", "                        n_predict = std::stoi(argv[++i]);", "                    } catch (...) {", "                        print_usage(argc, argv);", "                        return 1;", "                    }", "                } else {", "                    print_usage(argc, argv);", "                    return 1;", "                }", "            } else if (strcmp(argv[i], \"-ngl\") == 0) {", "                if (i + 1 < argc) {", "                    try {", "                        ngl = std::stoi(argv[++i]);", "                    } catch (...) {", "                        print_usage(argc, argv);", "                        return 1;", "                    }", "                } else {", "                    print_usage(argc, argv);", "                    return 1;", "                }", "            } else {", "                // 첫 일반 인자부터 남은 인자를 공백으로 이어 프롬프트를 만든다.", "                break;", "            }", "        }", "        if (model_path.empty()) {", "            print_usage(argc, argv);", "            return 1;", "        }", "        if (i < argc) {", "            prompt = argv[i++];", "            for (; i < argc; i++) {", "                prompt += \" \";", "                prompt += argv[i];", "            }", "        }", "    }", "", "", "    // 사용 가능한 백엔드를 찾아 등록한다. 인자와 반환값은 없다.", "    ggml_backend_load_all();", "", "", "    // 기본 로드 설정을 받아 GPU에 배치할 레이어 수만 ngl로 지정한다.", "    llama_model_params model_params = llama_model_default_params();", "    model_params.n_gpu_layers = ngl;", "    // GGUF 로드 | 파일 경로(model_path), 로드 설정(model_params) -> 모델 포인터. 실패하면 NULL.", "    llama_model * model = llama_model_load_from_file(model_path.c_str(), model_params);", "", "    if (model == NULL) {", "        fprintf(stderr , \"%s: error: unable to load model\\n\" , __func__);  // stderr에 현재 함수명(__func__)과 오류를 쓴다. 성공 시 쓴 문자 수를 반환한다.", "        return 1;", "    }", "    // 어휘 조회 | model -> 모델이 소유한 vocab. 토큰화와 텍스트 복원에 함께 쓴다.", "    const llama_vocab * vocab = llama_model_get_vocab(model);", "", "    // 토큰 수 조회 | vocab, 입력 텍스트, 바이트 수, NULL, 용량 0 -> 필요한 개수의 음수. 앞의 -로 양수화한다.", "    // 두 true는 순서대로 모델 설정에 따른 시작/끝 토큰 추가와 입력 문자열 속 특수 토큰 인식을 허용한다.", "    const int n_prompt = -llama_tokenize(vocab, prompt.c_str(), prompt.size(), NULL, 0, true, true);", "", "    // 토큰화 | n_prompt칸을 만든다. data()는 쓸 주소, size()는 칸 수. ID는 벡터에 쓰고 개수를 반환한다.", "    std::vector<llama_token> prompt_tokens(n_prompt);", "    if (llama_tokenize(vocab, prompt.c_str(), prompt.size(), prompt_tokens.data(), prompt_tokens.size(), true, true) < 0) {", "        fprintf(stderr, \"%s: error: failed to tokenize the prompt\\n\", __func__);", "        return 1;", "    }", "", "", "    // 문맥 기본값 조회 | 인자 없음 -> ctx_params. 아래에서 이번 실행의 용량과 측정 옵션을 정한다.", "    llama_context_params ctx_params = llama_context_default_params();", "    // 마지막에 생성한 토큰은 다시 입력하지 않으므로 요청 길이에서 1을 뺀다.", "    ctx_params.n_ctx = n_prompt + n_predict - 1;", "    // 한 번의 decode에 프롬프트 전체를 넣을 수 있는 배치 크기.", "    ctx_params.n_batch = n_prompt;", "", "    ctx_params.no_perf = false;", "    // 실행 문맥 생성 | model(가중치), ctx_params(설정) -> KV 캐시와 출력 점수를 관리하는 ctx. 실패하면 NULL.", "    llama_context * ctx = llama_init_from_model(model, ctx_params);", "", "    if (ctx == NULL) {", "        fprintf(stderr , \"%s: error: failed to create the llama_context\\n\" , __func__);", "        return 1;", "    }", "", "", "    // 샘플러 준비 | 기본 설정 sparams를 얻고, 그 설정으로 선택 규칙을 담을 빈 체인 smpl을 만든다.", "    auto sparams = llama_sampler_chain_default_params();", "    sparams.no_perf = false;", "    llama_sampler * smpl = llama_sampler_chain_init(sparams);", "    // 최고 점수 토큰을 고를 규칙을 만들고 smpl에 등록한다. 등록 함수의 반환형은 void다.", "    llama_sampler_chain_add(smpl, llama_sampler_init_greedy());", "", "    // 입력 프롬프트 복원 | vocab, id, buf, 용량(128바이트) -> 텍스트는 buf에 쓰고 바이트 수는 n으로 반환한다.", "    // 끝의 0은 앞 공백을 유지하고 true는 특수 토큰도 표시한다. 공간이 부족하면 필요한 크기의 음수를 반환한다.", "    for (auto id : prompt_tokens) {", "        char buf[128];", "        int n = llama_token_to_piece(vocab, id, buf, sizeof(buf), 0, true);", "        if (n < 0) {", "            fprintf(stderr, \"%s: error: failed to convert token to piece\\n\", __func__);", "            return 1;", "        }", "        std::string s(buf, n);  // buf의 앞 n바이트로 문자열을 만든다. 널 종료 문자가 없어도 된다.", "        printf(\"%s\", s.c_str());  // s.c_str()의 문자열을 콘솔에 출력한다. 성공 시 쓴 문자 수를 반환한다.", "    }", "", "", "    // 첫 배치 | 토큰 배열 주소와 개수 -> 원래 배열을 참조하는 batch. 첫 decode는 프롬프트 전체를 받는다.", "    llama_batch batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());", "    // 인코더 필요 여부 | model -> bool. 디코더 전용 Qwen2.5에서는 false다.", "    if (llama_model_has_encoder(model)) {", "        if (llama_encode(ctx, batch)) {  // ctx와 입력 배치로 인코더 실행. 결과는 ctx에 남고 성공 시 0을 반환한다.", "            fprintf(stderr, \"%s : failed to eval\\n\", __func__);", "            return 1;", "        }", "        // 시작 토큰 조회 | model -> 디코더의 첫 토큰 ID. 지정값이 없으면 vocab에서 BOS(문장 시작) ID를 얻는다.", "        llama_token decoder_start_token_id = llama_model_decoder_start_token(model);", "        if (decoder_start_token_id == LLAMA_TOKEN_NULL) {", "            decoder_start_token_id = llama_vocab_bos(vocab);", "        }", "        // 시작 토큰의 주소와 개수 1 -> 디코더에 넘길 첫 배치.", "        batch = llama_batch_get_one(&decoder_start_token_id, 1);", "    }", "", "", "    // 시작 시각 측정 | 인자 없음 -> 마이크로초 단위 정수. 루프 종료 시각과의 차이로 소요 시간을 구한다.", "    const auto t_main_start = ggml_time_us();", "    int n_decode = 0;", "    llama_token new_token_id;", "", "    for (int n_pos = 0; n_pos + batch.n_tokens < n_prompt + n_predict; ) {", "        // 배치 평가 | ctx(실행 상태), batch(토큰 묶음) -> ctx의 KV 캐시와 다음 토큰 점수(logits)를 갱신. 반환값 0은 성공.", "        if (llama_decode(ctx, batch)) {", "            fprintf(stderr, \"%s : failed to eval, return code %d\\n\", __func__, 1);", "            return 1;", "        }", "", "        n_pos += batch.n_tokens;", "", "        // 다음 토큰 선택 | smpl(선택 규칙), ctx(후보 점수), -1(마지막 출력 위치) -> 토큰 ID 하나.", "        {", "            new_token_id = llama_sampler_sample(smpl, ctx, -1);", "", "            // 생성 종료 검사 | vocab, new_token_id -> 종료 토큰이면 true. 출력 전에 루프를 끝낸다.", "            if (llama_vocab_is_eog(vocab, new_token_id)) {", "                break;", "            }", "            // 생성 결과 복원 | 방금 선택한 ID -> 텍스트는 buf, 쓴 바이트 수는 n.", "            char buf[128];", "            int n = llama_token_to_piece(vocab, new_token_id, buf, sizeof(buf), 0, true);", "            if (n < 0) {", "                fprintf(stderr, \"%s: error: failed to convert token to piece\\n\", __func__);", "                return 1;", "            }", "            std::string s(buf, n);", "            printf(\"%s\", s.c_str());", "            fflush(stdout);  // stdout의 대기 중인 출력을 즉시 내보낸다. 성공 0, 실패 EOF.", "", "            // 다음 배치 | new_token_id의 주소와 개수 1 -> 다음 decode에 넣을 토큰 한 개짜리 batch.", "            batch = llama_batch_get_one(&new_token_id, 1);", "", "            n_decode += 1;", "        }", "    }", "", "    printf(\"\\n\");", "", "    const auto t_main_end = ggml_time_us();", "", "    fprintf(stderr, \"%s: decoded %d tokens in %.2f s, speed: %.2f t/s\\n\",", "            __func__, n_decode, (t_main_end - t_main_start) / 1000000.0f, n_decode / ((t_main_end - t_main_start) / 1000000.0f));", "", "    fprintf(stderr, \"\\n\");", "    llama_perf_sampler_print(smpl);", "    llama_perf_context_print(ctx);", "    fprintf(stderr, \"\\n\");", "", "    llama_sampler_free(smpl);", "    llama_free(ctx);", "    llama_model_free(model);", "", "    return 0;", "}"], "start": 86}</script><script>
+// Function contracts used in the code inspector. Each row names the formal argument, actual value and meaning.
+const funcs={};
+function contract(id,name,purpose,args,returns,writes){
+  funcs[id]={name,purpose,args,returns,writes};
+}
+contract("prompt","std::string / argv","명령줄에서 프롬프트를 만든다.",[["초깃값","Hello my name is","prompt 변수의 기본 문자열"],["argc, argv","-m … -ngl 99 -n 3 ＂The … is＂","옵션 뒤의 일반 인자를 읽는다. 따옴표 안의 문장은 인자 하나다."]],"생성자에는 별도 반환값이 없다.","prompt에 입력 문장을 대입한다. 인자가 여러 개면 공백을 넣어 잇는다.");
+contract("backend","ggml_backend_load_all","사용 가능한 계산 백엔드를 등록한다.",[],"void","라이브러리의 백엔드 목록이 준비된다.");
+contract("mparams","llama_model_default_params","모델을 어떻게 로드할지 정할 기본 설정을 얻는다.",[],"llama_model_params 값","다음 줄에서 model_params.n_gpu_layers에 ngl을 대입한다.");
+contract("load","llama_model_load_from_file","GGUF의 모델 구조와 가중치를 읽고 배치한다.",[["path_model","model_path.c_str()","-m 뒤의 GGUF 경로를 가리키는 문자열 주소"],["params","model_params","-ngl 99를 반영한 로드 설정"]],"성공하면 llama_model *, 실패하면 NULL","model이 로드한 모델을 가리킨다. 이 실행의 GPU 레이어는 29/29다.");
+contract("vocab","llama_model_get_vocab","모델이 소유한 어휘와 토큰화 규칙에 접근한다.",[["model","model","방금 로드한 Qwen 모델"]],"읽기 전용 const llama_vocab *","vocab이 같은 모델의 어휘를 참조한다. 이 예제는 이 포인터를 llama_tokenize에 전달한다.");
+const tokenArgs=[["vocab","vocab","모델에서 얻은 어휘"],["text","prompt.c_str()","입력 문자열의 첫 바이트 주소"],["text_len","prompt.size()","입력 길이 61바이트"]];
+const flags=[["add_special","true","모델 설정에 따른 시작·끝 특수 토큰 추가를 허용"],["parse_special","true","입력 문자열에 있는 특수 토큰 표기를 인식"]];
+contract("count","llama_tokenize · 길이 조회","프롬프트의 토큰 ID를 담을 칸 수를 알아낸다.",[...tokenArgs,["tokens","NULL","결과 배열 없이 길이만 조회"],["n_tokens_max","0","출력 용량 0칸"],...flags],"이 입력에서 -13. 앞의 부호를 적용한 n_prompt는 13","이번 호출에는 ID를 받는 배열이 없다.");
+contract("vector","std::vector<llama_token>","필요한 개수만큼 토큰 ID 저장 공간을 만든다.",[["count","n_prompt = 13","벡터에 생성할 원소 수"]],"prompt_tokens 객체가 생성된다.","정수 원소 13개가 0으로 초기화된다. 아직 어느 칸에도 입력 토큰화 결과가 기록되지 않았다.");
+contract("tokenize","llama_tokenize · ID 쓰기","같은 프롬프트를 실제 토큰 ID 배열로 바꾼다.",[...tokenArgs,["tokens","prompt_tokens.data()","ID를 기록할 벡터의 첫 원소 주소"],["n_tokens_max","prompt_tokens.size()","출력 용량 13칸"],...flags],"기록한 토큰 개수 13. 용량이 모자라면 필요한 개수의 음수","prompt_tokens에 785부터 374까지 13개 ID가 순서대로 기록된다.");
+contract("ctxp","llama_context_default_params","추론 문맥에 요청할 초기 설정값을 만든다.",[],"llama_context_params 값","n_ctx=13+3−1=15, n_batch=13, no_perf=false로 지정한다.");
+contract("ctx","llama_init_from_model","같은 모델을 참조하는 추론 문맥을 생성한다.",[["model","model","가중치와 모델 구조를 보유한 객체"],["params","ctx_params","요청 문맥 길이, 배치 한도, 성능 측정 설정"]],"성공하면 llama_context *, 실패하면 NULL","ctx에 실제 설정·백엔드·KV 캐시·출력 버퍼·스케줄러를 준비한다. 이 실행의 n_ctx는 256 단위로 올림된다.");
+contract("sp","llama_sampler_chain_default_params","샘플러 체인의 기본 설정을 얻는다.",[],"llama_sampler_chain_params 값","sparams.no_perf=false로 샘플러 측정을 켠다.");
+contract("sc","llama_sampler_chain_init","토큰 선택 규칙을 담을 빈 체인을 생성한다.",[["params","sparams","샘플러 체인 설정"]],"llama_sampler *","smpl이 새 체인을 가리킨다.");
+contract("gr","llama_sampler_init_greedy","후보 중 최고 점수의 토큰을 선택하는 규칙을 만든다.",[],"greedy 샘플러 포인터","만든 규칙은 바깥쪽 chain_add의 두 번째 인자가 된다.");
+contract("add","llama_sampler_chain_add","체인에 greedy 규칙을 등록한다.",[["chain","smpl","규칙을 보유할 체인"],["smpl","llama_sampler_init_greedy()","새로 만든 선택 규칙"]],"void","체인이 등록된 샘플러의 소유권을 갖는다.");
+const pieceArgs=id=>[["vocab","vocab","이 모델의 토큰 어휘"],["token",id,"텍스트 조각으로 복원할 ID"],["buf","buf","텍스트를 쓸 char 배열"],["length","sizeof(buf) = 128","버퍼 용량(바이트)"],["lstrip","0","앞 공백을 유지"],["special","true","특수 토큰 표기도 허용"]];
+contract("echo","llama_token_to_piece · 입력","입력 토큰 하나를 원래의 텍스트 조각으로 복원한다.",pieceArgs("id"),"쓴 바이트 수 n. 용량 부족 시 필요한 바이트 수의 음수","buf의 앞 n바이트가 채워진다. 이 함수를 입력 ID마다 호출한다.");
+contract("str","std::string(buf, n)","텍스트 조각을 정확한 길이로 복사한다.",[["시작 주소","buf","복원한 바이트가 있는 곳"],["길이","n","복사할 바이트 수"]],"문자열 s 생성","buf에 널 종료 문자가 없어도 s를 구성할 수 있다.");
+contract("print","printf","텍스트를 표준 출력으로 보낸다.",[["format","%s","문자열 형식"],["문자열","s.c_str()","널 종료된 문자열 주소"]],"성공 시 출력한 문자 수, 오류 시 음수","stdout에 조각을 이어 쓴다. 코드에는 완성된 답을 모으는 별도 문자열 변수가 없다.");
+function batch(id,actual,num,desc){contract(id,"llama_batch_get_one",desc,[["tokens",actual,"이번에 모델이 읽을 토큰 ID의 주소"],["n_tokens",num,"해당 주소에서 읽을 ID 개수"]],"주소와 개수를 담은 llama_batch 값","batch.token이 기존 저장 공간을 가리킨다. 토큰 벡터를 복사하거나 늘리지 않는다.");}
+batch("batch","prompt_tokens.data()","prompt_tokens.size() = 13","프롬프트 전체를 첫 평가 입력으로 묶는다.");
+contract("encoder","llama_model_has_encoder","모델에 별도 인코더 평가 단계가 있는지 확인한다.",[["model","model","실행하는 모델"]],"이 Qwen2.5에서는 false","if 본문을 건너뛴다. 첫 배치는 프롬프트 13토큰을 그대로 가리킨다.");
+contract("encode","llama_encode · 조건부","인코더가 있는 모델의 입력을 처리한다.",[["ctx","ctx","실행 상태"],["batch","batch","프롬프트 배치"]],"성공 0, 오류 음수","인코더 결과를 문맥에 준비한다. Qwen2.5 실습에서는 생략한다.");
+contract("start","llama_model_decoder_start_token","인코더·디코더 모델의 시작 토큰을 조회한다.",[["model","model","모델의 시작 설정"]],"디코더 시작 ID 또는 LLAMA_TOKEN_NULL","값이 없으면 다음의 BOS 조회를 사용한다.");
+contract("bos","llama_vocab_bos","어휘에서 문장 시작 토큰을 찾는다.",[["vocab","vocab","모델의 어휘"]],"BOS 토큰 ID","조건부 분기에서 decoder_start_token_id를 채운다.");
+batch("startbatch","&decoder_start_token_id","1","인코더 분기에만 있는 시작 배치 구성이다.");
+contract("time","ggml_time_us","생성 구간의 앞뒤 시각을 잰다.",[],"마이크로초 단위 int64_t","t_main_start와 t_main_end의 차이로 경과 시간을 구한다.");
+contract("guard","for · 반복 조건","다음 배치를 처리해 토큰 하나를 더 생성할지 판정한다.",[["처리 완료","n_pos","첫 진입은 0"],["이번 입력","batch.n_tokens","13, 1, 1 순"],["한도","n_prompt + n_predict","이 실습에서 13+3=16"]],"n_pos + batch.n_tokens < 16의 참·거짓","거짓이면 루프 종료. 이 조건은 이번 호출 전에 검사한다.");
+contract("decode","llama_decode","배치의 토큰으로 트랜스포머를 실행한다.",[["ctx","ctx","기존 KV 캐시와 백엔드·그래프 실행 상태"],["batch","batch","첫 호출은 13토큰, 이후는 직전에 고른 1토큰"]],"상태 코드 0이면 성공. 예제는 0 이외에 오류를 출력하고 종료","이번 토큰의 K/V를 저장하고 다음 후보 점수(logits)를 ctx에 준비한다. 성공 후 n_pos에 이번 입력 수를 더한다.");
+contract("sample","llama_sampler_sample","마지막 출력 위치의 점수에서 토큰 하나를 고른다.",[["smpl","smpl","greedy 규칙을 등록한 체인"],["ctx","ctx","decode가 준비한 후보 점수"],["idx","-1","마지막 출력 위치"]],"선택한 llama_token ID 하나","new_token_id에 반환값을 대입한다. 실제 첫 선택은 12095다.");
+contract("eog","llama_vocab_is_eog","선택한 ID가 생성 종료 신호인지 검사한다.",[["vocab","vocab","종료 토큰을 정의한 어휘"],["token","new_token_id","이번에 선택한 ID"]],"종료 토큰이면 true","true이면 break한다. 이 토큰은 화면에 쓰거나 n_decode에 더하지 않는다.");
+contract("piece","llama_token_to_piece · 생성","선택된 토큰을 사람이 읽을 텍스트로 바꾼다.",pieceArgs("new_token_id"),"첫 생성 조각은 공백을 포함해 6바이트","첫 회에서 buf에 ' Paris'가 쓰인다. n바이트로 s를 만든다.");
+contract("flush","fflush","출력한 조각을 바로 표시하도록 버퍼를 비운다.",[["stream","stdout","생성 조각을 쓰는 표준 출력"]],"성공 0, 실패 EOF","대기 중인 바이트를 출력 스트림에 보낸다.");
+batch("again","&new_token_id","1","방금 출력한 토큰 하나를 다음 배치로 전달한다.");
+contract("stderr","fprintf","오류·생성 수·소요 시간을 지정한 스트림에 쓴다.",[["stream","stderr","진단용 표준 오류"],["format, …","형식 문자열, __func__, 수치 등","__func__는 main. 속도는 생성 수를 경과 초로 나눈 값"]],"성공 시 쓴 문자 수, 오류 시 음수","실패 분기는 return 1로 끝난다. 정상 종료의 성능 정보도 stderr에 쓴다.");
+contract("ps","llama_perf_sampler_print","샘플러의 시간 통계를 출력한다.",[["chain","smpl","측정한 샘플러 체인"]],"void","샘플링 성능 로그를 쓴다.");
+contract("pc","llama_perf_context_print","프롬프트·생성 처리와 재사용 통계를 출력한다.",[["ctx","ctx","추론 중 측정한 문맥"]],"void","추론 성능 로그를 쓴다.");
+for(const [id,name,arg,owner] of [["fs","llama_sampler_free","smpl","샘플러 체인과 등록 규칙"],["fc","llama_free","ctx","문맥·캐시·실행 버퍼"],["fm","llama_model_free","model","모델이 소유한 자원"]]){
+  contract(id,name,owner+"을 해제한다.",[["대상",arg,"사용을 마친 객체"]],"void","호출 뒤 해당 객체에 접근하지 않는다.");
+}
+const stages=[];
+function stage(title,tag,fn,ranges,focus,ins,out,lesson,role="SS"){
+  stages.push({title,tag,fn,ranges,focus,ins,out,lesson,role});
+}
+stage("프롬프트 선언","std::string",["prompt"],[[17,24],[67,76]],[20,72],["argv","-n 3"],"prompt · 61바이트","문장은 어디서 시작할까? 이 예제는 명령 인수로 받는 일반 텍스트를 그대로 토큰화한다. 붙여넣은 구간 앞의 선언을 보충했다.");
+stage("로드 설정","model_params",["mparams","backend"],[[81,89]],[82,86,87],["ngl = 99"],"model_params","GPU에 올릴 레이어 수를 모델을 읽기 전에 지정한다. 99는 요청 개수다.");
+stage("GGUF 모델 로드","model",["load","stderr"],[[86,94]],[89],["GGUF 경로","model_params"],"llama_model *","파일에 저장된 가중치와 모델 정보를 읽는다. 뒤의 vocab과 ctx는 모두 여기에서 얻은 모델을 사용한다.");
+stage("어휘 조회","vocab",["vocab"],[[89,96]],[96],["model"],"const llama_vocab *","토크나이저의 규칙도 모델에서 가져온다. 이 코드에서 tokenizer라는 새 객체를 선언하는 대신 vocab을 함수 인자로 넘긴다.");
+stage("토큰 수 조회","n_prompt",["count"],[[95,100]],[100],["vocab","prompt","용량 0"],"n_prompt = 13","61바이트짜리 입력을 담으려면 토큰 칸이 몇 개 필요할까? 첫 호출은 -13을 돌려주고 앞의 부호가 이를 13으로 바꾼다.");
+stage("벡터 생성","prompt_tokens",["vector"],[[100,104]],[103],["n_prompt = 13"],"ID 저장 공간 13칸","문자열의 바이트 수와 벡터의 원소 수를 구분한다. 아직은 공간만 확보한 상태다.");
+stage("토큰 ID 기록","llama_tokenize",["tokenize"],[[102,107]],[104],["vocab","prompt","벡터 주소"],"13개 토큰 ID","두 번째 호출은 첫 번째와 같은 어휘·입력을 받는다. 이번에는 출력 주소를 주었으므로 벡터에 실제 숫자가 들어간다.");
+stage("실행 문맥 생성","ctx",["ctxp","ctx"],[[110,123]],[113,115,119],["model","ctx_params"],"llama_context *","ctx_params는 요청 설정, ctx는 매번 재사용할 실행 객체다. 모델 참조·KV 캐시·출력 버퍼가 준비되고 입력에 대한 계산은 decode 때 시작한다.");
+stage("선택 규칙 등록","smpl",["sp","sc","gr","add"],[[127,132]],[130,132],["sparams","greedy 규칙"],"샘플러 체인 smpl","후보별 점수가 생긴 다음 최고 점수의 ID를 고를 규칙을 지금 등록해 둔다.");
+stage("입력 문장 출력","stdout",["echo","str","print"],[[134,145]],[138,144],["vocab","입력 ID 하나"],"프롬프트 텍스트","벡터의 각 ID를 다시 조각으로 복원해서 콘솔에 이어 쓴다. 이 시점에 보이는 문장은 사용자가 입력한 부분이다.");
+stage("첫 배치 구성","batch",["batch"],[[148,151]],[149],["벡터 주소","13"],"batch.n_tokens = 13","벡터에는 ID들이 저장돼 있고 batch는 그 주소와 개수를 전달한다. 같은 데이터를 새 배열로 복사할 필요가 없다.");
+stage("인코더 확인","조건 분기",["encoder","encode","start","bos","startbatch"],[[150,163]],[151],["model"],"Qwen2.5 → false","Qwen2.5는 디코더 전용이라 batch가 그대로 통과한다. 인코더 모델이라면 encode 후 시작 ID 하나로 첫 디코더 배치를 구성한다.");
+stage("반복 조건 검사","for",["guard","time"],[[165,173]],[167,171],["n_pos","batch.n_tokens","한도 16"],"계속 또는 종료","13 < 16이면 첫 decode로 들어간다. 세 번째 새 토큰까지 출력하면 15 + 1 < 16이 거짓이 되어 종료한다.");
+stage("트랜스포머 평가","llama_decode",["decode"],[[170,178]],[173,178],["ctx","이번 batch"],"ctx의 KV·logits","Qwen2의 Q·K·V, Attention, FFN을 포함한 그래프가 실행된다. 다음 토큰을 고를 점수는 ctx에 남고 함수가 반환하는 값은 성공 코드 0이다.","HR · WG");
+stage("다음 ID 선택","sample",["sample"],[[178,185]],[182],["smpl","ctx","위치 −1"],"new_token_id","샘플러가 마지막 출력 위치의 점수에서 ID 하나를 고른다. 첫 회에서 12095가 선택되고 텍스트 변환은 다음 단계에서 일어난다.");
+stage("종료 토큰 검사","EOG",["eog"],[[182,187]],[185,186],["vocab","선택된 ID"],"false → 계속","모델이 끝내자는 ID를 선택하면 출력 전에 종료한다. 기록한 세 번의 선택은 모두 일반 토큰이었다.");
+stage("ID를 글자로","token_to_piece",["piece","str"],[[188,195]],[190,195],["vocab","new_token_id"],"buf와 바이트 수 n","12095는 앞에 공백이 붙은 ' Paris' 조각이다. buf의 앞 n바이트로 문자열을 만들어야 공백도 그대로 보존된다.");
+stage("생성 조각 출력","printf / fflush",["print","flush"],[[195,197]],[196,197],["s.c_str()"],"stdout에 텍스트 추가","첫 회에는 프롬프트 끝에 ' Paris'가 붙는다. 이 출력 스트림의 누적 내용과 모델 입력 벡터는 따로 존재한다.");
+stage("다음 배치 구성","batch · 1개",["again"],[[198,204]],[200,202],["&new_token_id","1"],"다음 batch","출력한 ID가 다음 호출의 입력이 된다. n_decode는 1 증가하고 반복 조건으로 돌아간다. 앞선 토큰의 K/V는 같은 ctx에 남는다.");
+stage("통계와 자원 해제","return 0",["time","print","stderr","ps","pc","fs","fc","fm"],[[206,223]],[206,210,214,215,218,219,220,222],["완성된 출력","성능 카운터"],"정상 종료 0","마지막 줄바꿈은 stdout, 성능 기록은 로그에 남는다. 체인·문맥·모델 순서로 자원을 해제하고 main이 0을 반환한다.");
+
+
+const data=JSON.parse(document.getElementById('run-data').textContent);
+const $=id=>document.getElementById(id);
+const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const button=(label,i,active)=>'<button class="tab" data-ix="'+i+'" aria-pressed="'+active+'">'+esc(label)+'</button>';
+function codeColour(line){
+  const re=/(\/\/.*$|"(?:\\.|[^"\\])*"|\b(?:return|if|for|else|break|true|false|nullptr|NULL|const|int|char|auto|void)\b|\b[A-Za-z_]\w*(?=\s*\())/g;
+  let html='',offset=0;
+  for(const m of line.matchAll(re)){
+    html+=esc(line.slice(offset,m.index));
+    const a=m[0], cl=a.startsWith('//')?'tokcomment':a.startsWith('"')?'tokstr':/^\w+$/.test(a)&&/^\s*\(/.test(line.slice(m.index+a.length))?'tokfunc':'tokkw';
+    html+='<span class="'+cl+'">'+esc(a)+'</span>';offset=m.index+a.length;
+  }
+  return html+esc(line.slice(offset));
+}
+function lineHTML(i,hi){
+  return '<span class="cline'+(hi?' hi':'')+'" data-line="'+i+'"><span class="ln">'+i+'</span>'+codeColour(data.lines[i-1])+'</span>';
+}
+$('term').innerHTML=esc(data.prompt)+'<span class="term-output">'+esc(data.generated.map(x=>x[1]).join(''))+'</span>';
+const svg=$('diagram'), ns='http://www.w3.org/2000/svg';
+function shape(tag,attrs,parent=svg,text){
+  const el=document.createElementNS(ns,tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));
+  if(text!==undefined)el.textContent=text;
+  parent.append(el);return el;
+}
+const defs=shape('defs',{});
+for(const [id,color] of [['direct','#4e8174'],['alt','#966420']]){
+  const mark=shape('marker',{id,viewBox:'0 0 8 8',refX:7,refY:4,markerWidth:6,markerHeight:6,orient:'auto'},defs);
+  shape('path',{d:'M0 0 L8 4 L0 8 Z',fill:color},mark);
+}
+const nw=178,nh=51;
+const pos=stages.map((s,i)=>{const r=Math.floor(i/5),col=r%2?4-i%5:i%5;return {x:28+col*211,y:21+r*96};});
+const routes=shape('g',{'aria-hidden':true});
+function path(d,alt=false){
+  return shape('path',{class:'route'+(alt?' alt':''),d,'marker-end':'url(#'+(alt?'alt':'direct')+')'},routes);
+}
+function label(x,y,text){shape('text',{x,y,class:'route-label','text-anchor':'middle'},routes,text);}
+for(let i=0;i<18;i++){
+  const a=pos[i],b=pos[i+1];
+  if(a.y===b.y){
+    const right=b.x>a.x;
+    path('M'+(a.x+(right?nw:0))+' '+(a.y+nh/2)+' H'+(b.x+(right?0:nw)));
+  }else path('M'+(a.x+nw/2)+' '+(a.y+nh)+' V'+b.y);
+}
+// Non-linear control flow: next input returns to the guard, EOG and false guard exit.
+const guard=pos[12],again=pos[18],finish=pos[19],eog=pos[15];
+path('M'+(again.x+nw/2)+' '+again.y+' V287 H'+(guard.x+nw/2)+' V'+(guard.y+nh),true);
+label(385,285,'다음 입력');
+path('M'+(guard.x+nw/2)+' '+guard.y+' V188 H13 V'+(finish.y+nh/2)+' H'+finish.x,true);
+label(193,185,'생성 한도 도달');
+path('M'+(eog.x+nw/2)+' '+(eog.y+nh)+' V383 H'+(finish.x+nw/2)+' V'+(finish.y+nh),true);
+label(617,380,'종료 토큰이면 출력 전에 탈출');
+const mapNodes=[];
+stages.forEach((s,i)=>{
+  const p=pos[i],g=shape('g',{class:'node',role:'button',tabindex:'0','aria-label':(i+1)+'단계 '+s.title,transform:'translate('+p.x+' '+p.y+')'});
+  shape('rect',{width:nw,height:nh,rx:7},g);
+  shape('text',{x:10,y:16,class:'count'},g,String(i+1).padStart(2,'0'));
+  shape('text',{x:34,y:23,class:'title'},g,s.title);
+  shape('text',{x:34,y:40,class:'tag'},g,s.tag);
+  g.addEventListener('click',()=>pickStage(i,true));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pickStage(i,true);}});
+  mapNodes.push(g);
+  $('pick').add(new Option((i+1)+' · '+s.title,i));
+});
+let current=0,rawMode='paste',rawLine=0;
+function displayContract(index){
+  const keys=stages[current].fn,key=keys[index],f=funcs[key];
+  $('ftabs').innerHTML=keys.map((k,i)=>button(funcs[k].name,i,i===index)).join('');
+  const argRows=f.args.length?f.args.map(a=>'<tr><td><code>'+esc(a[0])+'</code></td><td><code>'+esc(a[1])+'</code></td><td>'+esc(a[2])+'</td></tr>').join(''):'<tr><td colspan="3">인자가 없는 호출입니다.</td></tr>';
+  $('fbody').innerHTML='<p class="purpose">'+esc(f.purpose)+'</p><table class="args"><thead><tr><th>인자</th><th>넘기는 값</th><th>역할</th></tr></thead><tbody>'+argRows+'</tbody></table><dl class="out"><dt>반환값</dt><dd>'+esc(f.returns)+'</dd><dt>변경·출력</dt><dd>'+esc(f.writes)+'</dd></dl>';
+}
+$('ftabs').addEventListener('click',e=>{const b=e.target.closest('[data-ix]');if(b)displayContract(Number(b.dataset.ix));});
+const ref='https://github.com/ggml-org/llama.cpp/blob/'+data.commit+'/';
+function pickStage(id,scroll=false){
+  if(!Number.isInteger(id)||id<0||id>=stages.length)return;
+  current=id;const s=stages[id];
+  $('pick').value=id;
+  mapNodes.forEach((n,i)=>{n.classList.toggle('active',i===id);n.setAttribute('aria-pressed',i===id);});
+  $('meta').textContent='단계 '+String(id+1).padStart(2,'0')+' / '+stages.length+'　·　'+s.role;
+  $('stitle').textContent=s.title;$('lesson').textContent=s.lesson;
+  $('deps').innerHTML=s.ins.map(v=>'<span>'+esc(v)+'</span>').join('')+'<em>→</em><b>'+esc(s.tag)+'</b><em>→</em><span>'+esc(s.out)+'</span>';
+  $('codelabel').textContent='simple.cpp · '+s.ranges.map(([a,b])=>'L'+a+'–'+b).join(' / ');
+  $('code').innerHTML=s.ranges.map(([a,b])=>Array.from({length:b-a+1},(_,j)=>lineHTML(a+j,s.focus.includes(a+j))).join('')).join('<span class="cline">     …</span>');
+  $('code').scrollTop=0;
+  $('prev').disabled=id===0;$('next').disabled=id===stages.length-1;
+  displayContract(0);
+  if(id===13){
+    $('extra').innerHTML='<a class="btn primary" style="display:inline-block;color:#fff;text-decoration:none;margin:0 8px 6px 0" href="hr-ggml-graph-lecture.html#walk">HR · GGML 그래프 생성 따라가기 →</a> decode 안의 경로　Q·K·V 노드 구성 → 그래프 실행 → Vulkan dispatch <a href="'+ref+'src/models/qwen2.cpp#L83">Qwen2 83행</a> <a href="'+ref+'src/llama-context.cpp#L1454">그래프 실행 1454행</a> <a href="logs/report-vulkan-dispatch-20261111-101620.log">실행 로그</a>';
+  }else if(id===7){
+    $('extra').innerHTML='문맥 생성자의 실제 코드 <a href="'+ref+'src/llama-context.cpp#L84">모델 참조</a> <a href="'+ref+'src/llama-context.cpp#L396">KV 캐시 생성</a>';
+  }else{$('extra').textContent='';}
+  if(scroll)$('detail').scrollIntoView({block:'start',behavior:'instant'});
+}
+$('pick').onchange=e=>pickStage(Number(e.target.value),true);
+$('prev').onclick=()=>pickStage(current-1);$('next').onclick=()=>pickStage(current+1);
+function rawShow(mode,line=0){
+  rawMode=mode;rawLine=line;const a=mode==='paste'?data.start:1,b=mode==='paste'?data.lines.length:data.start-1;
+  $('paste-tab').setAttribute('aria-pressed',mode==='paste');$('pre-tab').setAttribute('aria-pressed',mode==='pre');
+  $('paste-tab').classList.toggle('primary',mode==='paste');$('pre-tab').classList.toggle('primary',mode==='pre');
+  $('raw-cap').textContent='L'+a+'–'+b;
+  $('rawcode').innerHTML=Array.from({length:b-a+1},(_,j)=>lineHTML(j+a,j+a===line)).join('');
+  const row=$('rawcode').querySelector('.hi');
+  $('rawcode').scrollTop=row?row.getBoundingClientRect().top-$('rawcode').getBoundingClientRect().top+$('rawcode').scrollTop-50:0;
+}
+$('paste-tab').onclick=()=>rawShow('paste');$('pre-tab').onclick=()=>rawShow('pre');
+$('showline').onclick=()=>{const line=stages[current].focus[0];$('raw').open=true;rawShow(line<data.start?'pre':'paste',line);$('source').scrollIntoView({behavior:'instant'});};
+$('raw').addEventListener('toggle',()=>{if($('raw').open)rawShow(rawMode,rawLine);});
+pickStage(0);
+const T=data.tokens,G=data.generated,P=data.prompt,genpieces=G.map(x=>x[1]);
+const frames=[],groups=[];
+let v={step:0,title:'프롬프트 준비',note:'프롬프트 문자열은 준비됐고 콘솔은 아직 비어 있다.',vector:-1,active:-1,echo:0,gen:0,bat:'—',pos:'—',decoded:'—',picked:'—',score:'—',kv:'—',buf:'—'};
+function add(title,note,updates={}){v={...v,title,note,...updates};frames.push({...v});}
+function group(name){groups.push([frames.length,name]);}
+group('시작 · 문자열');
+add('프롬프트를 문자열로 받는다','61바이트 입력을 받는다. 이때 토큰 ID 벡터는 아직 생성 전이다.');
+add('백엔드와 모델 로드 설정을 준비한다','model_params.n_gpu_layers에 99를 지정한다.',{step:1});
+add('GGUF를 읽어 model을 얻는다','Qwen2.5 가중치와 구조가 로드된다. 정상 경로에서 model 포인터가 유효하다.',{step:2});
+add('model에서 vocab을 얻는다','이 어휘를 길이 조회, ID 기록, 텍스트 복원에 공통으로 쓴다.',{step:3});
+add('첫 llama_tokenize 호출','출력 버퍼 NULL, 용량 0. 반환값 −13에 음수 부호를 붙여 n_prompt = 13을 얻는다.',{step:4});
+group('토큰화 · 벡터 채우기');
+add('벡터에 13칸을 확보한다','정수 원소는 0으로 초기화된다. 이 0은 아직 프롬프트를 토큰화한 결과가 아니다.',{step:5,vector:0});
+T.forEach(([id,piece],i)=>{
+  add('입력 토큰 '+(i+1)+' / '+T.length,'prompt_tokens['+i+']에 '+id+'가 들어간다. 한 번의 tokenize 호출 결과를 학습용으로 칸별로 펼쳐 보인다.',{step:6,vector:i+1,active:i});
+});
+add('실행 문맥을 준비한다','ctx는 같은 모델을 참조한다. 요청 n_ctx=15에서 실제 용량 256으로 올림하고 KV 캐시와 출력 공간을 준비한다.',{step:7,active:-1,kv:'0개 입력 처리'});
+add('greedy 선택 규칙을 준비한다','샘플러 체인을 만들고 최고 점수를 고르는 규칙을 추가한다.',{step:8});
+group('입력 출력 · 프롬프트 복원');
+T.forEach(([id,piece],i)=>add('프롬프트 출력 '+(i+1)+' / '+T.length,'ID '+id+' → '+JSON.stringify(piece)+' → stdout. 이 for문은 입력을 화면에 복원한다.',{step:9,echo:i+1,active:i,buf:JSON.stringify(piece)}));
+group('첫 배치 · 입력 13개');
+add('첫 배치를 벡터에 연결한다','batch.token은 prompt_tokens의 첫 칸을 가리킨다. 인코더 검사 결과 false이므로 13개 ID가 첫 decode로 들어간다.',{step:10,bat:'13개 · prompt_tokens',active:-1,buf:'—',pos:0,decoded:0});
+add('인코더 조건을 검사한다','Qwen2.5는 디코더 전용이다. 첫 배치를 유지하고 생성 루프로 진입한다.',{step:11});
+G.forEach(([id,piece],i)=>{
+  const [before,n,count]=data.batches[i],score=Number(data.scores[i][1]).toFixed(3);
+  group('생성 '+(i+1)+'회 · '+JSON.stringify(piece));
+  add('반복 '+(i+1)+' · 입력 확인',before+' + '+n+' < 16이 참이다. 이번에 모델이 읽을 입력은 '+n+'토큰이다.',{step:12,pos:before,decoded:count,buf:'—'});
+  add('decode가 이번 배치를 계산한다','Q·K·V, Attention, FFN을 거쳐 마지막 위치의 점수가 준비된다. 반환값은 0. 성공 후 n_pos += batch.n_tokens를 실행한다.',{step:13,pos:before+n,kv:(before+n)+'개 입력 처리',score:'logits 준비'});
+  add('greedy가 토큰 ID '+id+'을 고른다','이번 출력 위치에서 선택된 후보의 실제 logit은 '+score+'이다. logit은 정규화 전 점수다.',{step:14,picked:id,score:id+' → '+score,bat:i===0?'13개 · prompt_tokens':'1개 · ID '+id+' (같은 주소)'});
+  add('선택한 ID가 종료 토큰인지 검사한다','llama_vocab_is_eog가 false를 반환하므로 새 토큰을 화면에 출력하는 경로로 진행한다.',{step:15});
+  add('ID '+id+'을 텍스트로 복원한다','EOG 검사 결과 false. token_to_piece가 '+JSON.stringify(piece)+'를 buf에 쓰고 '+new TextEncoder().encode(piece).length+'바이트를 반환한다.',{step:16,buf:JSON.stringify(piece)});
+  add('생성 조각을 콘솔에 덧붙인다','printf와 fflush를 지나 '+JSON.stringify(piece)+'가 보인다. prompt_tokens의 원래 13칸은 그대로다.',{step:17,gen:i+1});
+  add('방금 고른 토큰을 다음 입력으로 건넨다','batch.token은 &new_token_id를 가리키고 n_tokens는 1이다. 출력한 새 토큰 수 n_decode를 증가시킨다.',{step:18,bat:'1개 · ID '+id,decoded:i+1});
+});
+group('종료 · 완성된 문장');
+add('생성 한도에 도달한다','15 + 1 < 16은 거짓이다. 마지막에 출력한 ID를 다시 평가하기 전에 루프가 끝난다.',{step:12,buf:'—'});
+add('최종 stdout · 정상 종료','줄바꿈을 쓰고 성능 통계를 stderr로 출력한다. smpl → ctx → model을 해제하고 main이 0을 반환한다.',{step:19,kv:'ctx 해제',score:'ctx 해제',bat:'평가 종료',buf:'—'});
+let frame=0,timer=null;
+
+// Lines are excerpted from the same numbered simple.cpp snapshot as the inspector.
+// A frame can summarize several statements, or revisit one call for successive IDs.
+const playbackSource = [
+  {lines:[20,71,72,73,74,75], hot:[72], value:()=> 'prompt = '+JSON.stringify(P)},
+  {lines:[82,86,87,89], hot:[82,86,87], value:()=> 'model_params.n_gpu_layers = 99'},
+  {lines:[86,87,89,91], hot:[89], value:()=> 'model → Qwen2.5-1.5B-Instruct FP16'},
+  {lines:[89,96,100], hot:[96], value:()=> 'model → vocab (어휘 참조)'},
+  {lines:[96,100,103,104], hot:[100], value:()=> 'llama_tokenize → −13    n_prompt = 13'},
+  {lines:[100,103,104], hot:[103], value:()=> 'prompt_tokens.size() = 13    초기 원소 = 0'},
+  {lines:[100,103,104,105,106,107], hot:[104], value:s=>
+    '한 번의 호출 결과 · prompt_tokens['+s.active+'] = '+T[s.active][0]+'  ('+JSON.stringify(T[s.active][1])+')'},
+  {lines:[111,113,115,117,119,121], hot:[119], value:()=> 'ctx_params.n_ctx = 15 → ctx->cparams.n_ctx = 256'},
+  {lines:[128,129,130,132], hot:[130,132], value:()=> 'smpl = greedy 규칙을 담은 샘플러 체인'},
+  {lines:[136,137,138,143,144,145], hot:[138,143,144], value:s=>{
+    const [id,piece]=T[s.active];
+    return 'prompt_tokens['+s.active+'] → id = '+id+' → '+JSON.stringify(piece)+' → stdout';
+  }},
+  {lines:[149,151,152], hot:[149], value:()=> 'batch.token = prompt_tokens.data()    batch.n_tokens = 13'},
+  {lines:[149,151,152,162,163], hot:[151], value:()=> 'llama_model_has_encoder(model) = false → batch 유지'},
+  {lines:[168,169,171,173], hot:[171], value:s=>{
+    const size=s.decoded===0?T.length:1, limit=T.length+G.length;
+    return s.pos+' + '+size+' < '+limit+' → '+(s.pos+size<limit?'true · 계속':'false · 루프 종료');
+  }},
+  {lines:[171,173,174,175,176,178], hot:[173,178], value:s=>
+    'llama_decode → 0    batch.n_tokens = '+(s.decoded===0?T.length:1)+'    n_pos = '+s.pos},
+  {lines:[178,182,185], hot:[182], value:s=>'idx = −1    new_token_id = '+s.picked+'    '+s.score+' (logit)'},
+  {lines:[182,185,186,187], hot:[185], value:s=>'llama_vocab_is_eog(vocab, '+s.picked+') = false'},
+  {lines:[189,190,191,195], hot:[190,195], value:s=>{
+    const piece=G[s.gen][1];
+    return 'ID '+s.picked+' → buf = '+JSON.stringify(piece)+'    n = '+new TextEncoder().encode(piece).length+'바이트';
+  }},
+  {lines:[190,195,196,197,200], hot:[196,197], value:s=>'stdout에 추가한 조각  '+JSON.stringify(G[s.gen-1][1])},
+  {lines:[196,197,200,202], hot:[200,202], value:s=>
+    'batch.token[0] = '+s.picked+'    batch.n_tokens = 1    n_decode = '+s.decoded},
+  {lines:[206,208,210,211,214,215,218,219,220,222], hot:[206,214,215,218,219,220,222], value:()=> '생성 3토큰 · 자원 해제 · main 반환값 0'}
+];
+let displayedSourceStep=-1;
+function renderPlaybackSource(state){
+  if(!$('follow-toggle').checked) return;
+  const view=playbackSource[state.step];
+  if(displayedSourceStep!==state.step){
+    $('follow-loc').textContent=view.hot.map(n=>'L'+n).join(' · ');
+    const indent=Math.min(...view.lines.map(n=>data.lines[n-1].search(/\S/)));
+    $('follow-list').innerHTML=view.lines.map(number=>{
+      const active=view.hot.includes(number);
+      const statement=data.lines[number-1].slice(indent);
+      return '<div class="trace-row'+(active?' trace-hot':'')+'" data-line="'+number+'"><span class="trace-num">'+number+'</span><code>'+codeColour(statement)+'</code></div>';
+    }).join('');
+    displayedSourceStep=state.step;
+  }
+  $('follow-value').textContent=view.value(state);
+}
+$('follow-toggle').addEventListener('change',()=>{
+  const enabled=$('follow-toggle').checked;
+  $('follow-pane').hidden=!enabled;
+  $('workbench').classList.toggle('with-code',enabled);
+  if(enabled) renderPlaybackSource(frames[frame]);
+});
+function paintFrame(n){
+  frame=Math.max(0,Math.min(n,frames.length-1));const s=frames[frame];
+  renderPlaybackSource(s);
+  $('hr-frame').hidden=s.step!==13;
+  if(s.step===13) $('hr-frame').href='hr-ggml-graph-lecture.html?call='+(s.decoded+1)+'#walk';
+  $('slider').value=frame;$('findex').textContent=(frame+1)+' / '+frames.length;
+  $('frame-title').textContent=s.title;$('frame-note').textContent=s.note;
+  $('labjump').value=groups.filter(g=>g[0]<=frame).at(-1)[0];
+  $('vec').innerHTML=s.vector<0?'<span class="state-note">선언 전</span>':T.map(([id,p],i)=>'<div class="cell '+(i>=s.vector?'wait ':'')+(i===s.active?' now':'')+'"><small>['+i+']</small><b>'+(i<s.vector?id:0)+'</b><code>'+(i<s.vector?esc(p.replaceAll(' ','␠')):'대기')+'</code></div>').join('');
+  const variables=[['batch',s.bat],['n_pos',s.pos],['n_decode',s.decoded],['new_token_id',s.picked],['ctx / KV',s.kv],['logits',s.score],['buf',s.buf]];
+  $('vars').innerHTML=variables.map(([k,value])=>'<dt>'+esc(k)+'</dt><dd>'+esc(value)+'</dd>').join('');
+  $('echo-out').textContent=T.slice(0,s.echo).map(x=>x[1]).join('');$('gen-out').textContent=genpieces.slice(0,s.gen).join('')+(frame===frames.length-1?'\n':'');
+  $('back').disabled=frame===0;$('forward').disabled=frame===frames.length-1;
+  if(frame===frames.length-1)pause();
+}
+function pause(){if(timer!==null)clearInterval(timer);timer=null;$('play').textContent='▶ 재생';$('play').setAttribute('aria-pressed','false');}
+function seek(n){pause();paintFrame(n);}
+$('slider').max=frames.length-1;$('slider').oninput=e=>seek(Number(e.target.value));
+groups.forEach(([i,title])=>$('labjump').add(new Option(title,i)));
+$('labjump').onchange=e=>seek(Number(e.target.value));$('back').onclick=()=>seek(frame-1);$('forward').onclick=()=>seek(frame+1);$('reset').onclick=()=>seek(0);
+$('play').onclick=()=>{if(timer!==null){pause();return;}if(frame===frames.length-1)paintFrame(0);$('play').textContent='Ⅱ 일시정지';$('play').setAttribute('aria-pressed','true');timer=setInterval(()=>paintFrame(frame+1),900);};
+$('to-value').onclick=()=>{const n=frames.findIndex(f=>f.step===current);seek(n);$('lab').scrollIntoView({behavior:'instant'});};
+$('to-code').onclick=()=>{pause();pickStage(frames[frame].step,true);};
+paintFrame(0);rawShow('paste');
+function returnToDecode(){if(location.hash==='#decode')pickStage(13,true);}
+window.addEventListener('hashchange',returnToDecode);returnToDecode();
+
+
+</script></body></html>

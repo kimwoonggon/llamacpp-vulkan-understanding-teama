@@ -1,0 +1,82 @@
+---
+source_file: ""
+type: "code"
+community: "llama-context · 4"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/llama-context__4
+---
+
+# llama_context
+
+## Connections
+- [[llama-context.cpp]] - `imports` [EXTRACTED]
+- [[llama_attach_threadpool()]] - `references` [EXTRACTED]
+- [[llama_copy_state_data()]] - `references` [EXTRACTED]
+- [[llama_decode()]] - `references` [EXTRACTED]
+- [[llama_detach_threadpool()]] - `references` [EXTRACTED]
+- [[llama_encode()]] - `references` [EXTRACTED]
+- [[llama_free()]] - `references` [EXTRACTED]
+- [[llama_get_ctx_other()]] - `references` [EXTRACTED]
+- [[llama_get_embeddings()]] - `references` [EXTRACTED]
+- [[llama_get_embeddings_ith()]] - `references` [EXTRACTED]
+- [[llama_get_embeddings_layer_inp()]] - `references` [EXTRACTED]
+- [[llama_get_embeddings_nextn()]] - `references` [EXTRACTED]
+- [[llama_get_embeddings_nextn_ith()]] - `references` [EXTRACTED]
+- [[llama_get_embeddings_seq()]] - `references` [EXTRACTED]
+- [[llama_get_logits()]] - `references` [EXTRACTED]
+- [[llama_get_logits_ith()]] - `references` [EXTRACTED]
+- [[llama_get_model()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_candidates_count_ith()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_candidates_ith()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_logits_count_ith()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_logits_ith()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_probs_count_ith()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_probs_ith()]] - `references` [EXTRACTED]
+- [[llama_get_sampled_token_ith()]] - `references` [EXTRACTED]
+- [[llama_get_state_size()]] - `references` [EXTRACTED]
+- [[llama_init_from_model()]] - `references` [EXTRACTED]
+- [[llama_load_session_file()]] - `references` [EXTRACTED]
+- [[llama_n_batch()]] - `references` [EXTRACTED]
+- [[llama_n_ctx()]] - `references` [EXTRACTED]
+- [[llama_n_ctx_seq()]] - `references` [EXTRACTED]
+- [[llama_n_rs_seq()]] - `references` [EXTRACTED]
+- [[llama_n_seq_max()]] - `references` [EXTRACTED]
+- [[llama_n_threads()]] - `references` [EXTRACTED]
+- [[llama_n_threads_batch()]] - `references` [EXTRACTED]
+- [[llama_n_ubatch()]] - `references` [EXTRACTED]
+- [[llama_new_context_with_model()]] - `references` [EXTRACTED]
+- [[llama_perf_context()]] - `references` [EXTRACTED]
+- [[llama_perf_context_print()]] - `references` [EXTRACTED]
+- [[llama_perf_context_reset()]] - `references` [EXTRACTED]
+- [[llama_pooling_type()]] - `references` [EXTRACTED]
+- [[llama_save_session_file()]] - `references` [EXTRACTED]
+- [[llama_set_abort_callback()]] - `references` [EXTRACTED]
+- [[llama_set_adapter_cvec()]] - `references` [EXTRACTED]
+- [[llama_set_adapters_lora()]] - `references` [EXTRACTED]
+- [[llama_set_causal_attn()]] - `references` [EXTRACTED]
+- [[llama_set_embeddings()]] - `references` [EXTRACTED]
+- [[llama_set_embeddings_layer_inp()]] - `references` [EXTRACTED]
+- [[llama_set_embeddings_nextn()]] - `references` [EXTRACTED]
+- [[llama_set_n_threads()]] - `references` [EXTRACTED]
+- [[llama_set_nextn_layer_offset()]] - `references` [EXTRACTED]
+- [[llama_set_sampler()]] - `references` [EXTRACTED]
+- [[llama_set_state_data()]] - `references` [EXTRACTED]
+- [[llama_set_warmup()]] - `references` [EXTRACTED]
+- [[llama_state_get_data()]] - `references` [EXTRACTED]
+- [[llama_state_get_size()]] - `references` [EXTRACTED]
+- [[llama_state_load_file()]] - `references` [EXTRACTED]
+- [[llama_state_save_file()]] - `references` [EXTRACTED]
+- [[llama_state_seq_get_data()]] - `references` [EXTRACTED]
+- [[llama_state_seq_get_data_ext()]] - `references` [EXTRACTED]
+- [[llama_state_seq_get_size()]] - `references` [EXTRACTED]
+- [[llama_state_seq_get_size_ext()]] - `references` [EXTRACTED]
+- [[llama_state_seq_load_file()]] - `references` [EXTRACTED]
+- [[llama_state_seq_save_file()]] - `references` [EXTRACTED]
+- [[llama_state_seq_set_data()]] - `references` [EXTRACTED]
+- [[llama_state_seq_set_data_ext()]] - `references` [EXTRACTED]
+- [[llama_state_set_data()]] - `references` [EXTRACTED]
+- [[llama_synchronize()]] - `references` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/llama-context__4

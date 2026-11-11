@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "llama-simple | CPU",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Debug/llama-simple.exe",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-m", "${workspaceFolder}/models/qwen2.5-1.5b-instruct-fp16.gguf",
+                "-ngl", "0", "-n", "3",
+                "The capital of South Korea is Seoul. The capital of France is"
+            ],
+            "console": "integratedTerminal",
+            "environment": [{ "name": "GGML_VK_VISIBLE_DEVICES", "value": "0" }]
+        },
+        {
+            "name": "llama-simple | Vulkan",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Debug/llama-simple.exe",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-m", "${workspaceFolder}/models/qwen2.5-1.5b-instruct-fp16.gguf",
+                "-ngl", "99", "-n", "3",
+                "The capital of South Korea is Seoul. The capital of France is"
+            ],
+            "console": "integratedTerminal",
+            "environment": [{ "name": "GGML_VK_VISIBLE_DEVICES", "value": "0" }]
+        }
+    ]
+}

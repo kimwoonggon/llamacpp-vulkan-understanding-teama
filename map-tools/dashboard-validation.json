@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "viewerVersion": "2.9.8",
+  "projectRoot": "D:\\llama-vulkan-lab\\llama.cpp",
+  "nodes": 42,
+  "edges": 67,
+  "sourcePanel": true,
+  "sourceFile": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+  "sourceBytes": 873715,
+  "scope": "12 selected source files",
+  "pageErrors": []
+}

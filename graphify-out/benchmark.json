@@ -1,0 +1,35 @@
+{
+  "corpus_tokens": 215938,
+  "corpus_words": 161954,
+  "nodes": 2503,
+  "edges": 6381,
+  "avg_query_tokens": 1627,
+  "reduction_ratio": 132.7,
+  "per_question": [
+    {
+      "question": "llama_decode",
+      "query_tokens": 1607,
+      "reduction": 134.4
+    },
+    {
+      "question": "ggml_mul_mat",
+      "query_tokens": 1634,
+      "reduction": 132.2
+    },
+    {
+      "question": "ggml_vk_mul_mat",
+      "query_tokens": 1635,
+      "reduction": 132.1
+    },
+    {
+      "question": "ggml_backend_sched",
+      "query_tokens": 1626,
+      "reduction": 132.8
+    },
+    {
+      "question": "ggml_vk_get_dequantize_mul_mat_vec",
+      "query_tokens": 1637,
+      "reduction": 131.9
+    }
+  ]
+}

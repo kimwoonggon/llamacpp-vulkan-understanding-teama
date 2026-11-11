@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "checked": [
+    {
+      "label": "llama_decode()",
+      "line": 4326,
+      "file": "src/llama-context.cpp"
+    },
+    {
+      "label": "ggml_mul_mat()",
+      "line": 3341,
+      "file": "ggml/src/ggml.c"
+    },
+    {
+      "label": "ggml_vk_mul_mat()",
+      "line": 6980,
+      "file": "ggml/src/ggml-vulkan/ggml-vulkan.cpp"
+    }
+  ],
+  "unresolvedExample": "DescriptorSetLayout",
+  "evidence": {
+    "file": "ggml/src/ggml-vulkan/ggml-vulkan-types.h",
+    "line": 789
+  },
+  "localCount": 17,
+  "mapped": 2177,
+  "unresolved": 326,
+  "pageErrors": [],
+  "offline": true,
+  "mobile": {
+    "scroll": 390,
+    "width": 390
+  },
+  "canvasNodeClick": "ggml_vk_build_graph()"
+}

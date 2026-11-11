@@ -1,0 +1,1291 @@
+{
+  "version": "1.0.0",
+  "kind": "codebase",
+  "project": {
+    "name": "Qwen2.5 F16: llama_decode에서 Vulkan까지",
+    "languages": [
+      "cpp",
+      "c",
+      "glsl"
+    ],
+    "frameworks": [
+      "GGML",
+      "Vulkan"
+    ],
+    "description": "e6ab7c1의 12개 선택 파일을 분석한 팀 발표용 부분 그래프. 전체 llama.cpp 지도가 아니며 실제 실행을 관측하지 않았다.",
+    "analyzedAt": "2026-11-10T14:26:22.031093+00:00",
+    "gitCommitHash": "e6ab7c1a41054a888ada952eab4c886444c2f5ad"
+  },
+  "nodes": [
+    {
+      "id": "file:examples/simple/simple.cpp",
+      "type": "file",
+      "name": "simple.cpp",
+      "filePath": "examples/simple/simple.cpp",
+      "summary": "llama-simple이 모델 경로, GPU 레이어 수와 생성 길이를 준비합니다. / GPU 레이어 설정을 담은 model_params로 모델을 읽습니다. / 모델 vocabulary로 문자열을 token ID 배열로 바꿉니다. / 모델을 참조하는 추론 상태와 실행 설정을 만듭니다. / 입력 토큰 배열을 decode에 넘길 batch로 묶습니다. / logits에서 다음 토큰을 고르고 문자열로 출력합니다.",
+      "tags": [
+        "ss",
+        "cpp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ggml/src/ggml-backend.cpp",
+      "type": "file",
+      "name": "ggml-backend.cpp",
+      "filePath": "ggml/src/ggml-backend.cpp",
+      "summary": "새 그래프에 실행 backend와 split별 메모리 계획을 준비합니다. / 가중치 버퍼 위치와 연산 지원 여부를 사용해 backend 후보를 정합니다. / 필요한 backend 간 복사 후 각 split의 실행을 요청합니다. / 공통 backend API가 등록된 graph_compute 함수를 호출합니다.",
+      "tags": [
+        "lead",
+        "cpp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+      "type": "file",
+      "name": "ggml-vulkan-common.h",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+      "summary": "buffer와 pipeline을 바인딩하고 workgroup 수로 dispatch를 기록합니다.",
+      "tags": [
+        "lead",
+        "c"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ggml/src/ggml-vulkan/ggml-vulkan-types.h",
+      "type": "file",
+      "name": "ggml-vulkan-types.h",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan-types.h",
+      "summary": "Vulkan matvec 상수와 장치·pipeline 자료형 정의.",
+      "tags": [
+        "lead",
+        "c"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "type": "file",
+      "name": "ggml-vulkan.cpp",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "summary": "dtype, 차원, 연속성 등으로 Vulkan이 이 연산을 처리할 수 있는지 검사합니다. / 이미 생성된 GGML 그래프를 받아 Vulkan 실행을 준비합니다. / MUL_MAT switch 분기가 Vulkan 행렬곱 함수로 연결됩니다. / 특수 분기 다음에 출력 열 수와 dtype 조건으로 구현 계열을 고릅니다. / 입력 배치와 dtype에 맞는 matvec pipeline을 찾습니다. / dtype와 장치 기능, 연속성에 따라 변환과 matmul 변형을 고릅니다. / 장치 특성과 M/K, 입력 dtype, 열 수로 pipeline 배열을 고릅니다. / 기록한 Vulkan command buffer를 제출할 목록으로 묶습니다.",
+      "tags": [
+        "lead",
+        "cpp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp",
+      "type": "file",
+      "name": "mul_mat_vec.comp",
+      "filePath": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp",
+      "summary": "선택된 변형의 GPU invocation이 실제 계산에 진입합니다.",
+      "tags": [
+        "lead",
+        "comp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+      "type": "file",
+      "name": "vulkan-shaders-gen.cpp",
+      "filePath": "ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+      "summary": "생성기가 dtype별 이름을 GLSL 원본 및 정의와 연결합니다.",
+      "tags": [
+        "lead",
+        "cpp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ggml/src/ggml.c",
+      "type": "file",
+      "name": "ggml.c",
+      "filePath": "ggml/src/ggml.c",
+      "summary": "출력 shape와 op, 두 입력 포인터를 기록합니다.",
+      "tags": [
+        "hr",
+        "c"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/llama-context.cpp",
+      "type": "file",
+      "name": "llama-context.cpp",
+      "filePath": "src/llama-context.cpp",
+      "summary": "공개 API가 llama_context::decode(batch)로 실행을 넘깁니다. / 그래프 조건이 같으면 재사용하고, 다르면 새 그래프와 버퍼 계획을 만듭니다. / 계산한 logits를 CPU 쪽 결과 버퍼로 비동기 복사 요청합니다.",
+      "tags": [
+        "hr",
+        "cpp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/llama-graph.cpp",
+      "type": "file",
+      "name": "llama-graph.cpp",
+      "filePath": "src/llama-graph.cpp",
+      "summary": "가중치 표현에 따라 통합 QKV 또는 별도 Q/K/V 행렬곱을 만듭니다. / 공통 투영 함수가 ggml_mul_mat로 기본 행렬곱 노드를 만듭니다.",
+      "tags": [
+        "hr",
+        "cpp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/llama-model.cpp",
+      "type": "file",
+      "name": "llama-model.cpp",
+      "filePath": "src/llama-model.cpp",
+      "summary": "모델의 build_arch_graph를 호출하고 출력 정보를 설정합니다.",
+      "tags": [
+        "hr",
+        "cpp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/models/qwen2.cpp",
+      "type": "file",
+      "name": "qwen2.cpp",
+      "filePath": "src/models/qwen2.cpp",
+      "summary": "Qwen2 구현에서 embedding과 반복 Transformer 층을 조립합니다. / 정규화 출력을 FFN의 up/gate와 down 투영으로 연결합니다.",
+      "tags": [
+        "hr",
+        "cpp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:entry",
+      "type": "concept",
+      "name": "실행 옵션과 백엔드 로드",
+      "filePath": "examples/simple/simple.cpp",
+      "lineRange": [
+        14,
+        24
+      ],
+      "summary": "llama-simple이 모델 경로, GPU 레이어 수와 생성 길이를 준비합니다. ngl 기본값은 99입니다. 81행에서 ggml_backend_load_all()을 호출합니다. 이 simple 예제의 인자 목록에 --device는 없습니다. GPU 빌드 및 장치 지원 여부는 실행 로그로 확인해야 합니다.",
+      "tags": [
+        "ss",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:load",
+      "type": "concept",
+      "name": "GGUF 모델 로드",
+      "filePath": "examples/simple/simple.cpp",
+      "lineRange": [
+        85,
+        96
+      ],
+      "summary": "GPU 레이어 설정을 담은 model_params로 모델을 읽습니다. GGUF는 메타데이터와 텐서를 담습니다. 파일명 F16만으로 모든 텐서가 F16이라고 단정하지 않습니다. 실제 dtype과 shape는 로드된 텐서 또는 GGUF 정보에서 확인합니다.",
+      "tags": [
+        "ss",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:tokens",
+      "type": "concept",
+      "name": "프롬프트 토큰화",
+      "filePath": "examples/simple/simple.cpp",
+      "lineRange": [
+        98,
+        107
+      ],
+      "summary": "모델 vocabulary로 문자열을 token ID 배열로 바꿉니다. 먼저 NULL 출력으로 필요한 개수를 얻고, 배열을 확보한 다음 실제 토큰화를 호출합니다.",
+      "tags": [
+        "ss",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:context",
+      "type": "concept",
+      "name": "추론 context 준비",
+      "filePath": "examples/simple/simple.cpp",
+      "lineRange": [
+        111,
+        119
+      ],
+      "summary": "모델을 참조하는 추론 상태와 실행 설정을 만듭니다. 이 예제는 n_ctx=n_prompt+n_predict-1, n_batch=n_prompt입니다. llama_context와 텐서 메타데이터를 만드는 ggml_context는 다른 객체입니다.",
+      "tags": [
+        "ss",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:batch",
+      "type": "concept",
+      "name": "프롬프트 batch 준비",
+      "filePath": "examples/simple/simple.cpp",
+      "lineRange": [
+        148,
+        150
+      ],
+      "summary": "입력 토큰 배열을 decode에 넘길 batch로 묶습니다. 첫 호출은 프롬프트 묶음입니다. 이후 생성 루프에서는 199행에서 샘플링한 한 토큰으로 다음 batch를 만듭니다.",
+      "tags": [
+        "ss",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:decode",
+      "type": "concept",
+      "name": "llama_decode() 경계",
+      "filePath": "src/llama-context.cpp",
+      "lineRange": [
+        4326,
+        4335
+      ],
+      "summary": "공개 API가 llama_context::decode(batch)로 실행을 넘깁니다. SS님은 호출 직전의 batch 조건을, HR님은 내부 ubatch와 그래프 구성을 연결합니다. 내부 decode는 1704행에서 시작하고, 1887행에서 process_ubatch를 호출합니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:reuse",
+      "type": "concept",
+      "name": "process_ubatch(): 생성 또는 재사용",
+      "filePath": "src/llama-context.cpp",
+      "lineRange": [
+        1399,
+        1439
+      ],
+      "summary": "그래프 조건이 같으면 재사용하고, 다르면 새 그래프와 버퍼 계획을 만듭니다. 재사용 조건은 graph_reuse_disable, 활성 결과 객체, can_reuse(gparams)입니다. 그래프 재사용과 과거 attention K/V 상태의 재사용은 별개입니다. 이후 set_inputs와 graph_compute는 매 요청 수행합니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:model_graph",
+      "type": "concept",
+      "name": "모델별 그래프 진입",
+      "filePath": "src/llama-model.cpp",
+      "lineRange": [
+        2762,
+        2779
+      ],
+      "summary": "모델의 build_arch_graph를 호출하고 출력 정보를 설정합니다. Qwen2 아키텍처 객체의 가상 메서드로 분기합니다. 모델 선택은 GGUF 아키텍처에 따라 이뤄지고 파일명으로 분기하지 않습니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:qwen",
+      "type": "concept",
+      "name": "Qwen2.5 Transformer 그래프",
+      "filePath": "src/models/qwen2.cpp",
+      "lineRange": [
+        49,
+        85
+      ],
+      "summary": "Qwen2 구현에서 embedding과 반복 Transformer 층을 조립합니다. 이 커밋의 Qwen2.5는 Qwen2 아키텍처 구현을 봅니다. 108~132행에서 residual과 FFN을 연결하고, 138~153행에서 최종 norm, lm_head, logits와 forward graph를 만듭니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:qkv",
+      "type": "concept",
+      "name": "QKV 투영의 두 경로",
+      "filePath": "src/llama-graph.cpp",
+      "lineRange": [
+        1648,
+        1664
+      ],
+      "summary": "가중치 표현에 따라 통합 QKV 또는 별도 Q/K/V 행렬곱을 만듭니다. layer.wqkv가 있으면 하나의 투영 후 view로 나눕니다. 없으면 1696행부터 별도 투영을 수행합니다. 실제 GGUF를 확인하지 않고 Q/K/V가 항상 세 개의 MUL_MAT이라고 단정하지 않습니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:ffn",
+      "type": "concept",
+      "name": "FFN up/gate/down",
+      "filePath": "src/models/qwen2.cpp",
+      "lineRange": [
+        119,
+        126
+      ],
+      "summary": "정규화 출력을 FFN의 up/gate와 down 투영으로 연결합니다. build_ffn은 llama-graph.cpp:1748부터 정의됩니다. Qwen2는 SiLU 및 병렬 gate 구성을 전달합니다. 대표 사례는 첫 층 FFN up의 GGML_OP_MUL_MAT로 고정할 수 있습니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:lora_mm",
+      "type": "concept",
+      "name": "build_lora_mm()",
+      "filePath": "src/llama-graph.cpp",
+      "lineRange": [
+        1514,
+        1522
+      ],
+      "summary": "공통 투영 함수가 ggml_mul_mat로 기본 행렬곱 노드를 만듭니다. LoRA가 없는 기본 조건에서도 이 함수를 사용합니다. 이름에 LoRA가 있어도 기본 호출은 ggml_mul_mat(ctx0,w,cur)입니다. LoRA가 있으면 추가 행렬곱과 덧셈을 붙입니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:mulmat_node",
+      "type": "concept",
+      "name": "GGML_OP_MUL_MAT 노드",
+      "filePath": "ggml/src/ggml.c",
+      "lineRange": [
+        3341,
+        3356
+      ],
+      "summary": "출력 shape와 op, 두 입력 포인터를 기록합니다. 이 함수는 숫자를 곱하지 않습니다. 일반 2D 표기에서 W=[K,M], X=[K,N], Y=[M,N]이며 GGML 축 순서입니다. src[0]=W, src[1]=X를 다음 담당자에게 전달합니다.",
+      "tags": [
+        "hr",
+        "inference"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:alloc",
+      "type": "concept",
+      "name": "그래프 배정·분할·할당",
+      "filePath": "ggml/src/ggml-backend.cpp",
+      "lineRange": [
+        1992,
+        2007
+      ],
+      "summary": "새 그래프에 실행 backend와 split별 메모리 계획을 준비합니다. alloc_graph는 split_graph를 호출합니다. split_graph:1066부터 배정 전파, backend 우선순위, 복사 필요성과 분할 경계를 정합니다. GPU 레이어 설정만으로 모든 노드가 Vulkan으로 확정되지는 않습니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:assign",
+      "type": "concept",
+      "name": "가중치 위치와 backend 정책",
+      "filePath": "ggml/src/ggml-backend.cpp",
+      "lineRange": [
+        951,
+        983
+      ],
+      "summary": "가중치 버퍼 위치와 연산 지원 여부를 사용해 backend 후보를 정합니다. 현재 버퍼, view, 입력 플래그를 먼저 확인합니다. WEIGHTS 입력이 있으면 그 버퍼의 backend를 선호합니다. host 가중치의 offload 정책 등 예외가 있고, 매번 속도를 측정해 고르는 기능은 아닙니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:supports",
+      "type": "concept",
+      "name": "Vulkan MUL_MAT 지원 검사",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        15132,
+        15159
+      ],
+      "summary": "dtype, 차원, 연속성 등으로 Vulkan이 이 연산을 처리할 수 있는지 검사합니다. F16은 허용 dtype 중 하나입니다. ne[3] 불일치, 지원되지 않는 stride/dtype 조합은 거절할 수 있습니다. false는 scheduler가 다른 backend를 검토하는 근거이며 이 함수가 CPU 계산을 직접 실행하지 않습니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:split_exec",
+      "type": "concept",
+      "name": "split 실행과 입력 복사",
+      "filePath": "ggml/src/ggml-backend.cpp",
+      "lineRange": [
+        1789,
+        1806
+      ],
+      "summary": "필요한 backend 간 복사 후 각 split의 실행을 요청합니다. llama_context::graph_compute(2569행) → sched_graph_compute_async(2017행) → compute_splits(1646행)를 거칩니다. 동일 그래프에 CPU와 Vulkan split이 함께 존재할 수 있습니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:backend_call",
+      "type": "concept",
+      "name": "backend 함수 포인터 호출",
+      "filePath": "ggml/src/ggml-backend.cpp",
+      "lineRange": [
+        461,
+        468
+      ],
+      "summary": "공통 backend API가 등록된 graph_compute 함수를 호출합니다. Vulkan 구현은 ggml-vulkan.cpp:14821~14837의 interface에 ggml_backend_vk_graph_compute로 등록됩니다. 호출 관계가 함수 포인터를 통해 이어지는 지점입니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:vk_graph",
+      "type": "concept",
+      "name": "Vulkan graph 실행 입구",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        13888,
+        13921
+      ],
+      "summary": "이미 생성된 GGML 그래프를 받아 Vulkan 실행을 준비합니다. 노드를 순회하면서 fusion, dispatch 기록, 제출 경계를 처리합니다. ggml_vk_build_graph는 GGML 모델 그래프를 새로 만드는 함수가 아닙니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:vk_op",
+      "type": "concept",
+      "name": "GGML 연산별 Vulkan 연결",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        12388,
+        12400
+      ],
+      "summary": "MUL_MAT switch 분기가 Vulkan 행렬곱 함수로 연결됩니다. 이미 받은 tensor의 op를 검사합니다. 동일 GGML_OP_MUL_MAT도 shape, dtype, 메모리 배치에 따라 구현이 달라집니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:vk_select",
+      "type": "concept",
+      "name": "matvec / matmul 상위 선택",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        7030,
+        7051
+      ],
+      "summary": "특수 분기 다음에 출력 열 수와 dtype 조건으로 구현 계열을 고릅니다. 앞선 큰 buffer 분할, FWHT, permutation, noncontiguous, 한 행 결과 swap 조건을 먼저 봅니다. 일반 조건에서 N=1 또는 N≤8이면서 높은 차원 batch가 1이면 matvec 후보입니다. max_cols 상수는 ggml-vulkan-types.h:379에서 8입니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:matvec",
+      "type": "concept",
+      "name": "F16 matvec 실행 준비",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        6433,
+        6458
+      ],
+      "summary": "입력 배치와 dtype에 맞는 matvec pipeline을 찾습니다. F16 가중치에는 Q8_1 활성값 matvec 조합이 없어 해당 후보가 nullptr이면 원래 src1 dtype 경로로 돌아옵니다. 이 조건에서 F16×F32→F32의 명시적 예를 설명할 수 있습니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:matmul",
+      "type": "concept",
+      "name": "일반 matmul 실행 준비",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        6083,
+        6132
+      ],
+      "summary": "dtype와 장치 기능, 연속성에 따라 변환과 matmul 변형을 고릅니다. ggml_vk_get_mul_mat_mat_pipeline_map, guess_matmul_pipeline_map, guess_split_k로 이어집니다. coopmat2 등 조건에 따라 F32 입력의 F16 변환이 추가될 수 있으므로 실제 선택 shader 이름은 장치와 로그로 확인합니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:pipeline",
+      "type": "concept",
+      "name": "matvec dtype·workgroup 선택",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        5352,
+        5376
+      ],
+      "summary": "장치 특성과 M/K, 입력 dtype, 열 수로 pipeline 배열을 고릅니다. F16×F32→F32 pipeline 이름은 2732행의 mul_mat_vec_f16_f32_f32입니다. NVIDIA/Intel 조건에서는 작은 M과 충분한 K일 때 큰 workgroup을 선호하는 휴리스틱이 있습니다. 실제 reduction 변형까지 관측한 것은 아닙니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:shader",
+      "type": "concept",
+      "name": "pipeline 이름과 shader 원본",
+      "filePath": "ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+      "lineRange": [
+        774,
+        787
+      ],
+      "summary": "생성기가 dtype별 이름을 GLSL 원본 및 정의와 연결합니다. F16 일반 matvec은 mul_mat_vec.comp를 사용합니다. subgroup/shmem 변형은 빌드 정의가 다릅니다. 이는 빌드 시 매핑이며 매 decode마다 GLSL을 컴파일한다는 뜻이 아닙니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:shader_main",
+      "type": "concept",
+      "name": "mul_mat_vec.comp 계산 입구",
+      "filePath": "ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp",
+      "lineRange": [
+        248,
+        264
+      ],
+      "summary": "선택된 변형의 GPU invocation이 실제 계산에 진입합니다. 여기서부터 스레드별 reduction과 타일 계산을 추가 분석할 수 있습니다. 이번 범위에서는 원본 위치와 입출력·dispatch 연결을 우선 확인합니다. CPU 함수 호출과 다른 GPU 실행 단계입니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:dispatch",
+      "type": "concept",
+      "name": "bind와 dispatch 명령 기록",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+      "lineRange": [
+        249,
+        279
+      ],
+      "summary": "buffer와 pipeline을 바인딩하고 workgroup 수로 dispatch를 기록합니다. wg=ceil(elements/wg_denoms)로 workgroup 수를 계산합니다. dispatch 호출이 반환해도 GPU 계산 완료를 뜻하지 않습니다. pipeline 선택과 dispatch 크기를 함께 기록해야 재현이 가능합니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:submit",
+      "type": "concept",
+      "name": "command buffer 큐 제출",
+      "filePath": "ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "lineRange": [
+        874,
+        900
+      ],
+      "summary": "기록한 Vulkan command buffer를 제출할 목록으로 묶습니다. 이 함수 뒷부분에서 큐 제출을 수행합니다. graph 실행은 조건에 따라 묶어서 제출하므로 노드 하나가 항상 dispatch/submit 하나와 대응하지 않습니다. compute_forward:12482~12518에서 호출됩니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:logits",
+      "type": "concept",
+      "name": "출력 회수와 동기화",
+      "filePath": "src/llama-context.cpp",
+      "lineRange": [
+        1925,
+        1944
+      ],
+      "summary": "계산한 logits를 CPU 쪽 결과 버퍼로 비동기 복사 요청합니다. 일반 CPU sampler가 logits를 읽기 전에는 context 동기화가 필요합니다. llama_get_logits_ith의 3928~3945행에서 synchronize 후 결과 포인터를 제공합니다.",
+      "tags": [
+        "lead",
+        "MUL_MAT"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "concept:sample",
+      "type": "concept",
+      "name": "샘플링과 다음 토큰 출력",
+      "filePath": "examples/simple/simple.cpp",
+      "lineRange": [
+        180,
+        200
+      ],
+      "summary": "logits에서 다음 토큰을 고르고 문자열로 출력합니다. 이 예제는 greedy sampler를 사용합니다. 종료 토큰이면 멈추고, 아니면 출력 후 한 토큰 batch를 만들어 decode 루프를 계속합니다.",
+      "tags": [
+        "ss",
+        "inference"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:examples/simple/simple.cpp",
+      "target": "concept:entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:examples/simple/simple.cpp",
+      "target": "concept:load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:examples/simple/simple.cpp",
+      "target": "concept:tokens",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:examples/simple/simple.cpp",
+      "target": "concept:context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:examples/simple/simple.cpp",
+      "target": "concept:batch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/llama-context.cpp",
+      "target": "concept:decode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/llama-context.cpp",
+      "target": "concept:reuse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/llama-model.cpp",
+      "target": "concept:model_graph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/models/qwen2.cpp",
+      "target": "concept:qwen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/llama-graph.cpp",
+      "target": "concept:qkv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/models/qwen2.cpp",
+      "target": "concept:ffn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/llama-graph.cpp",
+      "target": "concept:lora_mm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml.c",
+      "target": "concept:mulmat_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-backend.cpp",
+      "target": "concept:alloc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-backend.cpp",
+      "target": "concept:assign",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:supports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-backend.cpp",
+      "target": "concept:split_exec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-backend.cpp",
+      "target": "concept:backend_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:vk_graph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:vk_op",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:vk_select",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:matvec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:matmul",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+      "target": "concept:shader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp",
+      "target": "concept:shader_main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+      "target": "concept:dispatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "concept:submit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/llama-context.cpp",
+      "target": "concept:logits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:examples/simple/simple.cpp",
+      "target": "concept:sample",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "concept:entry",
+      "target": "concept:load",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "main에서 옵션 파싱, backend 로드 후 모델 로드"
+    },
+    {
+      "source": "concept:load",
+      "target": "concept:tokens",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "로드된 model에서 얻은 vocabulary로 토큰화"
+    },
+    {
+      "source": "concept:tokens",
+      "target": "concept:context",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "n_prompt를 context 크기와 n_batch에 사용"
+    },
+    {
+      "source": "concept:context",
+      "target": "concept:batch",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "context 생성 후 프롬프트 batch 구성"
+    },
+    {
+      "source": "concept:batch",
+      "target": "concept:decode",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "main 생성 루프가 llama_decode(ctx,batch) 호출"
+    },
+    {
+      "source": "concept:decode",
+      "target": "concept:reuse",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "ctx->decode가 batch를 ubatch로 처리하며 process_ubatch 호출"
+    },
+    {
+      "source": "concept:reuse",
+      "target": "concept:model_graph",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "재사용 불가 시 model.build_graph(gparams)"
+    },
+    {
+      "source": "concept:model_graph",
+      "target": "concept:qwen",
+      "type": "routes",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "가상 build_arch_graph가 Qwen2 구현으로 분기"
+    },
+    {
+      "source": "concept:qwen",
+      "target": "concept:qkv",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "Qwen graph가 build_qkv 호출"
+    },
+    {
+      "source": "concept:qwen",
+      "target": "concept:ffn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "Qwen graph가 build_ffn 호출"
+    },
+    {
+      "source": "concept:qkv",
+      "target": "concept:lora_mm",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "fused 또는 separate QKV 경로가 공통 투영 호출"
+    },
+    {
+      "source": "concept:ffn",
+      "target": "concept:lora_mm",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "FFN의 up/gate/down 투영이 build_lora_mm 사용"
+    },
+    {
+      "source": "concept:lora_mm",
+      "target": "concept:mulmat_node",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "ggml_mul_mat(ctx0,w,cur)가 연산 노드 생성"
+    },
+    {
+      "source": "concept:mulmat_node",
+      "target": "concept:alloc",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "완성된 cgraph의 노드를 scheduler에 전달, 직접 함수 호출 아님"
+    },
+    {
+      "source": "concept:reuse",
+      "target": "concept:alloc",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "새 그래프 생성 후 sched_alloc_graph 호출"
+    },
+    {
+      "source": "concept:alloc",
+      "target": "concept:assign",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "alloc_graph → split_graph → backend_id_from_cur로 배정"
+    },
+    {
+      "source": "concept:assign",
+      "target": "concept:supports",
+      "type": "routes",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "공통 supports_op/버퍼 호환 검사로 device 구현 조회"
+    },
+    {
+      "source": "concept:alloc",
+      "target": "concept:split_exec",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "할당 후 set_inputs와 graph_compute를 거쳐 split 실행"
+    },
+    {
+      "source": "concept:reuse",
+      "target": "concept:split_exec",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "재사용 경우에도 입력을 설정하고 graph_compute 호출"
+    },
+    {
+      "source": "concept:split_exec",
+      "target": "concept:backend_call",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "split_backend와 split graph로 비동기 실행 API 호출"
+    },
+    {
+      "source": "concept:backend_call",
+      "target": "concept:vk_graph",
+      "type": "routes",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Vulkan backend iface.graph_compute 등록을 경유"
+    },
+    {
+      "source": "concept:vk_graph",
+      "target": "concept:vk_op",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "Vulkan graph loop가 노드별 build_graph 호출"
+    },
+    {
+      "source": "concept:vk_op",
+      "target": "concept:vk_select",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "GGML_OP_MUL_MAT case에서 ggml_vk_mul_mat 호출"
+    },
+    {
+      "source": "concept:vk_select",
+      "target": "concept:matvec",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "작은 N 등 matvec 조건을 만족하는 경우"
+    },
+    {
+      "source": "concept:vk_select",
+      "target": "concept:matmul",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "앞선 조건에 해당하지 않으면 일반 matmul"
+    },
+    {
+      "source": "concept:matvec",
+      "target": "concept:pipeline",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "dtype와 ne 값으로 matvec pipeline 선택"
+    },
+    {
+      "source": "concept:pipeline",
+      "target": "concept:shader",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "runtime pipeline 이름과 생성기 shader 이름의 대응"
+    },
+    {
+      "source": "concept:shader",
+      "target": "concept:shader_main",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "빌드 시 mul_mat_vec.comp의 main을 SPIR-V로 컴파일"
+    },
+    {
+      "source": "concept:pipeline",
+      "target": "concept:dispatch",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "선택한 pipeline을 matvec 실행 함수가 dispatch에 전달"
+    },
+    {
+      "source": "concept:matmul",
+      "target": "concept:dispatch",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "필요한 변환, matmul 및 reduction 명령을 기록"
+    },
+    {
+      "source": "concept:dispatch",
+      "target": "concept:submit",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "command 기록 후 제출 조건에서 compute_forward/submit 호출"
+    },
+    {
+      "source": "concept:submit",
+      "target": "concept:shader_main",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "제출된 compute 명령을 GPU가 실행, CPU 직접 호출 아님"
+    },
+    {
+      "source": "concept:submit",
+      "target": "concept:logits",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "계산 결과 tensor에 대한 비동기 복사 요청과 완료 동기화"
+    },
+    {
+      "source": "concept:logits",
+      "target": "concept:sample",
+      "type": "transforms",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "결과 logits를 sampler가 읽고 다음 token 선택"
+    },
+    {
+      "source": "concept:sample",
+      "target": "concept:decode",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "생성된 한 token batch로 다음 반복"
+    },
+    {
+      "source": "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+      "target": "file:ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "concept:vk_select",
+      "target": "file:ggml/src/ggml-vulkan/ggml-vulkan-types.h",
+      "type": "reads_from",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "mul_mat_vec_max_cols=8 상수를 분기 조건에 사용합니다 (types.h:379)."
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:ss",
+      "name": "SS · 실행과 모델 입력",
+      "description": "GGUF 설정, 토큰화, batch, 샘플링",
+      "nodeIds": [
+        "file:examples/simple/simple.cpp",
+        "concept:entry",
+        "concept:load",
+        "concept:tokens",
+        "concept:context",
+        "concept:batch",
+        "concept:sample"
+      ]
+    },
+    {
+      "id": "layer:hr",
+      "name": "HR · 모델 연산 그래프",
+      "description": "decode, Qwen2 graph, MUL_MAT 생성",
+      "nodeIds": [
+        "file:ggml/src/ggml.c",
+        "file:src/llama-context.cpp",
+        "file:src/llama-graph.cpp",
+        "file:src/llama-model.cpp",
+        "file:src/models/qwen2.cpp",
+        "concept:decode",
+        "concept:reuse",
+        "concept:model_graph",
+        "concept:qwen",
+        "concept:qkv",
+        "concept:ffn",
+        "concept:lora_mm",
+        "concept:mulmat_node"
+      ]
+    },
+    {
+      "id": "layer:lead",
+      "name": "WG · 백엔드와 Vulkan",
+      "description": "배정, 구현 선택, shader, dispatch와 출력 회수",
+      "nodeIds": [
+        "file:ggml/src/ggml-backend.cpp",
+        "file:ggml/src/ggml-vulkan/ggml-vulkan-common.h",
+        "file:ggml/src/ggml-vulkan/ggml-vulkan-types.h",
+        "file:ggml/src/ggml-vulkan/ggml-vulkan.cpp",
+        "file:ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp",
+        "file:ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+        "concept:alloc",
+        "concept:assign",
+        "concept:supports",
+        "concept:split_exec",
+        "concept:backend_call",
+        "concept:vk_graph",
+        "concept:vk_op",
+        "concept:vk_select",
+        "concept:matvec",
+        "concept:matmul",
+        "concept:pipeline",
+        "concept:shader",
+        "concept:shader_main",
+        "concept:dispatch",
+        "concept:submit",
+        "concept:logits"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "SS: 같은 실행 조건부터 맞추기",
+      "description": "커밋, GGUF, -ngl, prompt, n_prompt와 실행 로그를 맞춥니다.",
+      "nodeIds": [
+        "concept:entry",
+        "concept:load",
+        "concept:tokens",
+        "concept:context",
+        "concept:batch"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "SS에서 HR로: decode 입력",
+      "description": "SS의 batch를 HR의 ubatch와 그래프 재사용 조건으로 연결합니다.",
+      "nodeIds": [
+        "concept:decode",
+        "concept:reuse",
+        "concept:model_graph"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "HR: 대표 MUL_MAT 하나 고정",
+      "description": "Qwen2.5의 FFN up을 예로 W/X/Y의 ne, nb, type을 기록합니다.",
+      "nodeIds": [
+        "concept:qwen",
+        "concept:qkv",
+        "concept:ffn",
+        "concept:lora_mm",
+        "concept:mulmat_node"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "HR에서 WG로: 실행 장치 결정",
+      "description": "같은 노드의 가중치 buffer와 지원 조건을 scheduler 배정 근거로 넘깁니다.",
+      "nodeIds": [
+        "concept:alloc",
+        "concept:assign",
+        "concept:supports",
+        "concept:split_exec",
+        "concept:backend_call"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "WG: Vulkan 구현 선택",
+      "description": "작은 N과 큰 N의 분기를 비교하고 실제 pipeline은 실행 증거로 확인합니다.",
+      "nodeIds": [
+        "concept:vk_graph",
+        "concept:vk_op",
+        "concept:vk_select",
+        "concept:matvec",
+        "concept:matmul",
+        "concept:pipeline"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "WG: shader와 실행 완료 경계",
+      "description": "shader 매핑, dispatch 기록, submit 및 logits 완료 경계를 잇습니다.",
+      "nodeIds": [
+        "concept:shader",
+        "concept:shader_main",
+        "concept:dispatch",
+        "concept:submit",
+        "concept:logits",
+        "concept:sample"
+      ]
+    }
+  ]
+}

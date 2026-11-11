@@ -1,0 +1,381 @@
+---
+type: community
+cohesion: 0.01
+members: 340
+---
+
+# ggml-vulkan-types · 1
+
+**Cohesion:** 0.01 - loosely connected
+**Members:** 340 nodes
+
+## Members
+- [[DescriptorSetLayout]] - code
+- [[DriverId]] - code
+- [[PFN_vkGetDeviceFaultInfoEXT]] - code
+- [[PhysicalDevice]] - code
+- [[PhysicalDeviceProperties]] - code
+- [[add_rms_fusion]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[all_pipelines]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[allow_sysmem_fallback]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[architecture]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[async_use_transfer_queue]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[bf16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[buffer_device_address]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[buffer_type]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[compile_cv]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[compile_mutex]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[compute_queue]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat1_fa_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat2]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat2_bf16_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat2_decode_vector]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_acc_f16_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_acc_f32_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_bf16_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_int_k]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_int_m]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_int_n]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_int_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_k]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_m]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_n]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_support_16x16x16_f16acc]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[coopmat_support_16x16x16_f32acc]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[debug_cmdbuf_idx]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[device_3]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[device_fault]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[diag_cgraph]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[diag_prev_end]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[diag_prev_start]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[disable_fusion]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[disable_graph_optimize]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[disable_host_visible_vidmem]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[dot2_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[driver_id]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[dsl]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[external_memory_host]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[fa_sparse_compact_use_subgroups]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[fence_1]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[float_controls_denorm_preserve_fp16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[float_controls_rte_fp16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[fp16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[ggml_backend_buffer_type]] - code
+- [[has_internally_synchronized_queues]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[idx]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[integer_dot_product]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[matmul_id_tile_selector]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[matmul_tile_selector]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[max_buffer_size]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[max_memory_allocation_size]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[max_nodes_per_submit]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[max_workgroup_size_log2]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[memory_logger]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[memory_priority]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[min_imported_host_pointer_alignment]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mmvq_mode]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_id_l]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_id_l_int]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_id_m]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_id_m_int]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_id_s]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_id_s_int]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_l]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_l_int]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_m]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_m_int]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_s]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mul_mat_s_int]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[multi_add]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[mutex_2]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[name_2]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[ocp_fp4]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pair]] - code
+- [[partials_binding_alignment]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pfn_vkGetDeviceFaultInfoEXT_1]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[physical_device]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pinned_memory]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pinned_memory_mutex]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_abs]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_acc_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add1_f16_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add1_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add1_f32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add_id_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add_norepeat]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add_rms]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_add_rms_norepeat]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_arange_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_argmax_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_argsort_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_argsort_large_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_ceil]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_clamp]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_col2im_1d_bf16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_col2im_1d_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_col2im_1d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_concat_i16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_concat_i32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_concat_i64]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_concat_i8]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_bf16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_f16_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_f32_bf16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_f32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_f32_i32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_contig_cpy_i32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv2d_dw_cwhn_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv2d_dw_cwhn_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv2d_dw_whcn_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv2d_dw_whcn_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv2d_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv2d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv3d_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv3d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv_transpose_1d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv_transpose_2d_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_conv_transpose_2d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cos]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_count_equal_i32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_count_experts]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_bf16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f16_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f32_bf16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f32_i32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_f32_quant]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_i32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_quant_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_transpose_02_16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_transpose_02_32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_transpose_16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cpy_transpose_32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cross_entropy_loss_back_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cross_entropy_loss_back_f32_wg512]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cross_entropy_loss_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cross_entropy_loss_f32_wg512]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cumsum_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cumsum_multipass1_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cumsum_multipass2_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_cumsum_small_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant_mul_mat_vec_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant_mul_mat_vec_f32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant_mul_mat_vec_id_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant_mul_mat_vec_id_q8_1_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant_mul_mat_vec_q8_1_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dequant_transpose]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_diag]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_diag_mask_inf_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_div]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_div_norepeat]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dsv4_hc_comb_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dsv4_hc_post_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dsv4_hc_post_nocomb_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dsv4_hc_pre_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_dsv4_hc_pre_gated_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_elu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_executable_properties_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_exp]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_expm1]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_fa_mask_opt]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_fa_sparse_compact]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_fa_sparse_compact_subgroup]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_fill_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_fill_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_flash_attn_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_flash_attn_split_k_reduce]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_floor]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_fwht_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_gated_delta_net]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_gated_linear_attn_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_geglu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_geglu_erf]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_geglu_quick]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_gelu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_gelu_erf]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_gelu_quick]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_get_rows]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_get_rows_back_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_get_rows_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_group_norm_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_hardsigmoid]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_hardswish]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_im2col_3d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_im2col_3d_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_im2col_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_im2col_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_l2_norm_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_leaky_relu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_lightning_indexer_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_log]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_matmul]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_matmul_split_k_reduce]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_mul]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_mul_mat_vec_nc_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_mul_mat_vec_p021_f16_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_mul_norepeat]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_multi_add]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_multi_add_rms]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_neg]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_norm_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_opt_step_adamw_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_opt_step_sgd_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_out_prod_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_pad_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_pad_reflect_1d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_pool1d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_pool2d_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_quantize_q8_1_x4]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_reglu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_relu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_repeat_back_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_repeat_i16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_repeat_i32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_back_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_add_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_add_mul_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_add_mul_partials_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_add_partials_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_partials_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_rope_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_mul_rope_f32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_partials_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_set_rows_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rms_norm_set_rows_f32_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_robustness]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_roll_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_multi_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_multi_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_multi_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_neox_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_neox_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_neox_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_norm_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_norm_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_norm_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_vision_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rope_vision_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_round]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rwkv_wkv6_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_rwkv_wkv7_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_scale_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_set_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_set_rows_i32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_set_rows_i64]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sgn]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sigmoid]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_silu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_silu_back_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sin]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_snake_bf16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_snake_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_snake_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_back_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_f32_f16_wg512]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_f32_wg512]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_large1_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_large1_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_large2_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_large2_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_large3_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_soft_max_large3_f32_f16]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_softplus]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_solve_tri_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sqr]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sqrt]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_ssm_conv_bias_silu_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_ssm_conv_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_ssm_conv_silu_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_ssm_scan_f32_d128]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_ssm_scan_f32_d256]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_step]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sub]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sub_norepeat]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_sum_rows_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_swiglu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_swiglu_clamp]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_swiglu_oai]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_tanh]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_timestep_embedding_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_topk_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_topk_moe]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_topk_radix_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_topk_radix_qsa]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_tri]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_trunc]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_unary_mul]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_upscale_bicubic_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_upscale_bilinear_antialias_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_upscale_bilinear_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_upscale_nearest_f32]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_xe_fa_decode_dual_phases]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[pipeline_xielu]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[prefer_host_memory]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[properties]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[queue_submit_mutex]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[recursive_mutex]] - code
+- [[serialize_submissions]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[shader_64b_indexing]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[shader_core_count]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[shader_int64]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[single_queue]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[suballocation_block_size]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_arithmetic]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_ballot]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_basic]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_clustered]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_max_size]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_min_size]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_require_full_support]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_shuffle]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_size_1]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_size_control]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_size_log2]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[subgroup_vote]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[support_async]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[sync_staging]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[transfer_queue]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[uma]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[vendor_id]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[vk_device_struct]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+- [[vulkan_memory_model]] - code - ggml/src/ggml-vulkan/ggml-vulkan-types.h
+
+## Live Query (requires Dataview plugin)
+
+```dataview
+TABLE source_file, type FROM #community/ggml-vulkan-types__1
+SORT file.name ASC
+```
+
+## Connections to other communities
+- 5 edges to [[_COMMUNITY_외부 참조 · 26]]
+- 2 edges to [[_COMMUNITY_ggml-vulkan-types · 40]]
+- 2 edges to [[_COMMUNITY_ggml-vulkan-types · 23]]
+- 2 edges to [[_COMMUNITY_ggml-vulkan-types · 29]]
+- 2 edges to [[_COMMUNITY_ggml-vulkan-types · 7]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan · 17]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan · 12]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 68]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 66]]
+- 1 edge to [[_COMMUNITY_vulkan-shaders-gen · 9]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 56]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 49]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 47]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 43]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 37]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 74]]
+- 1 edge to [[_COMMUNITY_ggml-vulkan-types · 45]]
+
+## Top bridge nodes
+- [[vk_device_struct]] - degree 364, connects to 17 communities
