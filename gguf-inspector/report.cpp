@@ -34,9 +34,9 @@ class Table {
         out << (html ? "</tr>\n" : "\n");
     }
 public:
-    Table(std::ostream &o, bool h, const char *title, std::initializer_list<std::string> headings)
+    Table(std::ostream &o, bool h, const char *title, std::initializer_list<std::string> headings, const char *id = "")
         : out(o), html(h) {
-        if (html) out << "<section><h2>" << title << "</h2><div class=scroll><table><thead>";
+        if (html) out << "<section" << id << "><h2>" << title << "</h2><div class=scroll><table><thead>";
         else out << "\n" << title << "\n";
         cells(headings, true);
         if (html) out << "</thead><tbody>\n";
@@ -63,6 +63,7 @@ td,th{text-align:left;padding:9px 12px;vertical-align:top;border-bottom:1px soli
 th{background:#e4eee8;white-space:nowrap}tbody tr:hover{background:#f2f8f4}
 input{font:inherit;padding:8px 12px;border:1px solid #769487;border-radius:5px;width:min(29em,100%)}code{white-space:normal}
 </style><header><h1>)" << text(m.filename,true) << "</h1><p>" << summary << "</p></header><main>";
+        qwen2_map(out, m);
     } else out << text(m.filename,false) << "\n" << summary << "\n";
     {
         Table t(out,html,"파일 구획",{"구획","시작 (B)","끝 · 미포함 (B)","길이 (B)","저장 순서"});
@@ -86,7 +87,7 @@ input{font:inherit;padding:8px 12px;border:1px solid #769487;border-radius:5px;w
             t.row({to_string(k.begin),to_string(k.end),k.key,k.type,k.value});
     }
     {
-        Table t(out,html,"텐서",{"이름","Shape (ne 순서)","GGML 타입","기술자 위치","상대 위치","파일 위치","데이터 (B)","뒤 패딩 (B)","앞 16 B · hex"});
+        Table t(out,html,"텐서",{"이름","Shape (ne 순서)","GGML 타입","기술자 위치","상대 위치","파일 위치","데이터 (B)","뒤 패딩 (B)","앞 16 B · hex"}," id='tensor-records'");
         for (const auto &v : m.tensors)
             t.row({v.name,v.shape,v.type,to_string(v.descriptor),to_string(v.relative),to_string(v.absolute),
                    to_string(v.bytes),to_string(v.padding),v.hex});

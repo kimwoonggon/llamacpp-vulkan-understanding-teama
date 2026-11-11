@@ -24,6 +24,10 @@ $exe = '.\gguf-inspector\build\bin\Debug\gguf-inspector.exe'
 Start-Process '.\gguf-inspector\build\report.html'
 ```
 
+## Qwen2 연산 지도
+
+Qwen2 가중치 파일의 HTML에는 토큰 임베딩, 반복 블록, 최종 RMSNorm, 출력 투영을 연결한 SVG가 표시됩니다. 블록을 선택한 뒤 연산 상자를 누르면 해당 파일에서 읽은 텐서 이름·shape·타입·절대 위치를 볼 수 있습니다. 텐서 이름을 누르면 원본 표의 행으로 이동합니다. 화살표는 저장소의 Qwen2 그래프 생성 코드를 기준으로 한 데이터 흐름이며, 점선은 잔차 연결입니다.
+
 ## 예제로 패딩 따라가기
 
 동봉한 384바이트 파일은 Header 24 B, Metadata KV 131 B, Tensor Info 88 B 순으로 시작합니다. 끝 주소는 해당 구획에 포함되지 않습니다.

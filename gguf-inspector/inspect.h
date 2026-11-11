@@ -24,4 +24,5 @@ struct Inspection {
 };
 
 Inspection inspect(const std::filesystem::path &path);
+void qwen2_map(std::ostream &out, const Inspection &model);
 void report(std::ostream &out, const Inspection &model, bool html);

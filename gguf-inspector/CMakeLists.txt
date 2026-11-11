@@ -8,7 +8,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT gguf-inspector)
 endif()
 
-add_executable(gguf-inspector main.cpp inspect.cpp report.cpp inspect.h)
+add_executable(gguf-inspector main.cpp inspect.cpp report.cpp qwen2-map.cpp inspect.h)
 target_compile_features(gguf-inspector PRIVATE cxx_std_17)
 target_link_libraries(gguf-inspector PRIVATE ggml-base)
 if(MSVC)
