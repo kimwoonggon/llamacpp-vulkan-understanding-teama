@@ -54,16 +54,30 @@
 .path-map details{margin-top:10px}
 .path-map summary{cursor:pointer;font-weight:650}
 @media(max-width:600px){.path-map{padding:12px}.site-path{display:grid;gap:10px}.site-path li{padding-left:14px}.site-path li:not(:last-child)::after{content:'↓';left:-4px;top:22px}}
+#values .trace-body{padding:clamp(12px,2vw,24px)}.trace-settings label{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:650}.trace-body>p{font-size:14px}.trace-tools,#trace-stages{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:14px 0}.trace-tools .frameidx{margin-left:8px}#trace-stages{border-block:1px solid var(--line);padding:9px 0}#trace-stages button{border:0;border-radius:4px;background:transparent;color:#46645c;padding:6px 10px;font-size:13px}#trace-stages [aria-current=step]{background:#d6f1e2;color:#104d3c;font-weight:750}.trace-panels{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:18px;align-items:start}.trace-narrative h3{font-size:22px}.trace-narrative>p{color:var(--dim);font-size:14px;margin:7px 0}.trace-fields{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin:12px 0 0}.trace-fields dt{font-family:var(--mono);color:var(--teal)}.trace-fields dd{margin:0;overflow-wrap:anywhere}.trace-figure{background:#eef5ee;border:1px solid var(--line);border-radius:10px;padding:14px}.trace-figure h4{font-size:15px}.trace-figure svg{width:100%;display:block}.trace-figure svg text{font:14px var(--mono);fill:#29433c}.trace-figure svg .big{font-weight:700}.trace-figure svg .hot rect{fill:#c1eed5;stroke:#27745c;stroke-width:2.5}.trace-figure svg .future{opacity:.47}#trace-equation{font:600 clamp(12px,1.2vw,16px)/1.5 var(--mono);overflow-wrap:anywhere}.trace-foot,.trace-help{font-size:13px;color:var(--dim);margin-top:14px}.trace-help summary{cursor:pointer;color:var(--teal)}.trace-help p{margin:6px 0}.trace-lines{background:#123536;color:#e1f4ed;white-space:pre-wrap;overflow-wrap:anywhere;padding:10px 12px;border-radius:6px;margin:8px 0;font:12px/1.6 var(--mono)}#trace-code a{font:12px var(--mono)}@media(max-width:800px){.trace-panels{grid-template-columns:1fr}}@media(max-width:620px){.top nav{flex-wrap:wrap;justify-content:flex-end}.trace-figure{padding:8px}#trace-stages button{padding:4px 6px}}
 </style></head><body>
-<header class="top"><div class="wrap topin"><a class="brand" href="simple-inference-lecture.html#decode"><span class="backmark">←</span> SS · llama_decode</a><nav aria-label="강의 목차"><a href="#walk">호출 재생</a><a href="#tensors">텐서 지도</a><a href="#dot">행렬곱</a><a href="#vs">중단점</a></nav></div></header>
-<main><section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">HR　/　QWEN2.5 · GGML 그래프 생성</div><h1>한 번의 decode가<br><em>그래프</em>가 되기까지</h1><p>SS가 넘긴 토큰 13개에서 출발해, 첫 층의 가중치와 입력이 하나의 행렬곱 노드에 연결되는 과정을 따라갑니다.</p></div><div class="terminal"><div class="term-head"><span>관찰한 첫 층 · ffn_up-0</span><span>GPU · Vulkan</span></div>
+<header class="top"><div class="wrap topin"><a class="brand" href="simple-inference-lecture.html#decode"><span class="backmark">←</span> SS · llama_decode</a><nav aria-label="강의 목차"><a href="#values">토큰 재생</a><a href="#walk-detail">호출 흐름</a><a href="#tensors">텐서 지도</a><a href="#dot">행렬곱</a><a href="#vs">중단점</a></nav></div></header>
+<main><section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">HR　/　QWEN2.5 · GGML 그래프 생성</div><h1>한 번의 decode가<br><em>그래프</em>가 되기까지</h1><p>SS가 넘긴 토큰 13개에서 출발해, 첫 블록의 잔차 덧셈에 실제 숫자가 쓰이고 다음 토큰 점수가 나올 때까지 따라갑니다.</p></div><div class="terminal"><div class="term-head"><span>관찰한 첫 층 · ffn_up-0</span><span>GPU · Vulkan</span></div>
 <svg class="hero-op" viewBox="0 0 430 145" role="img" aria-label="F16 가중치와 F32 입력이 F32 MUL_MAT 결과에 연결됨"><defs><marker id="hero-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path fill="#a5d8c6" d="M0 0L8 4L0 8Z"/></marker></defs>
 <g stroke="#85b6a5" fill="none" marker-end="url(#hero-arrow)"><path d="M170 39 H194 L231 67"/><path d="M170 108 H194 L231 83"/></g>
 <g fill="#173f40" stroke="#507b6e"><rect x="2" y="14" width="167" height="49" rx="5"/><rect x="2" y="83" width="167" height="49" rx="5"/></g>
 <rect x="237" y="47" width="185" height="59" rx="6" fill="#beeccf"/><g fill="#e5f4e8" font-family="Consolas,monospace"><text x="13" y="35">W · F16</text><text x="13" y="53">[1536, 8960]</text><text x="13" y="104">X · F32</text><text x="13" y="122">[1536, 13]</text></g><g fill="#153d36" font-family="Consolas,monospace"><text x="251" y="72" font-weight="bold">GGML_OP_MUL_MAT</text><text x="251" y="92">F32 [8960, 13]</text></g></svg>
 <div class="term-key">GGML ne 순서 · 그림에는 앞 두 축을 표시</div></div></div></section>
 <div class="wrap">
-<section class="section" id="walk"><div class="section-head"><div><h2><span class="seq">01 /</span>decode 안으로 들어가기</h2><p>세 호출 중 하나를 고르세요. 새로 만드는 호출은 Qwen2 블록 조립을 거치고, 재사용 호출은 입력 갱신으로 곧바로 이어집니다.</p></div></div>
+<div id="walk"><section class="section" id="values" aria-labelledby="value-title">
+<div class="section-head"><div><h2 id="value-title">첫 ADD에 숫자가 생기는 순간</h2><p>토큰 ID 하나가 임베딩과 어텐션을 거쳐 <code>ffn_inp-0</code>의 첫 성분이 되는 과정을 재생합니다.</p></div></div>
+<div class="atlas"><div class="atlasbar trace-settings"><label>실행 기록 <select id="trace-run"><option value="ss">SS 프롬프트 · CPU + Vulkan</option><option value="cpu">토큰 ID 123 실험 · CPU</option></select></label><label>decode 호출 <select id="trace-call"></select></label></div>
+<div class="trace-body"><p id="trace-prompt"></p>
+<div class="trace-tools"><button type="button" class="btn" id="trace-prev">← 이전</button><button type="button" class="btn primary" id="trace-play" aria-pressed="false">▶ 재생</button><button type="button" class="btn" id="trace-next">다음 →</button><span id="trace-count" class="frameidx"></span></div>
+<div id="trace-stages" role="group" aria-label="실행 단계로 이동"></div>
+<div class="trace-panels"><article class="trace-narrative"><h3 id="trace-title"></h3><p id="trace-note"></p>
+<h4>ffn_inp-0 구조체</h4><dl class="trace-fields"><dt>op</dt><dd id="trace-op"></dd><dt>ne · 모양</dt><dd id="trace-shape"></dd><dt>src[0], src[1]</dt><dd id="trace-src"></dd><dt>data · 결과 버퍼</dt><dd id="trace-data"></dd></dl><div id="trace-code"></div>
+</article><div class="trace-figure"><h4>블록 0 · 두 입력이 만나는 곳</h4><div id="trace-diagram"></div><p id="trace-equation"></p></div></div>
+<p class="trace-foot" id="trace-position"></p>
+<details class="trace-help"><summary>텐서와 data를 디버거에서 읽는 법</summary><p><code>ggml_tensor *ffn_inp</code>는 구조체를 가리킵니다. 구조체의 <code>ne</code>는 각 축의 길이, <code>op</code>는 연산 종류, <code>src[]</code>는 입력 텐서 구조체의 주소입니다. <code>data</code>는 원소를 저장할 버퍼 위치입니다. 출력 텐서에 버퍼를 연결하고 나서도 이번 호출의 숫자는 해당 연산이 실행돼야 유효합니다.</p><p>GGUF 가중치는 모델 로드 때 준비됩니다. 입력 ID는 매 호출마다 복사하고, 중간 벡터는 앞 연산이 씁니다. 그림의 숫자는 각 연산 직후에 기록한 값입니다. 스케줄러는 수명이 끝난 중간값의 공간을 다른 연산에 쓸 수 있습니다.</p><p>Qwen2.5-1.5B-Instruct FP16으로 각 기록을 별도 실행했습니다. <code>cb_eval</code>과 <code>ggml_backend_tensor_get</code>으로 마지막 입력 토큰의 앞 세 성분을 읽고, 최종 logits의 최댓값 및 <code>n_reused</code>를 확인했습니다. 단계별 함수 순서는 팀 소스에서 대조했습니다. 아래 화살표는 첫 블록의 일부이며 임베딩과 출력 투영 사이에는 정규화·Q/K/V·RoPE·어텐션이 있습니다.</p></details><p><a id="trace-detail-link" href="#walk-detail">SS 호출의 전체 함수 흐름 보기 ↓</a></p>
+</div></div></section>
+</div>
+<section class="section" id="walk-detail"><div class="section-head"><div><h2><span class="seq">01 /</span>decode 안으로 들어가기</h2><p>세 호출 중 하나를 고르세요. 새로 만드는 호출은 Qwen2 블록 조립을 거치고, 재사용 호출은 입력 갱신으로 곧바로 이어집니다.</p></div></div>
 <div id="call-buttons" class="call-buttons" role="group" aria-label="기록된 decode 호출 선택"></div>
 <div class="atlas"><div class="atlasbar"><span class="mini">함수 흐름 · 노드를 눌러 이동</span><div class="legend"><span><i></i>선택한 호출 경로</span><span id="counter"></span></div></div><div class="route-scroll"><svg id="route-svg" viewBox="0 0 1120 215" role="group" aria-label="decode 검사에서 새 그래프와 재사용 분기를 거쳐 실행으로 이어지는 경로"></svg></div>
 <div class="walk-body"><div class="walk-tools"><div class="steps"><button class="btn" id="prev-f">← 이전</button><button class="btn primary" id="auto">▶ 재생</button><button class="btn" id="next-f">다음 →</button></div><select id="frame-select" aria-label="현재 호출의 단계 바로가기"></select><label class="switch"><input type="checkbox" id="code-on" checked>코드 따라보기</label></div>
@@ -495,5 +509,96 @@ roundLabels.forEach((label,i)=>{
 $('tensor-call').onchange=e=>selectCall(Number(e.target.value),true);
 const deepCall=Number(new URLSearchParams(location.search).get('call')||1);
 selectCall(Number.isInteger(deepCall)&&deepCall>=1&&deepCall<=3?deepCall-1:0);
+
+</script><script id="trace-records" type="application/json">{"cpu":[{"id":123,"ids":[123],"emb":[-0.03051758,-0.02038574,-0.0090332],"proj":[-0.30786517,-0.16063188,0.12963581],"add":[-0.33838275,-0.18101762,0.12060261],"reuse":0,"top":198,"logit":12.05595493,"reused":false},{"id":124,"ids":[124],"emb":[0.01068115,0.00860596,-0.00878906],"proj":[-0.62359095,-0.11955953,0.12194453],"add":[-0.61290979,-0.11095357,0.11315547],"reuse":1,"top":198,"logit":14.42923641,"reused":true},{"id":125,"ids":[125],"emb":[0.01068115,0.00860596,-0.00878906],"proj":[-0.6127547,-0.08109261,0.0982359],"add":[-0.60207355,-0.07248665,0.08944684],"reuse":2,"top":198,"logit":15.57387543,"reused":true}],"ss":[{"id":374,"ids":[785,6722,315,4882,11862,374,50189,13,576,6722,315,9625,374],"emb":[-0.00595093,-0.00491333,-0.02185059],"proj":[0.33862305,0.10791016,-0.20996094],"add":[0.33267212,0.10299683,-0.23181152],"reuse":0,"top":12095,"logit":22.61945724,"reused":false},{"id":12095,"ids":[12095],"emb":[0.01263428,0.00344849,0.01721191],"proj":[-0.31408811,-0.12925693,0.13674411],"add":[-0.30145383,-0.12580845,0.15395603],"reuse":0,"top":13,"logit":26.09575653,"reused":false},{"id":13,"ids":[13],"emb":[-0.0390625,-0.02819824,-0.00778198],"proj":[0.21758553,0.06099055,0.13499032],"add":[0.17852303,0.03279231,0.12720834],"reuse":1,"top":576,"logit":20.33444214,"reused":true}],"code":{"decode":{"file":"examples/simple/simple.cpp","line":173,"text":"173  if (llama_decode(ctx, batch)) {"},"build":{"file":"src/llama-context.cpp","line":1425,"text":"1425  gf = model.build_graph(gparams);"},"residual":{"file":"src/models/qwen2.cpp","line":110,"text":"110  ggml_tensor * ffn_inp = ggml_add(ctx0, cur, inpSA);"},"edges":{"file":"ggml/src/ggml.c","line":2067,"text":"2067  result->op     = GGML_OP_ADD;\n2068  result->src[0] = a;\n2069  result->src[1] = b;"},"expand":{"file":"src/models/qwen2.cpp","line":153,"text":"153  ggml_build_forward_expand(gf, cur);"},"alloc":{"file":"src/llama-context.cpp","line":1435,"text":"1435  if (!ggml_backend_sched_alloc_graph(sched.get(), gf)) {"},"reuse":{"file":"src/llama-context.cpp","line":1405,"text":"1405  if (!graph_reuse_disable && gf_res_prev_active == res && res->can_reuse(gparams)) {\n1415  n_reused++;"},"set":{"file":"src/llama-context.cpp","line":1449,"text":"1449  res->set_inputs(&ubatch);"},"copy":{"file":"src/llama-graph.cpp","line":73,"text":"73  ggml_backend_tensor_set(tokens, ubatch->token, 0, n_tokens*ggml_element_size(tokens));"},"compute":{"file":"src/llama-context.cpp","line":1454,"text":"1454  const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);"},"schedule":{"file":"src/llama-context.cpp","line":2588,"text":"2588  auto status = ggml_backend_sched_graph_compute_async(sched.get(), gf);"},"lookup":{"file":"ggml/src/ggml-cpu/ops.cpp","line":5054,"text":"5054  const int64_t i01 = *(int32_t *) ((char *) src1->data + i10*nb10 + i11*nb11 + i12*nb12);\n5058  ggml_cpu_fp16_to_fp32(\n5059  (const ggml_fp16_t*) ((char *) src0->data + i01*nb01 + i11*nb02 + i12*nb03),\n5060  (float *) ((char *)  dst->data + i10*nb1  + i11*nb2  + i12*nb3), nc);"},"vkadd":{"file":"ggml/src/ggml-vulkan/ggml-vulkan.cpp","line":12079,"text":"12079  ggml_vk_add(ctx, compute_ctx, src0, src1, node);"},"shader":{"file":"ggml/src/ggml-vulkan/vulkan-shaders/add.comp","line":39,"text":"39  FLOAT_TYPE sum = FLOAT_TYPE(data_a[get_aoffset() + src0_idx(i00, i01, i02, i03)]) + FLOAT_TYPE(data_b[get_boffset() + src1_idx(i00, i01, i02, i03)]);\n42  data_d[get_doffset() + dst_idx(i00, i01, i02, i03)] = D_TYPE(sum);"},"cpuadd":{"file":"ggml/src/ggml-cpu/ggml-cpu.c","line":1761,"text":"1761  case GGML_OP_ADD:\n1763  ggml_compute_forward_add(params, tensor);"},"buffers":{"file":"ggml/src/ggml-cpu/binary-ops.cpp","line":89,"text":"89  dst_t        * dst_ptr  = (dst_t  *)       ((char *)       dst->data  + i03*nb3  + i02*nb2  + i01*nb1 );\n90  const src0_t * src0_ptr = (const src0_t *) ((const char *) src0->data + i03*nb03 + i02*nb02 + i01*nb01);\n91  const src1_t * src1_ptr = (const src1_t *) ((const char *) src1->data + i13*nb13 + i12*nb12 + i11*nb11);"},"sum":{"file":"ggml/src/ggml-cpu/binary-ops.cpp","line":9,"text":"9  static inline float op_add(float a, float b) {\n10  return a + b;"},"sample":{"file":"examples/simple/simple.cpp","line":182,"text":"182  new_token_id = llama_sampler_sample(smpl, ctx, -1);"},"projCPU":{"file":"ggml/src/ggml-cpu/ggml-cpu.c","line":1871,"text":"1871  ggml_compute_forward_mul_mat(params, tensor);"},"projVK":{"file":"ggml/src/ggml-vulkan/ggml-vulkan.cpp","line":12392,"text":"12392  ggml_vk_mul_mat(ctx, compute_ctx, cgraph, node_idx);"},"readLogits":{"file":"include/llama.h","line":1049,"text":"1049  LLAMA_API float * llama_get_logits_ith(struct llama_context * ctx, int32_t i);"}}}</script><script>
+// Each record contains backend observations for one decode. A frame reveals a value only after its producer ran.
+(() => {
+  const records = JSON.parse($('trace-records').textContent);
+  const code = records.code;
+  const labels = {enter:'배치',build:'그래프 구성',alloc:'버퍼 배정',reuse:'그래프 재사용',input:'ID 복사',compute:'실행 요청',emb:'임베딩',proj:'출력 투영',add:'잔차 ADD',out:'logits'};
+  const order = reused => ['enter', ...(reused ? ['reuse'] : ['build','alloc']), 'input','compute','emb','proj','add','out'];
+  let mode='ss', round=call, frame=0, interval=null;
+
+  function stop(){
+    clearInterval(interval); interval=null;
+    $('trace-play').textContent='▶ 재생'; $('trace-play').setAttribute('aria-pressed','false');
+  }
+  function applyRun(){
+    const runs=records[mode];
+    $('trace-call').replaceChildren(...runs.map((r,i)=>new Option((i+1)+'회 · '+(r.ids.length>1?'프롬프트 '+r.ids.length+'토큰':'ID '+r.id)+' · '+(r.reused?'재사용':'새 그래프'),i)));
+    $('trace-call').value=round;
+  }
+  function render(){
+    const r=records[mode][round], stages=order(r.reused), key=stages[frame];
+    const N=r.ids.length, id=r.id, ss=mode==='ss', shape='[1536, '+N+', 1, 1]';
+    const shown=k=>stages.indexOf(k)>=0 && frame>=stages.indexOf(k);
+    const linked=key!=='enter' || r.reused, allocated=r.reused || shown('alloc');
+    const v=(field,i=0)=>r[field][i].toFixed(8);
+    const newReason=round===0?'첫 실제 decode에 쓸 그래프를 만듭니다.':'입력 길이가 13에서 1로 바뀌어 새 모양의 그래프를 만듭니다.';
+    const text={
+      enter:['배치에 ID가 도착했습니다','가중치 token_embd.weight와 blk.0.attn_output.weight는 이미 모델에 있습니다. 호출자가 넘긴 ID는 아직 이번 그래프의 입력 슬롯에 복사하기 전입니다.'],
+      build:['ADD가 두 입력을 가리킵니다',newReason+' Qwen2 빌더에서 ggml_add가 결과 구조체를 만들고 op와 src 두 칸을 기록합니다. 마지막에 ggml_build_forward_expand가 logits까지 필요한 노드를 그래프에 모읍니다.'],
+      alloc:['결과를 쓸 버퍼를 배정합니다','스케줄러가 장치와 버퍼 위치를 정합니다. ffn_inp-0 한 텐서에 필요한 데이터 크기는 1536 × '+N+' × 4 = '+(1536*N*4).toLocaleString('ko-KR')+'바이트입니다. 이번 ADD의 숫자는 실행 뒤에 유효합니다.'],
+      reuse:['기존 노드와 버퍼를 다시 사용합니다','활성 그래프가 이번 배치와 호환되어 build_graph와 alloc_graph를 건너뜁니다. 직전 결과가 남아 있을 수 있지만 이번 토큰의 값은 다시 계산해야 합니다.'],
+      input:['배치의 실제 ID를 입력 버퍼에 씁니다','set_inputs → llm_graph_input_embd::set_input → ggml_backend_tensor_set 순서로 '+N+'개 ID를 복사합니다. 위치·KV 슬롯·마스크도 이번 배치에 맞춰 갱신합니다.'],
+      compute:['완성된 그래프를 백엔드에 넘깁니다','graph_compute가 스케줄러에 ggml_cgraph를 전달합니다. 스케줄러가 의존 순서에 맞춰 각 구간을 실행합니다. 아래 세 단계는 그 실행 안에서 읽은 값입니다.'],
+      emb:['GET_ROWS가 임베딩을 읽었습니다','입력 ID '+id+'에 해당하는 가중치 행이 1536개 성분의 embd가 됩니다. 이 벡터는 어텐션으로 들어가는 동시에 첫 잔차 덧셈까지 전달됩니다.'],
+      proj:['MUL_MAT가 어텐션 출력 벡터를 썼습니다','Q/K/V와 어텐션을 거친 kqv_out-0에 blk.0.attn_output.weight를 적용합니다. 결과 node_26이 ADD의 첫 입력입니다.'],
+      add:['두 입력의 합이 ffn_inp-0에 기록됐습니다',ss?'Vulkan에서 출력 투영 결과와 장치에 전달된 임베딩(Vulkan0#embd#0)을 더했습니다. 이 합을 다음 FFN이 읽습니다.':'CPU가 dst->src[0]과 dst->src[1]의 버퍼에서 대응 원소를 읽고 더해 dst의 버퍼에 씁니다. 이 합을 다음 FFN이 읽습니다.'],
+      out:['logits에서 가장 높은 점수를 읽었습니다','첫 잔차 합은 FFN과 이후 블록, 최종 정규화·출력 투영을 거칩니다. 마지막 입력 위치의 최고 점수는 '+r.logit.toFixed(5)+', 토큰 ID는 '+r.top+'입니다. '+(ss?'SS에서 greedy로 선택한 조각은 “'+tokenOut[round]+'”입니다.':'이 실험은 다음 입력 ID를 직접 지정합니다.')],
+    };
+    $('trace-title').textContent=text[key][0]; $('trace-note').textContent=text[key][1];
+    $('trace-count').textContent=(round+1)+'회 호출 · '+(frame+1)+' / '+stages.length;
+    $('trace-prompt').textContent=(ss?'SS · The capital of South Korea is Seoul. The capital of France is':'CPU 실험 · ID 123, 124, 125를 같은 컨텍스트에 차례로 입력')+'　|　이번 batch.token = ['+r.ids.join(', ')+']';
+    $('trace-stages').replaceChildren(...stages.map((k,i)=>{
+      const b=document.createElement('button');b.textContent=labels[k];b.dataset.stage=k;
+      if(i===frame)b.setAttribute('aria-current','step');
+      b.onclick=()=>{stop();frame=i;render();};return b;
+    }));
+    const srcKeys={enter:['decode'],build:['build','residual','edges','expand'],alloc:['alloc'],reuse:['reuse'],input:['set','copy'],compute:['compute','schedule'],emb:['lookup'],proj:[ss?'projVK':'projCPU'],add:ss?['vkadd','shader']:['cpuadd','buffers','sum'],out:ss?['sample']:['readLogits']};
+    $('trace-code').innerHTML=srcKeys[key].map(k=>{
+      const s=code[k];return sourceLink(s.file,s.line,s.file.split('/').pop()+' · '+s.line)+'<pre class="trace-lines">'+esc(s.text)+'</pre>';
+    }).join('');
+    $('trace-op').textContent=linked?'GGML_OP_ADD':'이번 그래프 구성 전';
+    $('trace-shape').textContent=linked?'F32 '+shape:'—';
+    $('trace-src').textContent=linked?'[0] → node_26 (cur)　[1] → embd (inpSA)':'—';
+    $('trace-data').textContent=shown('add')?'ADD 직후 '+r.add.map((_,i)=>v('add',i)).join(' · '):allocated?'버퍼 배정됨 · 이번 결과 대기':linked?'결과 버퍼 배정 전':'—';
+    // Boxes show logical tensors. The Vulkan split reads a device copy of embd.
+    const box=(x,y,w,name,op,value,highlight,ready)=>'<g class="'+(highlight?'hot':ready?'':'future')+'"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="68" rx="7" fill="#fffef8" stroke="#91aa9b"/><text class="big" x="'+(x+10)+'" y="'+(y+19)+'">'+name+'</text><text x="'+(x+10)+'" y="'+(y+39)+'">'+op+'</text><text x="'+(x+10)+'" y="'+(y+58)+'">'+value+'</text></g>';
+    const wait=allocated?'계산 대기':'값 대기';
+    $('trace-diagram').innerHTML='<svg viewBox="0 0 445 235" role="img" aria-label="입력, 임베딩과 어텐션 출력에서 ADD까지"><defs><marker id="tr-tip" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#507566"/></marker></defs><g fill="none" stroke="#507566" stroke-width="1.6" marker-end="url(#tr-tip)"><path d="M182 51H246"/><path d="M340 86V111H107V144"/><path d="M340 86V144"/><path d="M185 180H246"/></g>'+
+      box(8,17,174,'inp_tokens','입력 I32',shown('input')?'ID '+id:'복사 대기',key==='input',shown('input'))+
+      box(249,17,184,'embd','GET_ROWS',shown('emb')?v('emb'):wait,key==='emb',shown('emb'))+
+      '<text x="115" y="136">어텐션 경유</text><text x="348" y="125">잔차</text>'+
+      box(8,146,177,'node_26','MUL_MAT',shown('proj')?v('proj'):wait,key==='proj',shown('proj'))+
+      box(249,146,184,'ffn_inp-0','ADD',shown('add')?v('add'):wait,key==='add',shown('add'))+'</svg>';
+    $('trace-equation').textContent=shown('add')?v('proj')+' + ('+v('emb')+') ≈ '+v('add'):'ffn_inp-0[i] = node_26[i] + embd[i]';
+    $('trace-position').textContent='마지막 입력 토큰 ID '+id+' · 배치 열 n='+(N-1)+' · 그림의 값은 성분 i=0 · '+(key==='out'?'종료 시 누적 그래프 재사용 '+r.reuse+'회':'그림의 숫자는 해당 연산 직후의 관찰값');
+    $('trace-prev').disabled=round===0&&frame===0;
+    $('trace-next').disabled=round===2&&frame===stages.length-1;
+    if($('trace-next').disabled)stop();
+  }
+  function advance(delta){
+    const length=order(records[mode][round].reused).length;
+    if(delta>0 && frame===length-1 && round<2){round++;frame=0;}
+    else if(delta<0 && frame===0 && round>0){round--;frame=order(records[mode][round].reused).length-1;}
+    else frame=Math.max(0,Math.min(length-1,frame+delta));
+    $('trace-call').value=round;render();
+  }
+  $('trace-run').onchange=e=>{stop();mode=e.target.value;round=0;frame=0;applyRun();render();};
+  $('trace-call').onchange=e=>{stop();round=Number(e.target.value);frame=0;render();};
+  $('trace-prev').onclick=()=>{stop();advance(-1);};
+  $('trace-next').onclick=()=>{stop();advance(1);};
+  $('trace-play').onclick=()=>{
+    if(interval!==null){stop();return;}
+    pause();stopAtlas();
+    if($('trace-next').disabled){round=0;frame=0;applyRun();render();}
+    $('trace-play').textContent='Ⅱ 일시정지';$('trace-play').setAttribute('aria-pressed','true');
+    interval=setInterval(()=>advance(1),2400);
+  };
+  document.addEventListener('click',e=>{if(e.target.closest('#auto,#atlas-play,#call-buttons,#trace-detail-link'))stop();});
+  $('trace-detail-link').onclick=()=>selectCall(mode==='ss'?round:call);
+  applyRun();render();
+})();
 
 </script></body></html>
