@@ -30,3 +30,4 @@ add_custom_target(study-map SOURCES
     llama.cpp/ggml/src/ggml-backend.cpp
     llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp
     llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp)
+add_subdirectory(gguf-inspector)

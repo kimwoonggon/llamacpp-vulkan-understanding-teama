@@ -2,6 +2,10 @@
 
 SS는 GGUF 모델 로드와 추론 진입을, HR은 Qwen2 연산 그래프를, WG는 첫 층 FFN 행렬곱의 Vulkan 실행을 추적합니다.
 
+## GGUF 내부 구조 확인
+
+[GGUF Inspector 실행 안내](gguf-inspector/README.md) · 저장소 루트에서 **05-open-gguf-inspector.cmd**를 실행하면 전용 Visual Studio 솔루션이 열립니다. 콘솔과 HTML에서 실제 모델의 메타데이터, 텐서, 파일 위치와 패딩을 확인할 수 있습니다.
+
 ## 강의와 코드 지도
 
 저장소를 복제한 후 다음 파일을 브라우저로 열면 됩니다.

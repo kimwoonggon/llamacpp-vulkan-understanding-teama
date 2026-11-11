@@ -20,3 +20,4 @@
 /graphify-out/cache/
 node_modules/
 __pycache__/
+/gguf-inspector/build/
