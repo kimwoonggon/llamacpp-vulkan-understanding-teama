@@ -2520,7 +2520,7 @@ ggml_cgraph * llama_context::graph_reserve(
     const auto gparams = graph_params(res, ubatch, mctx, ctx_type_to_graph_type(cparams.ctx_type));
 
     res->reset();
-
+    // 매우 중요. 연산 그래프를 만든다.
     auto * gf = model.build_graph(gparams);
 
     this->n_input_tensors = llama_graph_n_input_tensors(gf);
