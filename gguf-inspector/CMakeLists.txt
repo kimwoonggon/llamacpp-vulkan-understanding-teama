@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.24)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    project(gguf-inspector LANGUAGES C CXX)
+    set(BUILD_SHARED_LIBS OFF)
+    set(GGML_CPU OFF)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+    add_subdirectory(../llama.cpp/ggml ggml EXCLUDE_FROM_ALL)
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT gguf-inspector)
+endif()
+
+add_executable(gguf-inspector main.cpp inspect.cpp report.cpp qwen2-map.cpp inspect.h)
+target_compile_features(gguf-inspector PRIVATE cxx_std_17)
+target_link_libraries(gguf-inspector PRIVATE ggml-base)
+if(MSVC)
+    target_compile_options(gguf-inspector PRIVATE /utf-8 /W4)
+endif()
+set(model "${CMAKE_CURRENT_SOURCE_DIR}/../models/qwen2.5-1.5b-instruct-fp16.gguf")
+if(NOT EXISTS "${model}")
+    set(model "${CMAKE_CURRENT_SOURCE_DIR}/sample.gguf")
+endif()
+set_target_properties(gguf-inspector PROPERTIES
+    VS_DEBUGGER_COMMAND_ARGUMENTS "\"${model}\" --html \"${CMAKE_CURRENT_BINARY_DIR}/report.html\""
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
