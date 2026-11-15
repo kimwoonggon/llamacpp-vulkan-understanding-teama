@@ -71,8 +71,7 @@ D:\llama-vulkan-lab\
 ├─ matmul-demo\main.cpp                  독립 행렬곱 예제 소스
 ├─ .vscode\launch.json                   VS Code의 CPU/Vulkan 실행 설정
 ├─ scripts\                              빌드·실행 명령 파일이 부르는 PowerShell 스크립트
-├─ logs\                                 모델 로드·실행·Vulkan dispatch 기록
-└─ graphify-out\                         브라우저에서 열어 보는 코드 관계 지도
+└─ logs\                                 모델 로드·실행·Vulkan dispatch 기록
 ```
 
 **두 개의 CMakeLists.txt를 구분하는 법.** 캡처의 `llama-simple` 바로 밑에 있는 파일을 열면 `add_executable(${TARGET} simple.cpp)`가 나온다. 반면 실습 폴더 맨 위의 파일에는 `VS_STARTUP_PROJECT llama-simple`과 `VS_DEBUGGER_COMMAND_ARGUMENTS`가 있다. **“어떤 소스를 컴파일하지?”**는 첫 파일, **“왜 F5만 눌러도 Qwen과 Vulkan이 선택되지?”**는 두 번째 파일에서 답을 찾는다. 빌드 구성을 계속 유지하려면 원본 CMake 설정을 편집한다. `build` 아래 프로젝트 파일은 CMake가 다시 생성할 수 있다.
