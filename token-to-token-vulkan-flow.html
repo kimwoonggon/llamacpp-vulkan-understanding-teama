@@ -726,6 +726,212 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .chapter-source-details[open] > summary .detail-when-closed { display: none; }
 .chapter-source-details > :is(figure,.diagram,.weight-path,.readback-map,.input-write,.box,.qw,.gx) { margin-block: 20px; }
 @media print { .chapter-source-details > summary { display: none; } }
+
+/* Wq upload call tree. Each nested list contains a caller's direct calls. */
+.wq-calls {
+  --branch: clamp(8px, 1.6vw, 22px);
+  --rail: var(--rule-strong);
+  margin: 24px 0;
+  padding: clamp(14px, 2.5vw, 28px);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.wq-calls figcaption { margin: 0 0 16px; }
+.wq-calls figcaption h3 { margin: 0 0 4px; }
+.wq-calls figcaption span, .wq-calls .call-note {
+  display: block;
+  font: 400 .9rem/1.55 var(--font-body);
+  color: var(--muted);
+}
+.wq-calls ol { margin: 0; padding: 0; list-style: none; }
+.wq-calls ol ol { margin-left: var(--branch); }
+.wq-calls li { position: relative; margin: 0; padding: 0; }
+.wq-calls li li { padding-left: var(--branch); }
+.wq-calls li li::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-left: 1px solid var(--rail);
+}
+.wq-calls li li:last-child::before { height: 1.5rem; }
+.wq-calls li li::after {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  left: 0;
+  width: var(--branch);
+  border-top: 1px solid var(--rail);
+}
+.wq-calls .call-node {
+  position: relative;
+  padding: .48rem .65rem .45rem;
+  border-left: 3px solid var(--rule-strong);
+  overflow-wrap: anywhere;
+}
+.wq-calls .call-node code { font: 400 .91rem/1.55 var(--font-code); color: var(--text); }
+.wq-calls .call-node code b { font-weight: 700; }
+.wq-calls .call-node a { color: inherit; }
+.wq-calls .call-note { margin-top: .12rem; }
+.wq-calls .call-note code { font-size: .86rem; }
+.wq-calls .record { border-color: var(--accent-text); background: var(--tint); }
+.wq-calls .transfer { border-color: #387468; background: color-mix(in srgb, #387468 9%, var(--surface)); }
+@media (max-width: 600px) {
+  .wq-calls { --branch: 6px; padding-inline: 9px; }
+  .wq-calls .call-node { padding-inline: 7px; }
+}
+@media print { .wq-calls .call-node { break-inside: avoid; } }
+/* The scheduler is the caller of all three branches across two split iterations. */
+.split-map { --rail-color: var(--rule-strong); margin: 1.5rem 0; padding: clamp(14px, 2vw, 24px); background: var(--surface); color: var(--text); border: 1px solid var(--rule); border-radius: 12px; }
+.split-map figcaption { margin: 0 0 14px; }
+.split-map figcaption h3 { margin: 0 0 4px; }
+.split-map figcaption p, .split-map .split-out { margin: 0; }
+.split-map figcaption p { color: var(--muted); font-size: .93rem; }
+.split-map code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+.split-entry { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 9px; font-size: .81rem; line-height: 1.4; }
+.split-entry i { font-style: normal; color: var(--muted); }
+.split-entry a, .split-fn a, .split-middle a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+.split-root { position: relative; width: fit-content; max-width: 100%; margin: 19px auto 0; padding: 8px 18px; text-align: center; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--tint); font-weight: 650; font-size: .95rem; line-height: 1.45; }
+.split-root::before,.split-root::after { content:""; position:absolute; left:50%; height:18px; border-left:2px solid var(--rail-color); }
+.split-root::before { bottom:100%; } .split-root::after { top:100%; }
+.split-root a { color: var(--text); }
+.split-root small,.split-fn small { display:block; color:var(--muted); font:400 .8rem/1.45 var(--font-body); }
+.split-branches { --gap: 12px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--gap); position:relative; padding-top:34px; }
+.split-branches::before { content:""; position:absolute; top:17px; left:calc((100% - 2 * var(--gap))/6); right:calc((100% - 2 * var(--gap))/6); border-top:2px solid var(--rail-color); }
+.split-card { position:relative; display:flex; flex-direction:column; min-width:0; padding:11px; background:var(--bg); border:1px solid var(--rule); border-top:3px solid var(--branch-ink); border-radius:5px; }
+.split-cpu { --branch-ink:#356a83; } .split-copy { --branch-ink:#916129; } .split-vk { --branch-ink:#33705f; }
+.split-card::before { content:""; position:absolute; bottom:calc(100% + 3px); left:50%; height:16px; border-left:2px solid var(--rail-color); }
+.split-card h4 { margin:0 0 8px; font:700 1.05rem/1.35 var(--font-body); }
+.split-card h4 span { display:block; font:600 .81rem/1.5 var(--font-body); color:var(--muted); margin-bottom:3px; }
+.split-fn,.split-middle { position:relative; border:1px solid var(--rule); background:var(--surface); border-radius:4px; padding:6px 8px; font-size:.83rem; line-height:1.4; overflow-wrap:anywhere; }
+.split-fn ~ .split-fn,.split-middle { margin-top:12px; }
+.split-fn ~ .split-fn::before,.split-middle::before { content:"↓"; position:absolute; left:12px; top:-14px; line-height:13px; font-size:13px; font-weight:bold; color:var(--rail-color); }
+.split-middle { border-style:dashed; }
+.split-middle summary { cursor:pointer; font-weight:600; }
+.split-middle ol { margin:6px 0 0; padding-left:20px; }
+.split-values { margin:12px 0 0; border-left:3px solid var(--branch-ink); padding:3px 8px; font-size:.87rem; line-height:1.55; }
+.split-values strong { display:block; }
+.split-card .split-out { margin-top:auto; padding-top:12px; color:var(--muted); font-size:.85rem; line-height:1.48; }
+.split-out b { display:block; color:var(--text); }
+.split-map a:hover,.split-map a:focus-visible { color:var(--accent-text); }
+@media(max-width:760px) {
+ .split-entry { flex-direction:column; align-items:center; text-align:center; }
+ .split-entry i { transform:rotate(90deg); }
+ .split-branches { display:grid; grid-template-columns:1fr; gap:14px; padding:18px 0 0 17px; }
+ .split-branches::before { display:none; }
+ .split-root { margin-left:0; width:100%; }
+ .split-root::after { left:6px; }
+ .split-card::before { left:-12px; top:-18px; bottom:-16px; height:auto; }
+ .split-card:last-child::before { bottom:auto; height:43px; }
+ .split-card::after { content:""; position:absolute; left:-12px; top:25px; width:11px; border-top:2px solid var(--rail-color); }
+}
+
+.split-caller { position:relative; margin:0 auto; width:fit-content; max-width:100%; text-align:center; font-size:.89rem; }
+.split-caller::after { content:""; position:absolute; left:50%; top:100%; height:10px; border-left:2px solid var(--rail-color); }
+.split-prep { position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; padding:19px 0 0; margin:0 0 22px; }
+.split-prep::before { content:""; position:absolute; left:calc(12.5% - 3px); right:calc(12.5% - 3px); top:9px; border-top:2px solid var(--rail-color); }
+.split-prep > div { position:relative; min-width:0; border:1px solid var(--rule); border-radius:4px; padding:6px 4px; text-align:center; font-size:.76rem; line-height:1.4; }
+.split-prep > div::before { content:""; position:absolute; bottom:100%; left:50%; height:10px; border-left:2px solid var(--rail-color); }
+.split-prep small { display:block; font:400 .8rem/1.4 var(--font-body); color:var(--muted); }
+.split-prep > div:last-child { background:var(--tint); border-color:var(--rule-strong); }
+.split-prep > div:last-child::after { content:""; position:absolute; top:100%; left:50%; height:10px; border-left:2px solid var(--rail-color); }
+.split-prep::after { content:""; position:absolute; top:calc(100% + 10px); left:50%; right:calc(12.5% - 3px); border-top:2px solid var(--rail-color); }
+.split-entry { position:relative; }
+.split-entry::before { content:""; position:absolute; bottom:100%; left:50%; height:12px; border-left:2px solid var(--rail-color); }
+@media (max-width:760px) {
+ .split-prep { grid-template-columns:1fr; gap:4px; padding:13px 0 0 17px; margin-bottom:15px; }
+ .split-caller::after,.split-prep::before,.split-prep::after,.split-prep > div:last-child::after { display:none; }
+ .split-prep > div { text-align:left; padding:5px 7px; }
+ .split-prep > div::before { left:-12px; top:-5px; bottom:-5px; height:auto; }
+ .split-prep > div:first-child::before { top:-13px; }
+ .split-prep > div:last-child::before { bottom:50%; }
+ .split-prep > div::after,.split-prep > div:last-child::after { content:""; display:block; position:absolute; top:50%; left:-12px; width:12px; height:0; border:0; border-top:2px solid var(--rail-color); }
+ .split-entry::before { height:15px; }
+}
+/* Show the command buffer crossing the CPU / GPU execution boundary. */
+.q-entry { margin: 24px 0 18px; padding: clamp(12px, 1.8vw, 22px); background: var(--bg); border: 1px solid var(--rule-strong); border-radius: 8px; }
+.wq-calls .q-entry h4 { margin: 0 0 7px; font-size: 1.22rem; }
+.q-entry .q-entry-pipeline { margin: 0 0 14px; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.q-entry .q-entry-source { margin: 0 0 8px; padding: 9px 12px; background: var(--surface); color: var(--text); border-left: 3px solid var(--rule-strong); font: .86rem/1.55 var(--font-code); white-space: pre-wrap; overflow-wrap: anywhere; }
+.q-entry-source strong { color: var(--accent-text); }
+.q-entry-path { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.q-entry-stop { position: relative; padding: 11px; border: 1px solid var(--rule); border-top: 3px solid #356a83; border-radius: 4px; background: var(--surface); min-width: 0; }
+.q-entry-stop:nth-child(2) { border-top-color: #916129; }
+.q-entry-stop:last-child { border-top-color: #33705f; }
+.q-entry-stop + .q-entry-stop::before { content: "→"; position: absolute; top: 44%; left: -23px; width: 21px; color: var(--rule-strong); font-size: 1.1rem; text-align: center; }
+.q-entry-stop > span, .q-entry-stop > strong, .q-entry-stop > code { display: block; }
+.q-entry-stop > span { font-size: .8rem; color: var(--muted); }
+.q-entry-stop > strong { margin: 3px 0 8px; font-size: 1rem; }
+.q-entry-stop > code { background: var(--bg); padding: 5px; font-size: .82rem; overflow-wrap: anywhere; white-space: normal; }
+.q-entry .q-entry-stop p { margin: 8px 0 0; font-size: .86rem; line-height: 1.55; }
+@media (max-width: 760px) {
+  .q-entry-path { grid-template-columns: 1fr; gap: 19px; }
+  .q-entry-stop + .q-entry-stop::before { content: "↓"; top: -22px; left: 50%; transform: translateX(-50%); line-height: 19px; }
+}
+
+.measure .block-rms-flow {
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: clamp(.65rem, 2vw, 1.25rem);
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: 400 clamp(.79rem, 1.4vw, .94rem)/1.55 var(--font-code);
+  white-space: pre;
+}
+.block-rms-flow code { font: inherit; white-space: inherit; overflow-wrap: normal; }
+.block-rms-flow strong { color: var(--accent-text); }
+
+#attention-vulkan { margin-block: 2.5rem; }
+#attention-vulkan h4 { margin: 1.4rem 0 .4rem; }
+#attention-vulkan .box { padding: .6rem clamp(.55rem, 1.8vw, 1.2rem); }
+#attention-vulkan .box summary { cursor: pointer; }
+.attn-demo { margin: 1.25rem 0; padding: clamp(.8rem, 2vw, 1.4rem); border: 1px solid var(--rule-strong); border-radius: 8px; background: var(--surface); }
+#attention-vulkan .attn-demo h4 { margin: 0; }
+.attn-steps { display: flex; flex-wrap: wrap; gap: .35rem; margin: 1rem 0; padding: 0; border: 0; min-width: 0; }
+.attn-steps legend { margin-bottom: .35rem; font-weight: 700; }
+.attn-steps label { display: inline-flex; align-items: center; gap: .3rem; min-height: 2.5rem; padding: .2rem .6rem; border: 1px solid var(--rule-strong); border-radius: .35rem; cursor: pointer; }
+.attn-steps label:has(input:checked) { background: var(--tint); border-color: var(--accent); }
+.attn-steps input { accent-color: var(--accent); }
+.attn-cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.attn-cells > div { min-width: 0; padding: .6rem; border-block-start: 2px solid var(--rule-strong); }
+.attn-cells > div + div { border-inline-start: 1px solid var(--rule); }
+.attn-cells b { display: block; margin-top: .3rem; color: var(--accent-text); font: 700 .99rem/1.5 var(--font-code); }
+.attn-demo .attn-explain { margin-bottom: 0; }
+.attn-api dt { font-weight: 700; margin-top: .75rem; }
+.attn-api dd { margin: .2rem 0 .5rem; }
+#attention-vulkan .attn-capture { max-height: 25rem; overflow: auto; }
+@media (max-width: 480px) {
+  .attn-cells { grid-template-columns: 1fr; }
+  .attn-cells > div { display: flex; align-items: baseline; justify-content: space-between; gap: .4rem; }
+  .attn-cells > div + div { border-inline-start: 0; }
+  .attn-cells b { margin: 0; }
+}
+
+#attention-vulkan .attn-dependency { margin: 1.5rem 0; padding: clamp(.55rem, 1.5vw, 1.1rem); border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+#attention-vulkan .attn-dependency h4 { margin: 0; }
+.attn-dependency svg { width: 100%; height: auto; display: block; margin-block: .75rem; font: 15px var(--font-body); }
+.attn-dependency .dep-narrow { display: none; }
+.attn-dependency .dep-main, .attn-dependency .dep-side-title { fill: var(--text); font-weight: 700; font-size: 16px; }
+.attn-dependency .dep-hd, .attn-dependency .dep-ref { fill: var(--muted); font-size: 13px; }
+.attn-dependency .dep-hd { font-weight: 700; }
+.attn-dependency .dep-small { fill: var(--text); font-size: 14px; }
+.attn-dependency .dep-edge-label { fill: var(--accent-text); font-weight: 700; font-size: 15px; }
+.attn-dependency .dep-op, .attn-dependency .dep-copy, .attn-dependency .dep-input, .attn-dependency .dep-result { stroke: var(--rule-strong); fill: var(--surface); }
+.attn-dependency .dep-copy, .attn-dependency .dep-result { fill: var(--tint); stroke: var(--accent-text); }
+.attn-dependency .dep-flow, .attn-dependency .dep-side-arrow { fill: none; stroke: var(--accent-text); stroke-width: 2; }
+.attn-dependency .dep-side-arrow { stroke: var(--muted); }
+.attn-dependency .dep-arrowhead { fill: var(--accent-text); }
+.attn-dependency .dep-sidehead { fill: var(--muted); }
+.attn-dependency .dep-caption { margin-bottom: 0; }
+@media screen and (max-width: 740px) {
+  .attn-dependency .dep-wide { display: none; }
+  #attention-vulkan .attn-dependency { margin-inline: -.45rem; padding-inline: .45rem; }
+  .attn-dependency .dep-narrow { display: block; max-width: 430px; margin-inline: auto; }
+}
 </style><style>
 #wq-mapview-trace { margin: 16px 0; padding: clamp(12px, 2vw, 22px); border: 1px solid var(--line); border-radius: 10px; scroll-margin-top: 5rem; }
 #wq-mapview-trace h4 { margin: 0; font-size: 1.12rem; }
@@ -948,7 +1154,94 @@ flowchart TB
     </div>
   </div>
   <figcaption><strong>528행 · 복사 완료</strong><span><code>waitForFences</code>가 성공하면 staging은 다음 가중치에 재사용할 수 있습니다. Q 셰이더의 <code>binding 0</code>은 DEVICE_LOCAL 모델 버퍼의 Wq 구간을 가리킵니다.</span></figcaption>
-</figure><section class="chapter-flow" aria-label="가중치 복사 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-upload-1" name="flow-upload"><summary aria-label="1단계 llama_model_loader::load_all_data · Wq 원본 위치 찾기 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>Wq 원본 위치 찾기</strong><code>llama_<wbr>model_<wbr>loader::<wbr>load_<wbr>all_<wbr>data</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>모델 버퍼 준비 후 load_tensors가 컨텍스트별로 호출합니다. 함수 안의 텐서 반복문에서 Wq 차례를 봅니다.</dd><dt>호출 목적</dt><dd>이름으로 색인을 조회해 Wq의 원본 주소와 바이트 수를 구합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx</code></dt><dd>이번에 채울 가중치 텐서들의 컨텍스트입니다.</dd><dt><code>bufs</code></dt><dd>파일 번호와 연관된 백엔드 버퍼들을 찾는 표입니다.</dd><dt><code>lmlocks</code></dt><dd>파일 매핑을 메모리에 고정할 때 쓰는 상태 포인터입니다. 기본 실행에서는 NULL입니다.</dd><dt><code>progress_callback / progress_callback_user_data</code></dt><dd>로드 진행률을 보고하는 콜백과 호출자 데이터입니다.</dd></dl></dd><dt>실행 결과</dt><dd>data는 GGUF 시작 주소 +1,027,545,120, n_size는 1,536 × 1,536 × 2 = 4,718,592입니다. Vulkan Wq에는 이미 목적지가 있어 tensor_set 분기로 들어갑니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-model-loader.cpp#L1642-L1648" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/llama-model-loader.cpp:1642-1648</a></code></figcaption><pre tabindex="0"><code>if (from_mapping) {
+</figure>
+<figure class="wq-calls" id="wq-upload-calls" aria-labelledby="wq-upload-calls-title">
+  <figcaption>
+    <h3 id="wq-upload-calls-title">Wq를 복사할 때 어떤 함수가 어떤 인자를 넘길까?</h3>
+    <span>한 칸 안쪽의 가지는 바로 바깥 함수가 직접 부릅니다. 같은 깊이의 가지는 위에서 아래로 실행됩니다. 함수 이름을 누르면 해당 설명이나 소스를 볼 수 있습니다.</span>
+  </figcaption>
+  <ol>
+    <li>
+      <div class="call-node">
+        <code><a href="#fn-upload-1"><b>ml.load_all_data</b></a>(<wbr>ctx,<wbr> buf_map,<wbr> use_mlock ? &amp;pimpl-&gt;mlock_mmaps : NULL,<wbr> params.progress_callback,<wbr> params.progress_callback_user_data)</code>
+        <span class="call-note">가중치들을 순회하다 Wq를 만나면 <code>data = mapping-&gt;addr() + weight-&gt;offs</code>로 원본을 찾습니다. 이번 Wq는 파일 시작 +1,027,545,120 B에 있습니다.</span>
+      </div>
+      <ol>
+        <li>
+          <div class="call-node">
+            <code><a href="#fn-upload-2"><b>ggml_backend_tensor_set</b></a>(<wbr>cur,<wbr> data,<wbr> 0,<wbr> n_size)</code>
+            <span class="call-note"><code>cur</code>는 목적지 Wq, <code>data</code>는 GGUF 원본 주소입니다. Wq 안의 오프셋 0부터 <code>n_size</code>(4,718,592 B)만큼 씁니다.</span>
+          </div>
+          <ol>
+            <li>
+              <div class="call-node">
+                <code><a href="#fn-upload-3"><b>ggml_backend_vk_buffer_set_tensor</b></a>(<wbr>buf,<wbr> tensor,<wbr> data,<wbr> offset,<wbr> size)</code>
+                <span class="call-note">바로 위 함수가 <code>buf-&gt;iface.set_tensor</code>를 부르면 Vulkan 버퍼에 등록된 이 함수가 실행됩니다. <code>tensor</code>는 위의 <code>cur</code>입니다.</span>
+              </div>
+              <ol>
+                <li>
+                  <div class="call-node">
+                    <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-buffers.cpp#L534" target="_blank" rel="noopener noreferrer"><b>ggml_vk_buffer_write</b></a>(<wbr>buf,<wbr> vk_tensor_offset(tensor) + tensor-&gt;view_offs + offset,<wbr> data,<wbr> size)</code>
+                    <span class="call-note">여기서 <code>buf</code>는 Vulkan 모델 버퍼입니다. 두 번째 인자는 버퍼 기준 오프셋으로, 이번 Wq는 466,759,680 + 0 + 0 = <b>466,759,680 B</b>입니다.</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <div class="call-node">
+                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-buffers.cpp#L497" target="_blank" rel="noopener noreferrer"><b>ggml_vk_buffer_write_2d</b></a>(<wbr>dst,<wbr> offset,<wbr> src,<wbr> size,<wbr> size,<wbr> size,<wbr> 1)</code>
+                        <span class="call-note">앞에서 받은 모델 버퍼는 <code>dst</code>, GGUF 원본 주소는 <code>src</code>입니다. 원본 행 간격·목적지 행 간격·한 행 너비에 모두 <code>size</code>를 넣어 Wq 전체를 <b>4,718,592 B × 1행</b>으로 넘깁니다.</span>
+                      </div>
+                      <ol>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="#fn-upload-4"><b>ggml_vk_buffer_write_2d_async</b></a>(<wbr>subctx,<wbr> dst,<wbr> offset,<wbr> src,<wbr> spitch,<wbr> dpitch,<wbr> width,<wbr> height,<wbr> true)</code>
+                            <span class="call-note"><code>subctx</code>는 전송 명령을 기록할 컨텍스트입니다. 마지막 <code>true</code>로 staging 사용을 허용합니다.</span>
+                          </div>
+                          <ol>
+                            <li>
+                              <div class="call-node record">
+                                <code><a href="#upload-gpu-copy"><b>copyBuffer</b></a>(<wbr>staging_buffer-&gt;buffer,<wbr> dst-&gt;buffer,<wbr> slices)</code>
+                                <span class="call-note"><b>GPU 명령 기록.</b> <code>slices[0]</code>에 staging 시작 0 B, 모델 버퍼 목적지 +466,759,680 B, 복사 크기 4,718,592 B를 지정합니다.</span>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="call-node">
+                                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-buffers.cpp#L483" target="_blank" rel="noopener noreferrer"><b>deferred_memcpy</b></a>(<wbr>(uint8_t *)staging_buffer-&gt;ptr,<wbr> src,<wbr> staging_size,<wbr> &amp;subctx-&gt;in_memcpys)</code>
+                                <span class="call-note">CPU가 나중에 쓸 목적지·원본·크기를 <code>in_memcpys</code>에 등록합니다. 여기서 기록 함수가 끝나고 바깥의 <code>ggml_vk_buffer_write_2d</code>로 돌아갑니다.</span>
+                              </div>
+                            </li>
+                          </ol>
+                        </li>
+                        <li>
+                          <div class="call-node transfer">
+                            <code><a href="#fn-upload-5"><b>memcpy</b></a>(<wbr>cpy.dst,<wbr> cpy.src,<wbr> cpy.n)</code>
+                            <span class="call-note"><b>CPU 복사.</b> 방금 등록한 항목을 꺼냅니다. <code>cpy.src</code>는 GGUF의 Wq, <code>cpy.dst</code>는 staging의 CPU 주소, <code>cpy.n</code>은 4,718,592 B입니다.</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="call-node record">
+                            <code><a href="#fn-upload-6"><b>ggml_vk_submit</b></a>(<wbr>subctx,<wbr> dst-&gt;device-&gt;fence)</code>
+                            <span class="call-note"><b>큐 제출.</b> 기록한 명령을 전송 큐에 제출합니다. GPU가 그 명령을 실행할 때 staging의 4,718,592 B가 모델 버퍼의 Wq 자리로 복사됩니다.</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="#fn-upload-7"><b>waitForFences</b></a>(<wbr>{ dst-&gt;device-&gt;fence },<wbr> true,<wbr> UINT64_MAX)</code>
+                            <span class="call-note"><b>완료 확인.</b> CPU가 같은 fence의 신호를 기다립니다. 성공하면 Wq 복사가 끝났고, 상위 호출들이 반환되어 로더가 다음 텐서를 처리합니다.</span>
+                          </div>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</figure>
+<section class="chapter-flow" aria-label="가중치 복사 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-upload-1" name="flow-upload"><summary aria-label="1단계 llama_model_loader::load_all_data · Wq 원본 위치 찾기 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>Wq 원본 위치 찾기</strong><code>llama_<wbr>model_<wbr>loader::<wbr>load_<wbr>all_<wbr>data</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>모델 버퍼 준비 후 load_tensors가 컨텍스트별로 호출합니다. 함수 안의 텐서 반복문에서 Wq 차례를 봅니다.</dd><dt>호출 목적</dt><dd>이름으로 색인을 조회해 Wq의 원본 주소와 바이트 수를 구합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx</code></dt><dd>이번에 채울 가중치 텐서들의 컨텍스트입니다.</dd><dt><code>bufs</code></dt><dd>파일 번호와 연관된 백엔드 버퍼들을 찾는 표입니다.</dd><dt><code>lmlocks</code></dt><dd>파일 매핑을 메모리에 고정할 때 쓰는 상태 포인터입니다. 기본 실행에서는 NULL입니다.</dd><dt><code>progress_callback / progress_callback_user_data</code></dt><dd>로드 진행률을 보고하는 콜백과 호출자 데이터입니다.</dd></dl></dd><dt>실행 결과</dt><dd>data는 GGUF 시작 주소 +1,027,545,120, n_size는 1,536 × 1,536 × 2 = 4,718,592입니다. Vulkan Wq에는 이미 목적지가 있어 tensor_set 분기로 들어갑니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-model-loader.cpp#L1642-L1648" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/llama-model-loader.cpp:1642-1648</a></code></figcaption><pre tabindex="0"><code>if (from_mapping) {
     const auto &amp; mapping = mappings.at(weight-&gt;idx);
     ggml_backend_buffer_t buf_mmap = nullptr;
     if (bufs.count(weight-&gt;idx)) {
@@ -1074,7 +1367,210 @@ first=785</pre></details><details class="snap"><summary>첫 출력 ␠Paris</sum
 &quot;................................&quot;
 &quot;.....&quot;</pre></details><details class="snap"><summary>두 번째 decode 진입</summary><ol class="stack"><li>main <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L173" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">simple.cpp:173</a></span></li><li>llama_decode <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L4328" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-context.cpp:4328</a></span></li></ol></details><details class="snap"><summary>ubatch의 토큰과 위치</summary><ol class="stack"><li>main <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L173" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">simple.cpp:173</a></span></li><li>llama_decode <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L4329" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-context.cpp:4329</a></span></li><li>llama_context::decode <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L1887" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-context.cpp:1887</a></span></li></ol><pre class="observations">count=1
 input=12095
-position=13</pre></details></details></details></section><div class="chapter-bridge"><p>첫 출력 ␠Paris를 위치 5의 새 입력으로 넘깁니다. 앞의 다섯 위치는 KV 캐시에 있습니다.</p><a href="#graph">04 그래프와 입력 →</a></div></section><section id="graph" class="panel" role="tabpanel" aria-labelledby="tab-graph"><div class="chapter-head"><div class="chapter-label">04 / 09 · 그래프와 입력</div><h2>연결을 만든 뒤, 토큰 ID를 한 번 쓴다</h2></div><section class="chapter-body" aria-label="그래프와 입력 강의 본문"><p class="intro">모델 로드가 끝나면 <code>model.layers[0].wq</code>는 GPU에 올라간 Wq를 가리킵니다. 28개 층의 연산 순서는 Qwen2의 C++ 코드에 있습니다. <code>llama_init_from_model()</code>은 예시 배치로 작업 메모리 예약용 그래프를 만듭니다. 실제 <code>llama_decode()</code>에서는 현재 배치에 맞는 실행 그래프를 만들거나 이전 그래프를 재사용합니다. 그래프를 만들 때 입력 텐서 자리도 함께 생깁니다. 배치에 이미 있는 토큰 ID 12095를 그 자리에 쓰는 때는 <code>set_inputs()</code>이고, 각 층의 결과가 생기는 때는 <code>graph_compute()</code>입니다.</p><figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기"><title>연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기</title><defs><marker id="graphh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">BUILD</text><text x="19" y="59" class="svgTitle">연산 노드 연결</text><text x="19" y="81" class="svgSub">연산 종류와 src[] 연결</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">SET INPUTS</text><text x="324" y="59" class="svgTitle">inp_tokens[0] = 12095</text><text x="324" y="81" class="svgSub">이번 배치의 실제 값</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">COMPUTE</text><text x="629" y="59" class="svgTitle">결과 텐서에 쓰기</text><text x="629" y="81" class="svgSub">여기서 행 조회와 곱셈 실행</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기"><title>연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기</title><defs><marker id="graphv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">BUILD</text><text x="29" y="48" class="svgTitle">연산 노드 연결</text><text x="29" y="70" class="svgSub">연산 종류와 src[] 연결</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">SET INPUTS</text><text x="29" y="146" class="svgTitle">inp_tokens[0] = 12095</text><text x="29" y="168" class="svgSub">이번 배치의 실제 값</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">COMPUTE</text><text x="29" y="244" class="svgTitle">결과 텐서에 쓰기</text><text x="29" y="266" class="svgSub">여기서 행 조회와 곱셈 실행</text></svg></figure><section class="chapter-flow" aria-label="그래프와 입력 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-graph-1" name="flow-graph"><summary aria-label="1단계 llama_context::process_ubatch · 한 토큰 그래프 준비 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>한 토큰 그래프 준비</strong><code>llama_<wbr>context::<wbr>process_<wbr>ubatch</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>llama_context::decode가 현재 처리할 ubatch를 넘겨 직접 호출합니다.</dd><dt>호출 목적</dt><dd>현재 그래프를 재사용할 수 있는지 판정하고 배치 실행을 준비합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ubatch</code></dt><dd>ID 12095와 위치 5를 담은 이번 한 토큰 배치</dd><dt><code>gtype</code></dt><dd>컨텍스트에 맞춘 그래프 종류</dd><dt><code>mctx</code></dt><dd>이번 배치가 쓸 KV 캐시 문맥</dd><dt><code>ret</code></dt><dd>성공 또는 실패 상태를 호출자에게 돌려줄 참조</dd></dl></dd><dt>실행 결과</dt><dd>직전 5토큰 그래프와 모양이 달라 생성 경로로 들어갑니다. 이후 같은 한 토큰 모양에서 재사용 조건까지 맞으면 생성·할당을 건너뛰고 새 입력을 씁니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L1403-L1405" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/llama-context.cpp:1403-1405</a></code></figcaption><pre tabindex="0"><code>const auto gparams = graph_params(res, ubatch, mctx, gtype);
+position=13</pre></details></details></details></section><div class="chapter-bridge"><p>첫 출력 ␠Paris를 위치 5의 새 입력으로 넘깁니다. 앞의 다섯 위치는 KV 캐시에 있습니다.</p><a href="#graph">04 그래프와 입력 →</a></div></section><section id="graph" class="panel" role="tabpanel" aria-labelledby="tab-graph"><div class="chapter-head"><div class="chapter-label">04 / 09 · 그래프와 입력</div><h2>연결을 만든 뒤, 토큰 ID를 한 번 쓴다</h2></div><section class="chapter-body" aria-label="그래프와 입력 강의 본문"><p class="intro">모델 로드가 끝나면 <code>model.layers[0].wq</code>는 GPU에 올라간 Wq를 가리킵니다. 28개 층의 연산 순서는 Qwen2의 C++ 코드에 있습니다. <code>llama_init_from_model()</code>은 예시 배치로 작업 메모리 예약용 그래프를 만듭니다. 실제 <code>llama_decode()</code>에서는 현재 배치에 맞는 실행 그래프를 만들거나 이전 그래프를 재사용합니다. 그래프를 만들 때 입력 텐서 자리도 함께 생깁니다. 배치에 이미 있는 토큰 ID 12095를 그 자리에 쓰는 때는 <code>set_inputs()</code>이고, 각 층의 결과가 생기는 때는 <code>graph_compute()</code>입니다.</p>
+<figure class="split-map" id="graph-split-map" aria-label="두 번째 decode의 CPU 조회, Vulkan 입력 복사와 실행 호출도">
+  <figcaption><h3>04장의 그래프에서 05장의 임베딩과 06장의 Vulkan 실행까지</h3><p>두 번째 decode의 입력은 <b>␠Paris · ID 12095</b>입니다. 가로로 갈라진 선은 같은 함수가 순서대로 부르는 자식 호출입니다.</p></figcaption>
+  <div class="split-caller"><a href="#decode-graph-calls"><code>llama_decode(ctx, batch) → ctx-&gt;decode(batch)</code></a> → <a href="#fn-graph-1"><code>process_ubatch(…)</code></a></div>
+  <div class="split-prep">
+    <div><a href="#fn-graph-2"><code>model.build_graph</code></a><small>새 그래프에 Wq와 입력 연결</small></div>
+    <div><a href="#fn-graph-4"><code>ggml_backend_sched_alloc_graph</code></a><small>새 그래프의 버퍼 배정</small></div>
+    <div><a href="#fn-graph-5"><code>res-&gt;set_inputs</code></a><small>입력 텐서에 ID 12095 쓰기</small></div>
+    <div><a href="#fn-graph-7"><code>graph_compute(gf, false)</code></a><small>입력이 준비된 그래프 실행 요청 ↓</small></div>
+  </div>
+  <div class="split-entry"><a href="#fn-embedding-1"><code>ggml_backend_sched_graph_compute_async(sched, gf)</code></a></div>
+  <div class="split-root"><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L1646-L1661" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>backend_<wbr>sched_<wbr>compute_<wbr>splits(sched)</code></a><small>구간을 하나씩 순회하며 필요한 입력을 준비하고 실행을 요청합니다.</small></div>
+  <div class="split-branches">
+    <section class="split-card split-cpu">
+      <h4><span>① CPU 구간</span>임베딩 행 조회</h4>
+      <div class="split-fn"><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L1797-L1803" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>backend_<wbr>graph_<wbr>compute_<wbr>async</code></a><small>1799행 · 이번 백엔드는 CPU</small></div>
+      <details class="split-middle"><summary>CPU 내부 호출 5개</summary><ol>
+        <li><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-cpu/ggml-cpu.cpp#L170-L191" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>backend_<wbr>cpu_<wbr>graph_<wbr>compute</code></a></li>
+        <li><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-cpu/ggml-cpu.c#L3427-L3462" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>graph_<wbr>compute</code></a></li>
+        <li><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-cpu/ggml-cpu.c#L3145-L3157" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>graph_<wbr>compute_<wbr>thread</code></a></li>
+        <li><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-cpu/ggml-cpu.c#L1897-L1901" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>compute_<wbr>forward</code></a></li>
+        <li><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-cpu/ops.cpp#L5180-L5187" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>compute_<wbr>forward_<wbr>get_<wbr>rows</code></a></li>
+      </ol></details>
+      <div class="split-fn"><a href="#fn-embedding-2"><code>ggml_<wbr>compute_<wbr>forward_<wbr>get_<wbr>rows_<wbr>f16</code></a><small>토큰 ID로 표의 12095번 행 선택</small></div>
+      <div class="split-fn"><a href="#fn-embedding-3"><code>ggml_<wbr>cpu_<wbr>fp16_<wbr>to_<wbr>fp32</code></a><small>FP16 1,536개 → FP32 1,536개</small></div>
+      <p class="split-out"><b>↩ 스케줄러로 복귀</b>CPU 결과 <code>embd</code>가 준비됩니다. 스케줄러가 다음 Vulkan 구간으로 넘어갑니다.</p>
+    </section>
+    <section class="split-card split-copy">
+      <h4><span>② Vulkan 구간 · 입력 준비</span>CPU가 최종 GPU 입력 버퍼에 직접 쓰기</h4>
+      <div class="split-fn"><a href="#fn-embedding-4"><code>ggml_<wbr>backend_<wbr>vk_<wbr>cpy_<wbr>tensor_<wbr>async</code></a><small>1785행 · 목적지의 복사 함수 호출</small></div>
+      <div class="split-fn"><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-buffers.cpp#L534-L537" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>vk_<wbr>buffer_<wbr>write</code></a></div>
+      <div class="split-fn"><a href="#fn-embedding-5"><code>ggml_<wbr>vk_<wbr>buffer_<wbr>write_<wbr>2d</code></a></div>
+      <div class="split-fn"><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-buffers.cpp#L500-L505" target="_blank" rel="noopener noreferrer"><code>memcpy</code></a><small>504행 · <code>embd</code>의 6,144바이트를 <code>dst-&gt;ptr + offset</code>에 복사</small></div>
+      <div class="split-values"><strong>CPU가 직접 쓸 수 있는 이유</strong>이 실행의 <code>Vulkan0#embd#0</code> 메모리는 <code>DEVICE_LOCAL</code>이면서 <code>HOST_VISIBLE</code>입니다. CPU는 이미 매핑된 주소에 쓰고, <code>HOST_COHERENT</code>라 별도 flush를 생략합니다. <a href="#embedding-copy-branch">메모리 속성과 복사 분기 보기</a></div>
+      <p class="split-out"><b>↩ 스케줄러로 복귀</b>FP32 1,536개가 최종 입력 버퍼에 준비되면 스케줄러가 ③을 호출합니다.</p>
+    </section>
+    <section class="split-card split-vk">
+      <h4><span>③ 같은 Vulkan 구간 · 실행</span>dispatch 기록 → 큐 제출 → GPU 실행</h4>
+      <div class="split-fn"><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L1797-L1803" target="_blank" rel="noopener noreferrer"><code>ggml_<wbr>backend_<wbr>graph_<wbr>compute_<wbr>async</code></a><small>1799행 · 준비된 구간의 실행을 Vulkan 백엔드에 요청</small></div>
+      <div class="split-fn"><a href="#vulkan-q-dispatch"><code>ggml_<wbr>backend_<wbr>vk_<wbr>graph_<wbr>compute</code></a><small>그래프 노드를 순회하며 아래 명령들을 준비</small></div>
+      <div class="split-values"><strong>CPU · dispatch 기록</strong><code>ggml_vk_dispatch_pipeline</code> 안의 <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-common.h#L270-L279" target="_blank" rel="noopener noreferrer"><code>buf.dispatch(…)</code></a>가 명령 버퍼에 기록합니다. 0번 층에서 정규화와 Q 곱셈은 각각 별도 dispatch입니다.</div>
+      <div class="split-values"><strong>CPU · 명령 묶음 제출</strong><code>ggml_vk_submit</code> 안의 <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L942-L948" target="_blank" rel="noopener noreferrer"><code>queue.submit(…)</code></a>이 기록된 명령 버퍼를 Vulkan 큐에 넘깁니다.</div>
+      <p class="split-out"><b>GPU · 셰이더 실행</b>정규화 셰이더가 ②의 임베딩을 읽어 <code>attn_norm-0</code>을 만듭니다. Q·K·V 투영은 이 벡터를 읽습니다. 0~27번 층은 여러 dispatch로 처리합니다. <a href="#vulkan-q-dispatch">Q 한 번의 호출 깊이 보기 →</a></p>
+    </section>
+  </div>
+</figure>
+<figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기"><title>연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기</title><defs><marker id="graphh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">BUILD</text><text x="19" y="59" class="svgTitle">연산 노드 연결</text><text x="19" y="81" class="svgSub">연산 종류와 src[] 연결</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">SET INPUTS</text><text x="324" y="59" class="svgTitle">inp_tokens[0] = 12095</text><text x="324" y="81" class="svgSub">이번 배치의 실제 값</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">COMPUTE</text><text x="629" y="59" class="svgTitle">결과 텐서에 쓰기</text><text x="629" y="81" class="svgSub">여기서 행 조회와 곱셈 실행</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기"><title>연산 노드 연결 → inp_tokens[0] = 12095 → 결과 텐서에 쓰기</title><defs><marker id="graphv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">BUILD</text><text x="29" y="48" class="svgTitle">연산 노드 연결</text><text x="29" y="70" class="svgSub">연산 종류와 src[] 연결</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">SET INPUTS</text><text x="29" y="146" class="svgTitle">inp_tokens[0] = 12095</text><text x="29" y="168" class="svgSub">이번 배치의 실제 값</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#graphv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">COMPUTE</text><text x="29" y="244" class="svgTitle">결과 텐서에 쓰기</text><text x="29" y="266" class="svgSub">여기서 행 조회와 곱셈 실행</text></svg></figure><figure class="wq-calls" id="decode-graph-calls" aria-labelledby="decode-graph-calls-title">
+  <figcaption>
+    <h3 id="decode-graph-calls-title">두 번째 llama_decode 안에서 누가 그래프를 만들고 실행할까?</h3>
+    <span><code>main</code>에서 <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L89-L94" target="_blank" rel="noopener noreferrer">모델 가중치 로드</a>와 <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L111-L119" target="_blank" rel="noopener noreferrer">실행 문맥 생성</a>을 마친 뒤입니다. 첫 <code>llama_decode</code>는 프롬프트 다섯 토큰을 처리합니다. 샘플러가 고른 <code>␠Paris</code>(ID 12095)를 <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L199-L200" target="_blank" rel="noopener noreferrer">다음 배치에 넣으면</a>, 반복문이 다시 173행에 도달합니다.</span>
+    <span>한 칸 안쪽은 바로 바깥 함수가 부르는 함수입니다. 같은 깊이의 형제는 위에서 아래로 읽으세요. 한 가지가 끝나면 그 가지를 부른 함수로 돌아옵니다. 함수 이름을 누르면 설명이나 소스가 열립니다.</span>
+  </figcaption>
+  <ol>
+    <li>
+      <div class="call-node">
+        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L171-L178" target="_blank" rel="noopener noreferrer"><b>llama_decode</b></a>(<wbr>ctx,<wbr> batch)</code>
+        <span class="call-note"><code>main</code>의 두 번째 호출입니다. <code>ctx</code>에는 시퀀스 0의 위치 0~4까지 계산한 KV 캐시가 있고, <code>batch.token[0]</code>은 12095, <code>batch.n_tokens</code>는 1입니다.</span>
+      </div>
+      <ol>
+        <li>
+          <div class="call-node">
+            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L4326-L4335" target="_blank" rel="noopener noreferrer"><b>ctx-&gt;decode</b></a>(<wbr>batch)</code>
+            <span class="call-note"><code>llama_context::decode</code>가 이번 입력의 위치와 KV 캐시 칸을 준비합니다. 처리할 묶음 <code>ubatch</code>에는 토큰 ID 12095 하나와 위치 5가 들어 있습니다.</span>
+          </div>
+          <ol>
+            <li>
+              <div class="call-node">
+                <code><a href="#fn-graph-1"><b>process_ubatch</b></a>(<wbr>ubatch,<wbr> ctx_type_to_graph_type(cparams.ctx_type),<wbr> mctx.get(),<wbr> status)</code>
+                <span class="call-note"><code>decode</code>가 현재 묶음, 그래프 종류, 이번 KV 캐시 작업을 담은 <code>mctx</code>, 실행 상태를 받을 <code>status</code>를 넘깁니다. 아래 네 가지 호출은 모두 <code>process_ubatch</code> 안에 있습니다.</span>
+              </div>
+              <ol>
+                <li>
+                  <div class="call-node">
+                    <code><a href="#fn-graph-2"><b>model.build_graph</b></a>(<wbr>gparams)</code>
+                    <span class="call-note"><code>gparams</code>에는 현재 묶음과 모델·문맥 설정이 들어 있습니다. 직전 그래프는 5토큰용이므로 이번에는 1토큰용 그래프를 새로 만듭니다. 아래는 0번 층 Q를 연결하는 가지입니다.</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <div class="call-node">
+                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L49-L51" target="_blank" rel="noopener noreferrer"><b>llama_model_qwen2::build_arch_graph</b></a>(<wbr>params)</code>
+                        <span class="call-note"><code>build_graph</code>가 모델 종류에 맞는 함수를 호출합니다. Qwen2 구현은 모델 자신과 같은 그래프 설정을 생성자에 전달합니다.</span>
+                      </div>
+                      <ol>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L49-L54" target="_blank" rel="noopener noreferrer"><b>std::make_unique&lt;graph&gt;</b></a>(<wbr>*this,<wbr> params)</code>
+                            <span class="call-note">Qwen2 그래프 객체를 만들면서 다음 생성자를 실행합니다.</span>
+                          </div>
+                          <ol>
+                            <li>
+                              <div class="call-node">
+                                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L53-L85" target="_blank" rel="noopener noreferrer"><b>llama_model_qwen2::graph::graph</b></a>(<wbr>model,<wbr> params)</code>
+                                <span class="call-note">임베딩 조회를 연결한 뒤 층별 연산을 구성합니다. 첫 층에서 <code>il = 0</code>이고 <code>cur</code>는 입력을 정규화한 결과 텐서입니다.</span>
+                              </div>
+                              <ol>
+                                <li>
+                                  <div class="call-node">
+                                    <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L73-L85" target="_blank" rel="noopener noreferrer"><b>build_qkv</b></a>(<wbr>model.layers[il],<wbr> cur,<wbr> n_embd_head,<wbr> n_head,<wbr> n_head_kv,<wbr> il)</code>
+                                    <span class="call-note">이 호출은 Q·K·V가 공유하는 헤드 차원과 각 헤드 수를 받습니다.</span>
+                                  </div>
+                                  <ol>
+                                    <li>
+                                      <div class="call-node">
+                                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1619-L1649" target="_blank" rel="noopener noreferrer"><b>build_qkv</b></a>(<wbr>layer,<wbr> cur,<wbr> n_embd_head,<wbr> n_head,<wbr> n_embd_head,<wbr> n_head_kv,<wbr> n_embd_head,<wbr> n_head_kv,<wbr> il)</code>
+                                        <span class="call-note">같은 이름의 다른 함수에 Q·K·V 각각의 차원과 헤드 수를 넘깁니다. 이 모델처럼 가중치가 분리된 경우 Q부터 연결합니다.</span>
+                                      </div>
+                                      <ol>
+                                        <li>
+                                          <div class="call-node">
+                                            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1687-L1693" target="_blank" rel="noopener noreferrer"><b>build_lora_mm</b></a>(<wbr>layer.wq,<wbr> cur,<wbr> layer.wq_s)</code>
+                                            <span class="call-note"><code>layer.wq</code>는 모델 로드 때 채운 <code>blk.0.attn_q.weight</code>입니다. 함수 안에서는 이 가중치를 <code>w</code>로 받습니다.</span>
+                                          </div>
+                                          <ol>
+                                            <li>
+                                              <div class="call-node">
+                                                <code><a href="#fn-graph-3"><b>ggml_mul_mat</b></a>(<wbr>ctx0,<wbr> w,<wbr> cur)</code>
+                                                <span class="call-note"><code>ctx0</code>에 결과 텐서를 만들고 연산 종류를 <code>MUL_MAT</code>으로 기록합니다. <code>src[0]</code>은 Wq, <code>src[1]</code>은 정규화 결과입니다. 실제 Q 벡터의 값은 그래프 실행 때 계산합니다.</span>
+                                              </div>
+                                            </li>
+                                          </ol>
+                                        </li>
+                                      </ol>
+                                    </li>
+                                  </ol>
+                                </li>
+                              </ol>
+                            </li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  <div class="call-node">
+                    <code><a href="#fn-graph-4"><b>ggml_backend_sched_alloc_graph</b></a>(<wbr>sched.get(),<wbr> gf)</code>
+                    <span class="call-note"><code>build_graph</code>가 완성한 그래프 <code>gf</code>를 반환하면 <code>process_ubatch</code>가 이 함수를 부릅니다. 스케줄러는 연산을 CPU·Vulkan 구간으로 나누고 입력·중간 결과의 버퍼를 배정합니다. 이후 한 토큰 그래프를 재사용할 수 있으면 앞의 생성과 이 할당을 건너뜁니다.</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="call-node">
+                    <code><a href="#fn-graph-5"><b>res-&gt;set_inputs</b></a>(<wbr>&amp;ubatch)</code>
+                    <span class="call-note">새로 만든 그래프와 재사용하는 그래프 모두 이번 입력을 채웁니다. <code>llm_graph_result::set_inputs</code>가 등록된 입력 객체마다 <code>input-&gt;set_input(ubatch)</code>를 호출합니다. 아래는 토큰 ID를 맡은 객체입니다.</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <div class="call-node">
+                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L69-L74" target="_blank" rel="noopener noreferrer"><b>llm_graph_input_embd::set_input</b></a>(<wbr>ubatch)</code>
+                        <span class="call-note"><code>ubatch-&gt;token</code>이 가리키는 ID를 그래프의 <code>tokens</code> 입력 텐서에 씁니다.</span>
+                      </div>
+                      <ol>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="#fn-graph-6"><b>ggml_backend_tensor_set</b></a>(<wbr>tokens,<wbr> ubatch-&gt;token,<wbr> 0,<wbr> n_tokens * ggml_element_size(tokens))</code>
+                            <span class="call-note">목적지는 <code>inp_tokens</code>, 원본은 ID 12095의 주소입니다. 목적지 오프셋 0부터 정수 하나(4바이트)를 써서 <code>inp_tokens[0] = 12095</code>가 됩니다.</span>
+                          </div>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  <div class="call-node">
+                    <code><a href="#fn-graph-7"><b>graph_compute</b></a>(<wbr>res-&gt;get_gf(),<wbr> ubatch.n_tokens &gt; 1)</code>
+                    <span class="call-note">입력 객체들이 모두 반환하면 <code>process_ubatch</code>가 이 함수를 직접 부릅니다. 첫 인자는 입력을 채운 그래프 <code>gf</code>입니다. 두 번째 값은 <code>1 &gt; 1</code>, 즉 <code>false</code>여서 <code>cparams.n_threads</code>와 한 토큰용 CPU 스레드 풀을 선택합니다.</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <div class="call-node">
+                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L2569-L2588" target="_blank" rel="noopener noreferrer"><b>ggml_backend_sched_graph_compute_async</b></a>(<wbr>sched.get(),<wbr> gf)</code>
+                        <span class="call-note">질문의 2588행입니다. <code>graph_compute</code>가 스레드 설정을 적용한 뒤 스케줄러와 전체 그래프를 넘겨 실행을 요청합니다.</span>
+                      </div>
+                      <ol>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L2017-L2030" target="_blank" rel="noopener noreferrer"><b>ggml_backend_sched_compute_splits</b></a>(<wbr>sched)</code>
+                            <span class="call-note">CPU 구간의 조회가 끝나면, 다음 Vulkan 구간에서 입력 복사와 계산 요청을 차례대로 호출합니다. <a href="#graph-split-map">아래 세 호출의 깊이와 복귀 지점을 그림으로 보기</a></span>
+                          </div>
+                          <ol>
+                            <li>
+                              <div class="call-node">
+                                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L1797-L1803" target="_blank" rel="noopener noreferrer"><b>ggml_backend_graph_compute_async</b></a>(<wbr>split_backend,<wbr> &amp;split-&gt;graph)</code>
+                                <span class="call-note">① CPU 구간의 1799행. CPU 백엔드가 GET_ROWS를 실행해 12095번 행을 FP32로 변환한 뒤 반환합니다. <a href="#embedding-split-map">조회·복사 호출도</a></span>
+                              </div>
+                            </li>
+                            <li><div class="call-node"><code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L1783-L1795" target="_blank" rel="noopener noreferrer"><b>ggml_backend_vk_cpy_tensor_async</b></a>(input_backend, split_backend, input, input_cpy)</code>
+                              <span class="call-note">② 다음 Vulkan 구간의 1785행. CPU가 <code>embd</code>의 6,144바이트를 매핑된 <code>DEVICE_LOCAL</code> 입력 버퍼에 직접 쓴 뒤 스케줄러로 돌아옵니다. <a href="#fn-embedding-5">memcpy 소스</a></span></div></li>
+                            <li><div class="call-node"><code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L1797-L1803" target="_blank" rel="noopener noreferrer"><b>ggml_backend_graph_compute_async</b></a>(split_backend, &amp;split-&gt;graph)</code>
+                              <span class="call-note">③ 같은 Vulkan 구간의 1799행. 스케줄러가 실행을 요청하면 Vulkan 백엔드가 연산별 dispatch를 기록합니다. 명령 버퍼를 큐에 제출한 뒤 GPU가 셰이더를 실행합니다. <a href="#vulkan-q-dispatch">Q 셰이더가 결과를 쓰는 곳까지 보기</a></span></div></li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</figure>
+<section class="chapter-flow" aria-label="그래프와 입력 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-graph-1" name="flow-graph"><summary aria-label="1단계 llama_context::process_ubatch · 한 토큰 그래프 준비 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>한 토큰 그래프 준비</strong><code>llama_<wbr>context::<wbr>process_<wbr>ubatch</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>llama_context::decode가 현재 처리할 ubatch를 넘겨 직접 호출합니다.</dd><dt>호출 목적</dt><dd>현재 그래프를 재사용할 수 있는지 판정하고 배치 실행을 준비합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ubatch</code></dt><dd>ID 12095와 위치 5를 담은 이번 한 토큰 배치</dd><dt><code>gtype</code></dt><dd>컨텍스트에 맞춘 그래프 종류</dd><dt><code>mctx</code></dt><dd>이번 배치가 쓸 KV 캐시 문맥</dd><dt><code>ret</code></dt><dd>성공 또는 실패 상태를 호출자에게 돌려줄 참조</dd></dl></dd><dt>실행 결과</dt><dd>직전 5토큰 그래프와 모양이 달라 생성 경로로 들어갑니다. 이후 같은 한 토큰 모양에서 재사용 조건까지 맞으면 생성·할당을 건너뛰고 새 입력을 씁니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L1403-L1405" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/llama-context.cpp:1403-1405</a></code></figcaption><pre tabindex="0"><code>const auto gparams = graph_params(res, ubatch, mctx, gtype);
 
 if (!graph_reuse_disable &amp;&amp; gf_res_prev_active == res &amp;&amp; res-&gt;can_reuse(gparams)) {</code></pre></figure></div></details><details class="flow-step" id="fn-graph-2" name="flow-graph"><summary aria-label="2단계 llama_model::build_graph · Qwen2 연산 연결 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>Qwen2 연산 연결</strong><code>llama_<wbr>model::<wbr>build_<wbr>graph</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>process_ubatch가 재사용할 수 없는 그래프에 대해 model.build_graph(gparams)를 직접 호출합니다.</dd><dt>호출 목적</dt><dd>입력 텐서에서 최종 출력까지 어떤 연산들이 서로 연결되는지 정합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>params</code></dt><dd>배치 모양, 모델 설정, 메모리 문맥, 그래프 결과 객체를 담은 빌드 인자</dd></dl></dd><dt>실행 결과</dt><dd>build_arch_graph가 Qwen2 그래프 생성자를 실행합니다. 생성자는 임베딩 표에서 행을 찾는 GET_ROWS를 등록한 뒤 28개 층의 정규화, Q·K·V, attention, FFN을 연결합니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-model.cpp#L2762-L2763" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/llama-model.cpp:2762-2763</a></code></figcaption><pre tabindex="0"><code>ggml_cgraph * llama_model::build_graph(const llm_graph_params &amp; params) const {
     std::unique_ptr&lt;llm_graph_context&gt; llm = build_arch_graph(params);</code></pre></figure></div></details><details class="flow-step" id="fn-graph-3" name="flow-graph"><summary aria-label="3단계 ggml_mul_mat · Q 가중치와 입력 연결 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>Q 가중치와 입력 연결</strong><code>ggml_<wbr>mul_<wbr>mat</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>Qwen2 그래프 생성자에서 build_qkv와 build_lora_mm을 거쳐 호출합니다. 여기서는 첫 층의 Q 노드 하나를 봅니다.</dd><dt>호출 목적</dt><dd>결과 텐서에 연산 종류와 두 입력을 기록합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx</code></dt><dd>연산 텐서의 메타데이터를 만드는 ggml 컨텍스트</dd><dt><code>a</code></dt><dd>첫 층의 Q 가중치 blk.0.attn_q.weight</dd><dt><code>b</code></dt><dd>첫 층의 정규화·스케일 곱 결과 attn_norm-0</dd></dl></dd><dt>실행 결과</dt><dd>MUL_MAT 노드의 src[0]에는 Wq, src[1]에는 정규화 결과가 연결됩니다. 한 토큰의 출력 모양은 [1536, 1]이며, 실제 값은 실행 시 계산됩니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml.c#L3348-L3353" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml.c:3348-3353</a></code></figcaption><pre tabindex="0"><code>const int64_t ne[4] = { a-&gt;ne[1], b-&gt;ne[1], b-&gt;ne[2], b-&gt;ne[3] };
@@ -1192,6 +1688,7 @@ dim0=1536
 dim1=1</pre></details><details class="snap"><summary>실제 토큰 ID 쓰기</summary><ol class="stack"><li>main <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/examples/simple/simple.cpp#L173" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">simple.cpp:173</a></span></li><li>llama_decode <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L4329" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-context.cpp:4329</a></span></li><li>llama_context::decode <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L1887" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-context.cpp:1887</a></span></li><li>llama_context::process_ubatch <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-context.cpp#L1449" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-context.cpp:1449</a></span></li><li>llm_graph_result::set_inputs <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1358" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-graph.cpp:1358</a></span></li><li>llm_graph_input_embd::set_input <span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L73" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama-graph.cpp:73</a></span></li></ol><pre class="observations">ID=12095
 tokens=1</pre></details></details></details></section><div class="chapter-bridge"><p>입력 텐서에 쓴 12095를 CPU가 임베딩 표의 행 번호로 읽습니다.</p><a href="#embedding">05 임베딩 조회 →</a></div></section><section id="embedding" class="panel" role="tabpanel" aria-labelledby="tab-embedding"><div class="chapter-head"><div class="chapter-label">05 / 09 · 임베딩 조회</div><h2>토큰 ID 12095로 임베딩 표의 한 행을 읽는다</h2></div><section class="chapter-body" aria-label="임베딩 조회 강의 본문">
 <p class="intro">직전 단계에서 입력한 <code>12095</code>는 ‘ Paris’의 <strong>행 번호</strong>입니다. 한 토큰을 계산할 때 CPU가 이 번호로 표를 찾아 숫자 1,536개를 꺼냅니다. 이 숫자 묶음이 GPU 첫 블록에 넣을 <strong>임베딩</strong>입니다.</p>
+<div id="embedding-split-map"><a href="#graph-split-map">04장에서 이어지는 CPU·Vulkan 호출도 보기</a></div>
 <figure class="diagram emb-route" aria-labelledby="emb-route-title">
 <h3 id="emb-route-title">토큰 하나가 GPU 입력에 도착하기까지</h3>
 <div class="emb-flow">
@@ -1292,7 +1789,557 @@ float 0.03857421875
 dst의 memory_property_flags.m_mask = 7 (0x07)
 0x01 DEVICE_LOCAL  · GPU 쪽 메모리
 0x02 HOST_VISIBLE  · CPU용 주소로 접근 가능
-0x04 HOST_COHERENT · CPU가 쓴 뒤 별도 flush가 필요 없음</pre></details></details></details></section><div class="chapter-bridge"><p>GPU 쪽 입력 버퍼에 도착한 벡터는 정규화를 거쳐 Q·K·V 투영의 공통 입력이 됩니다.</p><a href="#qkv">06 셰이더 바인딩 →</a></div></section><section id="qkv" class="panel" role="tabpanel" aria-labelledby="tab-qkv"><div class="chapter-head"><div class="chapter-label">06 / 09 · 셰이더 바인딩</div><h2>같은 셰이더에 세 가중치를 바꿔 연결한다</h2></div><section class="chapter-body" aria-label="셰이더 바인딩 강의 본문"><p class="intro">Q·K·V는 정규화된 입력을 공유합니다. CPU가 호출마다 binding 0을 다른 weight 구간으로 바꿉니다. 이 한 토큰 실행에서는 Q → V → K 순서로 dispatch를 기록했습니다.</p><figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="Wq · 입력 · bias → mul_mat_vec → Qcur-0"><title>Wq · 입력 · bias → mul_mat_vec → Qcur-0</title><defs><marker id="qkvh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">A · B · Fuse0</text><text x="19" y="59" class="svgTitle">Wq · 입력 · bias</text><text x="19" y="81" class="svgSub">디스크립터가 버퍼 구간 지정</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">COMPUTE</text><text x="324" y="59" class="svgTitle">mul_mat_vec</text><text x="324" y="81" class="svgSub">내적 → 합산 → bias</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">D</text><text x="629" y="59" class="svgTitle">Qcur-0</text><text x="629" y="81" class="svgSub">FP32 결과를 GPU에 기록</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="Wq · 입력 · bias → mul_mat_vec → Qcur-0"><title>Wq · 입력 · bias → mul_mat_vec → Qcur-0</title><defs><marker id="qkvv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">A · B · Fuse0</text><text x="29" y="48" class="svgTitle">Wq · 입력 · bias</text><text x="29" y="70" class="svgSub">디스크립터가 버퍼 구간 지정</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">COMPUTE</text><text x="29" y="146" class="svgTitle">mul_mat_vec</text><text x="29" y="168" class="svgSub">내적 → 합산 → bias</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">D</text><text x="29" y="244" class="svgTitle">Qcur-0</text><text x="29" y="266" class="svgSub">FP32 결과를 GPU에 기록</text></svg></figure><section class="chapter-flow" aria-label="셰이더 바인딩 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-qkv-1" name="flow-qkv"><summary aria-label="1단계 ggml_vk_build_graph · 노드의 op 읽기 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>노드의 op 읽기</strong><code>ggml_<wbr>vk_<wbr>build_<wbr>graph</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>스케줄러가 Vulkan 구간을 실행하면 ggml_backend_vk_graph_compute가 담당 노드를 순회하며 직접 호출합니다.</dd><dt>호출 목적</dt><dd>Q 노드의 op를 읽어 알맞은 Vulkan 연산 함수로 보냅니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx</code></dt><dd>Vulkan 백엔드의 장치·명령 기록 상태</dd><dt><code>cgraph, node_idx</code></dt><dd>Vulkan 담당 그래프와 현재 Q 곱셈 노드 위치</dd><dt><code>node_begin, node_idx_begin</code></dt><dd>현재 명령 묶음의 시작 노드와 인덱스</dd><dt><code>last_node, almost_ready, submit</code></dt><dd>마지막 노드 여부와 제출·완료 통지 시점을 제어하는 값</dd></dl></dd><dt>실행 결과</dt><dd>op가 GGML_OP_MUL_MAT이므로 현재 노드 인덱스와 명령 기록 문맥을 ggml_vk_mul_mat에 넘깁니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L12391-L12393" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp:12391-12393</a></code></figcaption><pre tabindex="0"><code>case GGML_OP_MUL_MAT:
+0x04 HOST_COHERENT · CPU가 쓴 뒤 별도 flush가 필요 없음</pre></details></details></details></section><div class="chapter-bridge"><p>GPU 쪽 입력 버퍼에 도착한 벡터는 정규화를 거쳐 Q·K·V 투영의 공통 입력이 됩니다.</p><a href="#qkv">06 셰이더 바인딩 →</a></div></section><section id="qkv" class="panel" role="tabpanel" aria-labelledby="tab-qkv"><div class="chapter-head"><div class="chapter-label">06 / 09 · 셰이더 바인딩</div><h2>같은 셰이더에 세 가중치를 바꿔 연결한다</h2></div><section class="chapter-body" aria-label="셰이더 바인딩 강의 본문"><p class="intro">이 한 토큰 실행에서 블록 0은 입력을 먼저 정규화합니다. 이어 Q → V → K 순서로 같은 입력과 서로 다른 가중치를 연결합니다. <a href="#qkv-rms-flow">정규화부터 셰이더 바인딩 순서 보기</a> · <a href="#q-shader-options">셰이더 옵션 여섯 가지 보기</a> · <a href="#qkv-workgroups">Q는 왜 768그룹일까?</a> · <a href="#attention-vulkan">Q·K 점수에서 softmax와 V 가중합까지</a></p><section class="measure" id="qkv-rms-flow" aria-labelledby="qkv-rms-flow-title">
+  <h3 id="qkv-rms-flow-title">RMSNorm이 쓴 버퍼를 Q·V·K가 읽기까지</h3>
+  <p>13토큰 프롬프트 뒤 두 번째 <code>llama_decode</code>에서 블록 0이 <code>␠Paris</code> 한 토큰을 처리하는 순서입니다. 정규화 셰이더가 <strong>binding 2</strong>에 쓴 1,536개 값을 Q·V·K 셰이더가 각각 <strong>binding 1</strong>에서 읽습니다. 아래 행 번호는 각 <code>vkCmdDispatch</code>를 기록한 로그 위치입니다.</p>
+  <pre class="block-rms-flow" tabindex="0" role="region" aria-label="셰이더 바인딩 순서 · 블록 0의 RMSNorm에서 Q·V·K 투영까지"><code><strong>[CPU · 그래프 구성]</strong>
+
+qwen2.cpp · 블록 0
+  inpL = build_inp_embd(model.tok_embd)
+    │
+    ▼
+  cur = build_norm(inpL, attn_norm.weight, …)
+    ├─ ggml_rms_norm(ctx0, inpL, eps)
+    │   ├─ result-&gt;op = GGML_OP_RMS_NORM
+    │   └─ result-&gt;src[0] = inpL
+    └─ ggml_mul(ctx0, result, weight)
+        ├─ op = GGML_OP_MUL
+        └─ src[0] = result, src[1] = weight
+    │
+    ▼
+ggml_build_forward_expand(gf, …)
+    └─ src[]를 따라 입력부터 방문해
+       cgraph-&gt;nodes[]에 연산 노드 등록
+    │
+    ▼ 그래프에 버퍼를 배정하고 이번 토큰의 입력을 채움
+
+<strong>[CPU · Vulkan 명령 기록과 제출]</strong>
+
+ggml_backend_sched_graph_compute_async(sched, gf)
+    │
+    ▼ 스케줄러가 Vulkan 구간의 그래프를 넘김
+ggml_backend_vk_graph_compute(backend, cgraph)
+    ├─ cgraph-&gt;nodes[] 순회
+    ├─ RMS_NORM + MUL을 한 번에 실행할 수 있는지 검사
+    └─ ggml_vk_build_graph(…, node_idx, …)
+        │
+        ▼ case GGML_OP_RMS_NORM
+      ggml_vk_rms_norm(…)
+        └─ ggml_vk_op_f32(…)
+            ├─ ggml_vk_op_get_pipeline(…)
+            │   └─ pipeline_rms_norm_mul_f32 반환
+            └─ ggml_vk_dispatch_pipeline(…)
+                ├─ 디스크립터에 버퍼 지정
+                │   ├─ binding 0 · inpL 읽기
+                │   ├─ binding 1 · attn_norm.weight 읽기
+                │   └─ binding 2 · attn_norm-0 쓰기
+                ├─ pushConstants(…)   · epsilon 등
+                ├─ bindPipeline(…)
+                ├─ bindDescriptorSets(…)
+                └─ dispatch(1, 1, 1)  · 2382행
+    │
+    ▼ 제출 조건이 되면 ggml_vk_build_graph에서
+ggml_vk_compute_forward(…)
+    └─ ggml_vk_submit(…)
+        └─ queue.submit(…)  · vkQueueSubmit으로 명령 버퍼 제출
+
+<strong>[GPU · 실제 연산]</strong>
+
+큐에서 이 dispatch를 실행할 차례
+    │
+    ▼
+rms_norm.comp의 main()
+    ├─ inpL 버퍼에서 1,536개 값 읽기
+    ├─ 스레드 512개가 제곱합을 나눠 구하고 합치기
+    ├─ 각 값에 1 / √(제곱의 평균 + epsilon) 곱하기
+    ├─ 각 위치의 attn_norm.weight 곱하기
+    └─ 결과 1,536개를 attn_norm-0 버퍼에 쓰기
+    │
+    ▼
+다음 MUL_MAT의 binding 1이 attn_norm-0을 읽음
+가중치는 dispatch마다 binding 0에 바꿔 연결
+    ├─ Wq로 Q 계산  · 2385행
+    ├─ Wv로 V 계산  · 2388행
+    └─ Wk로 K 계산  · 2391행</code></pre>
+</section>
+<figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="Wq · 입력 · bias → mul_mat_vec → Qcur-0"><title>Wq · 입력 · bias → mul_mat_vec → Qcur-0</title><defs><marker id="qkvh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">A · B · Fuse0</text><text x="19" y="59" class="svgTitle">Wq · 입력 · bias</text><text x="19" y="81" class="svgSub">디스크립터가 버퍼 구간 지정</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">COMPUTE</text><text x="324" y="59" class="svgTitle">mul_mat_vec</text><text x="324" y="81" class="svgSub">내적 → 합산 → bias</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">D</text><text x="629" y="59" class="svgTitle">Qcur-0</text><text x="629" y="81" class="svgSub">FP32 결과를 GPU에 기록</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="Wq · 입력 · bias → mul_mat_vec → Qcur-0"><title>Wq · 입력 · bias → mul_mat_vec → Qcur-0</title><defs><marker id="qkvv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">A · B · Fuse0</text><text x="29" y="48" class="svgTitle">Wq · 입력 · bias</text><text x="29" y="70" class="svgSub">디스크립터가 버퍼 구간 지정</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">COMPUTE</text><text x="29" y="146" class="svgTitle">mul_mat_vec</text><text x="29" y="168" class="svgSub">내적 → 합산 → bias</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#qkvv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">D</text><text x="29" y="244" class="svgTitle">Qcur-0</text><text x="29" y="266" class="svgSub">FP32 결과를 GPU에 기록</text></svg></figure><section class="measure" id="qkv-workgroups" aria-labelledby="qkv-workgroups-title">
+  <h3 id="qkv-workgroups-title">같은 셰이더인데 왜 Q는 768그룹, V와 K는 각각 128그룹일까?</h3>
+  <p>13토큰 비교 실행에서 두 번째 <code>llama_decode</code>가 위치 13의 <code>␠Paris</code> 한 토큰을 처리할 때의 값입니다. 로그 2382~2423행의 연산은 모두 <strong>0번 층</strong>에 있습니다.</p>
+  <p>Q → V → K를 계산할 때 GPU는 같은 <code>mul_mat_vec_f16_f32_f32</code> 셰이더와 같은 입력 벡터(binding 1)를 사용합니다. CPU는 곱할 가중치(binding 0), 결과를 쓸 곳(binding 2), 더할 bias(binding 3)를 바꿔 연결합니다. 각 가중치에서 <strong>한 행을 입력 벡터와 곱해 더하면 출력 한 값</strong>이 나옵니다. 이 파이프라인은 그 일을 <strong>한 작업 그룹(workgroup)에 두 행씩</strong> 맡깁니다.</p>
+  <div class="tabwrap" role="region" aria-label="행렬곱의 출력 행 수와 작업 그룹 수 비교" tabindex="0"><table>
+    <caption>0번 층에서 같은 행렬·벡터 곱 셰이더로 기록한 dispatch</caption>
+    <thead><tr><th scope="col">연산 · 로그 행</th><th scope="col">출력 행 수</th><th scope="col">두 행씩 나눈 그룹 수 (X, Y, Z)</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Q · 2385</th><td>12개 헤드 × 128 = 1,536행</td><td>1,536 ÷ 2 = <b>768</b> → <code>(768, 1, 1)</code></td></tr>
+      <tr><th scope="row">V · 2388<br>K · 2391</th><td>각각 2개 헤드 × 128 = 256행</td><td>256 ÷ 2 = <b>128</b> → <code>(128, 1, 1)</code></td></tr>
+      <tr><th scope="row">어텐션 출력 투영 · 2408</th><td>1,536행</td><td>1,536 ÷ 2 = <b>768</b> → <code>(768, 1, 1)</code></td></tr>
+      <tr><th scope="row">FFN gate · 2414<br>FFN up · 2417</th><td>각각 8,960행</td><td>8,960 ÷ 2 = <b>4,480</b> → <code>(4480, 1, 1)</code></td></tr>
+      <tr><th scope="row">FFN down · 2423</th><td>1,536행</td><td>1,536 ÷ 2 = <b>768</b> → <code>(768, 1, 1)</code></td></tr>
+    </tbody>
+  </table></div>
+  <p><code>vkCmdDispatch(…, 768, 1, 1)</code>은 X 방향으로 작업 그룹 768개를 요청합니다. Q의 그룹 0은 Wq의 0·1행, 그룹 1은 2·3행, 그룹 767은 1534·1535행을 맡습니다. 이 실행에서는 <strong>그룹 안의 스레드 128개</strong>가 두 행의 열을 나눠 곱하고 부분합을 모읍니다. GPU는 가용 자원에 맞춰 그룹을 실행하므로 그룹 수만으로 실행 시간을 알 수 없습니다. <a href="#q-gpu-journey">그룹을 골라 담당 행과 스레드의 계산 보기</a></p>
+  <details class="box"><summary>코드에서 ‘두 행씩’은 어디에 적혀 있을까?</summary>
+    <p><code>ggml_vk_create_pipeline</code>에 넘긴 <code>{2, 1, 1}</code>은 CPU가 X·Y·Z축의 그룹 수를 계산할 때 쓸 나눗수입니다. 각 축에서 <code>elements</code>를 해당 나눗수로 나눈 뒤 올림합니다. Q는 <code>(1536, 1, 1)</code>을 <code>(2, 1, 1)</code>로 나누므로 <code>(768, 1, 1)</code>을 기록합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L2732" target="_blank" rel="noopener noreferrer">FP16 파이프라인 설정</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-common.h#L249-L252" target="_blank" rel="noopener noreferrer">세 축의 그룹 수 계산</a></p>
+    <p>바로 옆의 <code>{wg_size_subgroup, 2, i+1}</code>는 셰이더에 줄 설정입니다. 차례로 그룹 안의 스레드 수, 그룹이 맡을 출력 행 수(<code>NUM_ROWS</code>), 함께 처리할 입력 벡터 수(<code>NUM_COLS</code>)입니다. 이 한 토큰 실행에서는 각각 128, 2, 1입니다. 셰이더의 <code>main()</code>은 그룹 번호로 첫 행을 구해 <code>compute_outputs</code>에 넘깁니다. Z 방향 그룹이 하나인 이번 Q에서는 <code>first_row = 2 × gl_WorkGroupID.x</code>가 됩니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp#L248-L262" target="_blank" rel="noopener noreferrer">main()에서 첫 행을 정하는 코드</a></p>
+  </details>
+  <details class="box"><summary>같은 층에서 RMSNorm·RoPE·Flash Attention·SwiGLU는 어떻게 일을 나눌까?</summary>
+    <ul>
+      <li><b>RMSNorm · 2382, 2411행.</b> 한 토큰의 1,536차원 벡터 하나를 한 그룹이 함께 정규화하고 가중치를 곱합니다. 두 호출 모두 <code>(1, 1, 1)</code>입니다.</li>
+      <li><b>RoPE · 2394, 2400행.</b> 이 입력에서는 헤드 하나를 한 그룹이 맡습니다. Q의 헤드 12개에는 <code>(12, 1, 1)</code>, K의 헤드 2개에는 <code>(2, 1, 1)</code>을 씁니다. 그 사이 2397행의 <code>SET_ROWS</code>는 V를 지정된 행에 쓰는 별도 명령이며 <code>(1, 1, 1)</code>입니다.</li>
+      <li><b>Flash Attention · 2403, 2405행.</b> 같은 그래프 연산 <code>node_24</code>에 dispatch가 두 개입니다. 먼저 <code>flash_attn_f32_f16_aligned</code>가 <code>(8, 2, 1)</code>로 일을 나눠 부분 결과를 쓰고, <code>fa_split_k_reduce</code>가 <code>(12, 4, 1)</code>로 그 결과를 합칩니다. 어텐션은 처리할 토큰 수와 참조할 문맥 길이에 따라 작업 분할이 달라질 수 있습니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L8275-L8284" target="_blank" rel="noopener noreferrer">두 dispatch와 중간 버퍼</a></li>
+      <li><b>SwiGLU · 2420행.</b> 출력 8,960개를 최대 512개씩 묶으면 17묶음이 꽉 차고 256개가 남아 18묶음이 필요합니다. 이 구현은 묶음을 Y 방향에 놓아 <code>(1, 18, 1)</code>을 기록합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L9372-L9378" target="_blank" rel="noopener noreferrer">출력을 512개씩 나누는 코드</a></li>
+    </ul>
+  </details>
+  <p>다음 층의 Q는 어떻게 될까요? 0번 층의 <code>Qcur-0</code>(2385행)과 1번 층의 <code>Qcur-1</code>(2429행)은 서로 다른 Wq를 읽습니다. 두 Wq 모두 출력이 1,536행이어서 그룹 수는 똑같이 <code>(768, 1, 1)</code>입니다. <a href="#layer-dispatch-log">07장에서 층을 바꿔 원본 로그 행 비교하기</a></p>
+</section>
+<figure class="wq-calls" id="vulkan-q-dispatch" aria-labelledby="vulkan-q-dispatch-title">
+  <figcaption>
+    <h3 id="vulkan-q-dispatch-title">Vulkan이 그래프를 받으면 어떤 셰이더가 Q[0]을 쓸까?</h3>
+    <span>두 번째 decode에서 CPU가 12095번 임베딩 행을 읽고, Vulkan의 앞선 정규화 연산이 벡터 X를 만든 뒤입니다. 아래는 0번 층 Q를 계산하는 한 토큰 실행입니다. <a href="#q-submit-entry">큐 제출과 셰이더 진입점의 연결 보기 ↓</a></span>
+  </figcaption>
+  <h4>CPU에서 Q 곱셈을 기록하고 큐에 제출</h4>
+  <ol>
+    <li>
+      <div class="call-node">
+        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-backend.cpp#L461-L464" target="_blank" rel="noopener noreferrer"><b>ggml_backend_graph_compute_async</b></a>(<wbr>split_backend,<wbr> &amp;split-&gt;graph)</code>
+        <span class="call-note"><code>split_backend</code>은 이번 구간을 맡은 Vulkan0이고, 두 번째 인자는 그 구간의 연산 목록입니다. <code>backend-&gt;iface.graph_compute(backend, cgraph)</code>가 Vulkan에 등록된 아래 구현을 부릅니다.</span>
+      </div>
+      <ol>
+        <li>
+          <div class="call-node">
+            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L14016-L14067" target="_blank" rel="noopener noreferrer"><b>ggml_backend_vk_graph_compute</b></a>(<wbr>backend,<wbr> cgraph)</code>
+            <span class="call-note">노드를 순회하다 0번 층의 Q 곱셈과 바로 뒤의 bias 덧셈을 한 dispatch로 묶습니다. <code>i</code>는 현재 노드 번호입니다.</span>
+          </div>
+          <ol>
+            <li>
+              <div class="call-node">
+                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L14294-L14295" target="_blank" rel="noopener noreferrer"><b>ggml_vk_build_graph</b></a>(<wbr>ctx,<wbr> cgraph,<wbr> i,<wbr> cgraph-&gt;nodes[submit_node_idx],<wbr> submit_node_idx,<wbr> i + ctx-&gt;num_additional_fused_ops &gt;= last_node,<wbr> almost_ready,<wbr> submit)</code>
+                <span class="call-note">Q 노드를 처리하는 호출에서는 다음 곱셈 가지로 들어갑니다. 같은 명령 버퍼에 뒤의 연산들도 기록할 수 있습니다. 아래 제출 가지는 그 묶음을 닫는 노드에서 실행됩니다.</span>
+              </div>
+              <ol>
+                <li>
+                  <div class="call-node">
+                    <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L12391-L12393" target="_blank" rel="noopener noreferrer"><b>ggml_vk_mul_mat</b></a>(<wbr>ctx,<wbr> compute_ctx,<wbr> cgraph,<wbr> node_idx)</code>
+                    <span class="call-note"><code>GGML_OP_MUL_MAT</code>에 해당합니다. <code>src[0]</code>은 FP16 Wq, <code>src[1]</code>은 현재 토큰의 정규화된 벡터 X입니다. X가 한 열이므로 행렬·벡터 곱을 고릅니다.</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <div class="call-node">
+                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L7046-L7049" target="_blank" rel="noopener noreferrer"><b>ggml_vk_mul_mat_vec_q_f16</b></a>(<wbr>ctx,<wbr> subctx,<wbr> cgraph,<wbr> node_idx)</code>
+                        <span class="call-note"><code>mul_mat_vec_f16_f32_f32</code>는 <b>가중치 Wq(FP16) × 입력 X(FP32) → 결과 Q(FP32)</b>라는 뜻입니다. 같은 조건으로 다음 토큰을 계산할 때도 이 파이프라인을 재사용합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L2730-L2733" target="_blank" rel="noopener noreferrer">파이프라인과 진입점 main</a></span>
+                        <details id="q-shader-options">
+                          <summary>같은 셰이더 소스에서 여섯 버전이 나오는 이유</summary>
+                          <p class="call-note">빌드할 때 <code>DATA_A_F16=1</code>로 가중치를 FP16으로 정하면, <code>mul_mat_vec.comp</code>에서 <b>입력 형식 2가지 × 부분합을 더하는 방법 3가지</b>의 SPIR-V를 만듭니다.</p>
+                          <p class="call-note"><b>입력과 결과.</b> <code>B_TYPE</code>은 입력을 FP32 또는 FP16으로 읽도록 정합니다. <code>B_TYPEV2</code>와 <code>B_TYPEV4</code>는 같은 입력을 2개·4개씩 묶어 읽는 타입이고, <code>D_TYPE=float</code>는 결과를 FP32로 저장한다는 뜻입니다.</p>
+                          <p class="call-note"><b>부분합.</b> 기본 버전은 공유 메모리에서 더합니다. <code>_subgroup</code>은 각 스레드 묶음 안에서 먼저 더한 뒤 묶음별 합을 공유 메모리로 모으고, <code>_subgroup_no_shmem</code>은 한 묶음 안에서 합산을 끝냅니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp#L774-L788" target="_blank" rel="noopener noreferrer">여섯 줄의 컴파일 옵션</a></p>
+                        </details>
+                      </div>
+                      <ol>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L6608-L6624" target="_blank" rel="noopener noreferrer"><b>ggml_vk_dispatch_pipeline</b></a>(<wbr>ctx,<wbr> subctx,<wbr> dmmv,<wbr> {d_X,<wbr> d_Y,<wbr> d_D,<wbr> d_F0,<wbr> d_F1},<wbr> pc,<wbr> {groups_x,<wbr> groups_y,<wbr> groups_z})</code>
+                            <span class="call-note">셰이더가 읽을 버퍼 구간은 binding 0에 Wq, 1에 X, 3에 Q bias입니다. 결과를 쓸 곳은 binding 2입니다. <code>pc</code>로 행 길이 1536과 bias 사용 플래그 등을 넘깁니다.</span>
+                          </div>
+                          <ol>
+                            <li>
+                              <div class="call-node">
+                                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-common.h#L266-L279" target="_blank" rel="noopener noreferrer"><b>buf.dispatch</b></a>(<wbr>768,<wbr> 1,<wbr> 1)</code>
+                                <span class="call-note">CPU가 디스크립터를 갱신하고 푸시 상수·파이프라인·디스크립터 세트를 지정한 뒤, 작업 그룹 768개를 실행할 명령을 기록합니다. 한 그룹이 출력 두 행을 맡습니다.</span>
+                              </div>
+                            </li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  <div class="call-node">
+                    <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L12464-L12478" target="_blank" rel="noopener noreferrer"><b>ggml_vk_compute_forward</b></a>(<wbr>ctx,<wbr> cgraph,<wbr> node_begin,<wbr> node_idx_begin,<wbr> almost_ready)</code>
+                    <span class="call-note">제출 조건을 만족하면 <code>ggml_vk_build_graph</code>가 명령 기록을 끝내고 이 함수를 호출합니다. <code>node_idx_begin</code>으로 제출할 명령 묶음을 찾습니다.</span>
+                  </div>
+                  <ol>
+                    <li>
+                      <div class="call-node">
+                        <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L12504-L12513" target="_blank" rel="noopener noreferrer"><b>ggml_vk_submit</b></a>(<wbr>subctx,<wbr> fence)</code>
+                        <span class="call-note">두 번째 인자는 제출 경로에 따라 완료 신호를 받을 fence 또는 빈 핸들입니다.</span>
+                      </div>
+                      <ol>
+                        <li>
+                          <div class="call-node">
+                            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L932-L948" target="_blank" rel="noopener noreferrer"><b>queue.submit</b></a>(<wbr>submit_infos,<wbr> fence)</code>
+                            <span class="call-note"><code>submit_infos</code>에 앞서 기록한 명령 버퍼가 들어 있습니다. 이 제출의 <code>fence</code>는 선택적인 완료 신호입니다. Q dispatch에 사용할 셰이더는 명령 버퍼에 기록한 <code>bindPipeline</code>으로 이미 정해져 있습니다. <a href="#q-submit-entry">이 명령이 GPU의 main()으로 이어지는 과정 ↓</a></span>
+                          </div>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+  <section class="q-entry" id="q-submit-entry" aria-labelledby="q-submit-entry-title">
+    <h4 id="q-submit-entry-title"><code>queue.submit()</code>에서 셰이더 <code>main()</code>까지</h4>
+    <p class="q-entry-pipeline"><b>실행점 이름을 지정하는 필드는 <code>VkPipelineShaderStageCreateInfo::pName</code>입니다.</b> DirectX 11에서 <code>D3DCompile</code>의 <code>pEntrypoint</code>에 <code>"main"</code>을 주듯, 이 코드는 Q 파이프라인을 <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L2732" target="_blank" rel="noopener noreferrer">2732행에서 요청할 때</a> 진입점 인자로 <code>"main"</code>을 넘깁니다.</p>
+    <pre class="q-entry-source" tabindex="0"><code>vk::PipelineShaderStageCreateInfo pipeline_shader_create_info(
+    pipeline_shader_stage_create_flags,
+    vk::ShaderStageFlagBits::eCompute,
+    pipeline-&gt;shader_module,
+    <strong>entrypoint.c_str(),</strong>  // 705행 · pName에 넣는 값은 "main"
+    &amp;specialization_info);</code></pre>
+    <p class="q-entry-pipeline">위 생성자의 네 번째 인자가 <code>pName</code>입니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L701-L706" target="_blank" rel="noopener noreferrer">705행의 실행점 지정</a> → <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L715-L720" target="_blank" rel="noopener noreferrer">719행에서 파이프라인 설정에 포함</a> → <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L743-L745" target="_blank" rel="noopener noreferrer">744행에서 컴퓨트 파이프라인 생성</a></p>
+    <div class="q-entry-path">
+      <div class="q-entry-stop">
+        <span>CPU · 명령 버퍼 기록</span><strong>Q 파이프라인을 바인딩</strong>
+        <code>bindPipeline(…, pipeline-&gt;pipeline)</code>
+        <p>Wq·입력·결과·bias 버퍼를 연결하고 <code>dispatch(768, 1, 1)</code>을 기록합니다. 이 dispatch에는 앞서 바인딩한 Q 파이프라인이 적용됩니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-common.h#L270-L279" target="_blank" rel="noopener noreferrer">기록하는 줄</a></p>
+      </div>
+      <div class="q-entry-stop">
+        <span>CPU → Vulkan 큐 · 제출</span><strong>기록한 명령 버퍼를 큐에 전달</strong>
+        <code>queue.submit(submit_infos, fence)</code>
+        <p><code>ggml_vk_compute_forward</code>가 제출할 묶음을 찾고 <code>ggml_vk_submit</code>이 그 명령 버퍼를 <code>submit_infos</code>에 넣습니다. 큐에서 Q dispatch가 실행될 차례가 되면 GPU가 바인딩된 진입점에서 시작합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L931-L946" target="_blank" rel="noopener noreferrer">명령 버퍼와 제출</a></p>
+      </div>
+      <div class="q-entry-stop">
+        <span>GPU · 셰이더 실행</span><strong>각 스레드가 main()에서 시작</strong>
+        <code>main()<br>└─ compute_outputs(first_row, 2)</code>
+        <p>그룹 0의 각 스레드는 <code>first_row = 0</code>을 계산합니다. 257행에서 <code>main()</code>이 <code>compute_outputs(0, 2)</code>를 직접 호출해 Wq의 0·1행 계산을 시작합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp#L248-L258" target="_blank" rel="noopener noreferrer">셰이더 호출부</a></p>
+      </div>
+    </div>
+  </section>
+  <h4>GPU에서 셰이더 실행 · 작업 그룹 0의 두 출력</h4>
+  <ol>
+    <li>
+      <div class="call-node">
+        <code><a href="#fn-qkv-6"><b>main</b></a>(<wbr>)</code>
+        <span class="call-note">셰이더는 그룹 번호를 <code>gl_WorkGroupID.x</code>에서 받습니다. 그룹 g는 Wq의 <code>2g</code>행과 <code>2g + 1</code>행을 맡습니다. 그룹 0에서는 각 스레드가 아래 함수를 <code>compute_outputs(0, 2)</code>로 실행합니다.</span>
+      </div>
+      <ol>
+        <li>
+          <div class="call-node">
+            <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp#L141-L163" target="_blank" rel="noopener noreferrer"><b>compute_outputs</b></a>(<wbr>first_row,<wbr> num_rows)</code>
+            <span class="call-note">각 스레드가 <code>gl_LocalInvocationID.x</code>로 자기 번호를 읽고, 맡은 두 행의 부분합을 각각 0에서 시작합니다.</span>
+          </div>
+          <ol>
+            <li>
+              <div class="call-node">
+                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp#L118-L136" target="_blank" rel="noopener noreferrer"><b>iter_aligned_nonquant</b></a>(<wbr>temp,<wbr> first_row,<wbr> num_rows,<wbr> tid,<wbr> i * K_PER_ITER)</code>
+                <span class="call-note">그룹 0의 스레드 0은 첫 회에 X[0..3]과 Wq 0행의 같은 네 열로 <code>dot(v, b)</code>를 계산합니다. 같은 X 네 값으로 Wq 1행도 계산합니다. 다음 두 회에는 열 512~515, 1024~1027을 맡습니다. 128개 스레드 × 4개 열 × 3회로 각 행의 1536개 열을 모두 처리합니다.</span>
+              </div>
+            </li>
+            <li>
+              <div class="call-node">
+                <code><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec_base.glsl#L132-L179" target="_blank" rel="noopener noreferrer"><b>reduce_result</b></a>(<wbr>temp,<wbr> d_offset,<wbr> first_row,<wbr> num_rows,<wbr> tid)</code>
+                <span class="call-note">128개 스레드의 부분합을 행별로 합치고 스레드 0이 각 행의 bias를 더합니다. 그룹 0은 <code>data_d[0]</code>과 <code>data_d[1]</code>에 Q[0]과 Q[1]을 씁니다. 768개 그룹이 binding 2에 FP32 값 1536개를 채우면 0번 층의 Q 벡터가 완성됩니다.</span>
+              </div>
+            </li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+  <p><code>Q[0] = Wq[0,0] × X[0] + … + Wq[0,1535] × X[1535] + bias[0]</code></p>
+  <p><a href="#q-gpu-journey">Wq 행과 작업 그룹을 바꿔 계산 보기</a> · <a href="#archive-dispatch-lines-2383-2384">13토큰 비교 실행의 첫 Q dispatch 기록</a></p>
+</figure>
+<section class="measure" id="attention-vulkan" aria-labelledby="attention-vulkan-title">
+  <h3 id="attention-vulkan-title">Q·K의 점수는 언제 채워지고, softmax는 어디서 읽을까?</h3>
+  <p>0번 블록에서 Q와 K에 현재 위치가 반영된 뒤입니다. Flash Attention을 끄면 <code>build_attn_mha</code>는 점수, 확률, V의 가중합을 차례로 연결합니다. <strong>CPU는 점수가 나오기 전에도 softmax 노드를 만들 수 있습니다.</strong> 이때 넘기는 것은 점수를 만들 텐서의 포인터입니다. 실제 점수는 앞선 GPU 연산이 출력 버퍼에 쓸 때 생깁니다.</p>
+  <pre class="block-rms-flow" tabindex="0" role="region" aria-label="CPU에서 세 어텐션 노드를 연결하는 직접 호출"><code>llama_model_qwen2::graph::graph  ·  블록 0
+└─ build_attn(…, Qcur, Kcur, Vcur, …)
+   └─ build_attn_mha(q, k, v, …)
+      ├─ ggml_mul_mat(ctx0, k, q)                  → A
+      │    A.src[0] = K,  A.src[1] = Q
+      ├─ ggml_soft_max_ext(ctx0, A, mask, scale, …) → B
+      │    B.src[0] = A,  B.src[1] = mask
+      └─ ggml_mul_mat(ctx0, v, B)                  → C
+           C.src[0] = V,  C.src[1] = B</code></pre>
+  <p>코드에서 <code>kq = ggml_soft_max_ext(ctx0, kq, …)</code>의 오른쪽 <code>kq</code>는 A입니다. 호출이 끝나면 같은 C++ 변수는 B를 가리키고, B의 <code>src[0]</code>에는 A가 남습니다. 다음 행렬곱에 넘기는 <code>kq</code>는 이제 확률을 만들 B입니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L2670-L2716" rel="noopener noreferrer" target="_blank">build_attn_mha의 세 호출</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml.c#L4150-L4197" rel="noopener noreferrer" target="_blank">softmax 노드의 입력과 출력</a></p>
+  <figure class="attn-demo" aria-labelledby="attn-demo-title">
+    <figcaption><h4 id="attn-demo-title">한 헤드, 두 위치에서 값이 생기는 순간</h4>
+    <p>계산을 따라가기 위한 작은 예입니다. 실제 모델의 128차원 헤드를 한 성분으로 줄였습니다. <code>Q = 1</code>, 두 위치의 <code>K = [0, ln 3]</code>, <code>V = [4, 8]</code>로 두고, 배율은 1, 마스크는 두 위치 모두 0으로 둡니다.</p></figcaption>
+    <fieldset class="attn-steps"><legend>실행 시점 선택</legend><label><input type="radio" name="attn-moment" value="0" checked> 그래프 구성</label><label><input type="radio" name="attn-moment" value="1"> 버퍼 배정·명령 기록</label><label><input type="radio" name="attn-moment" value="2"> GPU · A 완료</label><label><input type="radio" name="attn-moment" value="3"> GPU · B 완료</label><label><input type="radio" name="attn-moment" value="4"> GPU · C 완료</label></fieldset>
+    <div class="attn-state" aria-live="polite" aria-atomic="true">
+      <div class="attn-cells"><div><span>A · 점수 <code>scores</code></span><b>계산 전</b></div><div><span>B · 확률 <code>probs</code></span><b>계산 전</b></div><div><span>C · 가중합 <code>kqv</code></span><b>계산 전</b></div></div>
+      <p class="attn-explain">CPU는 A·B·C의 모양과 op, src[]를 정합니다. B.src[0]은 벌써 A를 가리키고 있습니다.</p>
+    </div>
+    <noscript><p>GPU에서 A가 [0, ln 3]을 쓰고, B가 이를 읽어 [0.25, 0.75]를 씁니다. C의 결과는 4 × 0.25 + 8 × 0.75 = 7입니다.</p></noscript>
+  </figure>
+  <h4>GPU 버퍼에서 다음 GPU 버퍼로 어떻게 이어질까?</h4>
+  <p><strong>A의 출력 구간을 B의 입력 슬롯에 지정합니다.</strong> 디스크립터에는 <code>VkBuffer</code>, 시작 바이트 <code>offset</code>, 길이 <code>range</code>가 들어갑니다. 같은 GPU 구간을 다시 바인딩하면 B가 A의 결과를 제자리에서 읽습니다. 이를 확인하려고 강의와 같은 RTX 2070 SUPER·Qwen2.5-1.5B FP16·13토큰 프롬프트로 Flash Attention을 끄고 다시 실행했습니다. 아래는 두 번째 decode에서 위치 13의 <code>␠Paris</code> 한 토큰을 처리한 0번 층의 실제 디스크립터입니다. <a href="#attention-buffer-deps">슬롯 사이의 의존 관계를 그림으로 보기</a></p>
+  <div class="tabwrap" role="region" tabindex="0" aria-label="Flash를 끄고 측정한 세 단계의 Vulkan 버퍼 바인딩"><table>
+    <caption>같은 실행에서의 슬롯 → 버퍼 시작 오프셋(바이트). KV 캐시와 계산 버퍼의 기준 주소는 서로 다릅니다.</caption>
+    <thead><tr><th scope="col">노드 · 실제 파이프라인</th><th scope="col">읽는 슬롯과 구간</th><th scope="col">쓰는 슬롯과 구간</th></tr></thead><tbody>
+      <tr><th scope="row">A · <code>kq-0</code><br><code>mul_mat_vec_p021_f16_f326</code><br>(1, 256, 2)</th><td>0 = K · KV +0<br>1 = Q · 계산 +120,048</td><td>2 = <strong>scores</strong><br>계산 <b>+199,920</b> · 12,288 B</td></tr>
+      <tr><th scope="row">B · <code>kq_soft_max-0</code><br><code>soft_max_f32</code><br>(12, 1, 1)</th><td>0 = <strong>scores</strong> · 계산 <b>+199,920</b><br>1 = mask · 계산 +106,672<br>2 = 선택적 sinks 자리. 이번에는 미사용</td><td>3 = <strong>probs</strong><br>계산 <b>+199,920</b> · 12,288 B</td></tr>
+      <tr><th scope="row">C · <code>kqv-0</code><br><code>mul_mat_vec_f16_f32_f32</code><br>(64, 12, 1)</th><td>0 = V · KV +131,072<br>1 = <strong>probs</strong> · 계산 <b>+199,920</b></td><td>2 = <strong>kqv</strong><br>계산 +120,048 · 6,144 B</td></tr>
+    </tbody></table></div>
+  <p><strong>+199,920 B의 내용이 점수에서 확률로 바뀝니다.</strong> A의 출력 2번, B의 입력 0번과 출력 3번, C의 입력 1번이 모두 같은 버퍼의 같은 12,288바이트를 가리켰습니다. 길이 12,288 B는 Q 헤드 12개 × 패딩된 KV 자리 256개 × FP32 4 B입니다. 위치 13에서는 앞의 13토큰과 현재 토큰을 볼 수 있고, 마스크가 나머지 자리를 제외합니다. 실제 softmax에는 점수 배율 <code>1/√128</code>이 전달됩니다. A와 B가 별도 텐서여도 할당기는 마지막 사용 시점과 모양이 맞으면 메모리를 재사용합니다. B는 그 자리에 확률을 쓰고 C는 거기서 읽습니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-alloc.c#L631-L687" target="_blank" rel="noopener noreferrer">할당기가 재사용을 결정하는 코드</a></p>
+  <p>실제로 다른 위치에 써야 하는 경우도 보입니다. C 다음의 <code>CONT kqv_out-0</code>는 헤드별 결과를 출력 투영에서 쓸 연속 배치로 정리합니다. <code>contig_cpy_f32_f32</code> 셰이더가 계산 버퍼 +120,048에서 읽어 +199,920에 6,144바이트를 씁니다. 다음 <code>Wo</code> 행렬곱이 그 구간을 읽습니다.</p>
+  <figure class="attn-dependency" id="attention-buffer-deps" aria-labelledby="attention-buffer-deps-title">
+    <figcaption><h4 id="attention-buffer-deps-title">앞 셰이더가 쓴 값을 다음 셰이더의 몇 번 슬롯이 읽을까?</h4>
+      <p>Flash를 끈 실행의 블록 0입니다. 화살표는 한 셰이더가 쓴 값에서 그 값을 읽는 다음 셰이더로 이어집니다. 선 옆의 배리어는 앞선 쓰기가 다음 읽기에 보이도록 GPU 메모리 접근을 동기화합니다.</p>
+    </figcaption>
+    <svg xmlns="http://www.w3.org/2000/svg" class="dep-wide" viewBox="0 0 896 609" role="img" aria-labelledby="attn-dep-w-title attn-dep-w-desc"><title id="attn-dep-w-title">GPU 쓰기와 읽기의 의존 관계 · A → B → C → CONT → Wo</title><desc id="attn-dep-w-desc">A가 계산 버퍼 +199,920에 점수를 씁니다. B는 같은 구간을 읽고 확률로 덮어씁니다. C는 그 확률과 KV 캐시의 V를 읽어 +120,048에 가중합을 씁니다. CONT는 그 값을 연속 배치로 +199,920에 다시 쓰고 Wo가 읽습니다.</desc><defs><marker id="attn-dep-w-flow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="dep-arrowhead"/></marker><marker id="attn-dep-w-side" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="dep-sidehead"/></marker></defs>
+<text x="8" y="18" class="dep-hd">추가 입력</text><text x="260" y="18" class="dep-hd">셰이더 실행</text><text x="565" y="18" class="dep-hd">셰이더가 쓴 계산 버퍼 구간</text>
+<g data-dep-input="0"><rect x="6" y="38" width="204" height="60" rx="7" class="dep-input"/><text x="17" y="63" class="dep-side-title">K 캐시 + 회전된 Q</text><text x="17" y="84" class="dep-small">각각 입력 슬롯 0과 1</text><path d="M210 67 H254" class="dep-side-arrow" marker-end="url(#attn-dep-w-side)"/></g>
+<g data-dep-node="0"><rect x="260" y="35" width="247" height="66" rx="7" class="dep-op"/><text x="273" y="61" class="dep-main">A · Q와 K의 점수</text><text x="495" y="60" class="dep-ref" text-anchor="end">3263행</text><text x="273" y="85" class="dep-small">입력 0 = K, 입력 1 = Q</text></g>
+<g data-dep-edge="0"><path d="M507 67 H558" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><rect x="564" y="35" width="323" height="66" rx="7" class="dep-result"/><text x="578" y="61" class="dep-main">출력 2  ·  scores · 점수</text><text x="578" y="85" class="dep-small">계산 +199,920 B · 범위 12,288 B</text><path d="M657 101 V133 H330 V156" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><text x="493" y="126" class="dep-ref" text-anchor="middle">메모리 배리어 3296행</text></g>
+<g data-dep-node="1"><rect x="260" y="159" width="247" height="66" rx="7" class="dep-op"/><text x="273" y="185" class="dep-main">B · softmax</text><text x="495" y="184" class="dep-ref" text-anchor="end">3402행</text><text x="273" y="209" class="dep-small">입력 0 ← A의 scores</text></g>
+<g data-dep-edge="1"><path d="M507 191 H558" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><rect x="564" y="159" width="323" height="66" rx="7" class="dep-result"/><text x="578" y="185" class="dep-main">출력 3  ·  probs · 확률</text><text x="578" y="209" class="dep-small">계산 +199,920 B · 범위 12,288 B</text><path d="M657 225 V257 H330 V280" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><text x="493" y="250" class="dep-ref" text-anchor="middle">메모리 배리어 3435행</text></g>
+<g data-dep-input="2"><rect x="6" y="286" width="204" height="60" rx="7" class="dep-input"/><text x="17" y="311" class="dep-side-title">입력 0 · V (KV 캐시)</text><text x="17" y="332" class="dep-small">+131,072 B · 범위 131,072 B</text><path d="M210 315 H254" class="dep-side-arrow" marker-end="url(#attn-dep-w-side)"/></g>
+<g data-dep-node="2"><rect x="260" y="283" width="247" height="66" rx="7" class="dep-op"/><text x="273" y="309" class="dep-main">C · V의 가중합</text><text x="495" y="308" class="dep-ref" text-anchor="end">3545행</text><text x="273" y="333" class="dep-small">입력 1 ← B의 probs</text></g>
+<g data-dep-edge="2"><path d="M507 315 H558" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><rect x="564" y="283" width="323" height="66" rx="7" class="dep-result"/><text x="578" y="309" class="dep-main">출력 2  ·  kqv · 가중합</text><text x="578" y="333" class="dep-small">계산 +120,048 B · 범위 6,144 B</text><path d="M657 349 V381 H330 V404" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><text x="493" y="374" class="dep-ref" text-anchor="middle">메모리 배리어 3578행</text></g>
+<g data-dep-node="3"><rect x="260" y="407" width="247" height="66" rx="7" class="dep-copy"/><text x="273" y="433" class="dep-main">CONT · 연속 배치로 복사</text><text x="495" y="432" class="dep-ref" text-anchor="end">3676행</text><text x="273" y="457" class="dep-small">입력 0 ← C의 kqv</text></g>
+<g data-dep-edge="3"><path d="M507 439 H558" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><rect x="564" y="407" width="323" height="66" rx="7" class="dep-result"/><text x="578" y="433" class="dep-main">출력 1  ·  연속 배치의 kqv</text><text x="578" y="457" class="dep-small">계산 +199,920 B · 범위 6,144 B</text><path d="M657 473 V505 H330 V528" class="dep-flow" marker-end="url(#attn-dep-w-flow)"/><text x="493" y="498" class="dep-ref" text-anchor="middle">메모리 배리어 3709행</text></g>
+<g data-dep-input="4"><rect x="6" y="534" width="204" height="60" rx="7" class="dep-input"/><text x="17" y="559" class="dep-side-title">출력 가중치 Wo</text><text x="17" y="580" class="dep-small">입력 슬롯 0에서 읽음</text><path d="M210 563 H254" class="dep-side-arrow" marker-end="url(#attn-dep-w-side)"/></g>
+<g data-dep-node="4"><rect x="260" y="531" width="247" height="66" rx="7" class="dep-op"/><text x="273" y="557" class="dep-main">Wo · 출력 투영</text><text x="495" y="556" class="dep-ref" text-anchor="end">3819행</text><text x="273" y="581" class="dep-small">입력 1 ← CONT의 결과</text></g>
+</svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="dep-narrow" viewBox="0 0 320 691" role="img" aria-labelledby="attn-dep-m-title attn-dep-m-desc"><title id="attn-dep-m-title">GPU 쓰기와 읽기의 의존 관계 · A → B → C → CONT → Wo</title><desc id="attn-dep-m-desc">A가 계산 버퍼 +199,920에 점수를 씁니다. B는 같은 구간을 읽고 확률로 덮어씁니다. C는 그 확률과 KV 캐시의 V를 읽어 +120,048에 가중합을 씁니다. CONT는 그 값을 연속 배치로 +199,920에 다시 쓰고 Wo가 읽습니다.</desc><defs><marker id="attn-dep-m-flow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="dep-arrowhead"/></marker><marker id="attn-dep-m-side" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" class="dep-sidehead"/></marker></defs>
+<g data-dep-node="0"><rect x="6" y="8" width="308" height="66" rx="7" class="dep-op"/><text x="18" y="32" class="dep-main">A · Q와 K의 점수</text><text x="301" y="32" class="dep-ref" text-anchor="end">3263행</text><text x="18" y="55" class="dep-small">입력 0 = K · 입력 1 = Q</text></g>
+<g data-dep-edge="0"><path d="M26 74 V156" class="dep-flow" marker-end="url(#attn-dep-m-flow)"/><text x="42" y="93" class="dep-edge-label">출력 2 → 다음 입력 0  ·  scores · 점수</text><text x="42" y="113" class="dep-small">계산 +199,920 B · 범위 12,288 B</text><text x="42" y="132" class="dep-ref">메모리 배리어 3296행</text></g>
+<g data-dep-node="1"><rect x="6" y="159" width="308" height="66" rx="7" class="dep-op"/><text x="18" y="183" class="dep-main">B · softmax</text><text x="301" y="183" class="dep-ref" text-anchor="end">3402행</text><text x="18" y="206" class="dep-small">입력 0에서 A의 점수를 읽음</text></g>
+<g data-dep-edge="1"><path d="M26 225 V307" class="dep-flow" marker-end="url(#attn-dep-m-flow)"/><text x="42" y="244" class="dep-edge-label">출력 3 → 다음 입력 1  ·  probs · 확률</text><text x="42" y="264" class="dep-small">계산 +199,920 B · 범위 12,288 B</text><text x="42" y="283" class="dep-ref">메모리 배리어 3435행</text></g>
+<g data-dep-node="2"><rect x="6" y="310" width="308" height="78" rx="7" class="dep-op"/><text x="18" y="334" class="dep-main">C · V의 가중합</text><text x="301" y="334" class="dep-ref" text-anchor="end">3545행</text><text x="18" y="357" class="dep-small">입력 1 = 확률 · 입력 0 = V</text><text x="18" y="376" class="dep-small">KV +131,072 B · 범위 131,072 B</text></g>
+<g data-dep-edge="2"><path d="M26 388 V458" class="dep-flow" marker-end="url(#attn-dep-m-flow)"/><text x="42" y="407" class="dep-edge-label">출력 2 → 다음 입력 0  ·  kqv · 가중합</text><text x="42" y="427" class="dep-small">계산 +120,048 B · 범위 6,144 B</text><text x="42" y="446" class="dep-ref">메모리 배리어 3578행</text></g>
+<g data-dep-node="3"><rect x="6" y="461" width="308" height="66" rx="7" class="dep-copy"/><text x="18" y="485" class="dep-main">CONT · 연속 배치로 복사</text><text x="301" y="485" class="dep-ref" text-anchor="end">3676행</text><text x="18" y="508" class="dep-small">입력 0에서 읽고 다른 오프셋에 다시 씀</text></g>
+<g data-dep-edge="3"><path d="M26 527 V609" class="dep-flow" marker-end="url(#attn-dep-m-flow)"/><text x="42" y="546" class="dep-edge-label">출력 1 → 다음 입력 1  ·  연속 배치의 kqv</text><text x="42" y="566" class="dep-small">계산 +199,920 B · 범위 6,144 B</text><text x="42" y="585" class="dep-ref">메모리 배리어 3709행</text></g>
+<g data-dep-node="4"><rect x="6" y="612" width="308" height="66" rx="7" class="dep-op"/><text x="18" y="636" class="dep-main">Wo · 출력 투영</text><text x="301" y="636" class="dep-ref" text-anchor="end">3819행</text><text x="18" y="659" class="dep-small">입력 1 = 연속 구간 · 입력 0 = Wo</text></g>
+</svg>
+    <p class="dep-caption">B가 확률을 쓸 때는 점수와 같은 12,288 B를 사용합니다. C가 확률을 다 읽은 뒤, CONT는 그 자리의 앞 6,144 B를 연속 배치된 가중합으로 다시 채웁니다. Wo의 입력 슬롯 1은 이 가중합을 읽습니다. <a href="#attention-off-capture">디스크립터와 배리어 원본 행 펼치기</a> · <a href="#flash-buffer-deps">Flash를 켠 실행의 의존 관계 보기</a></p>
+  </figure>
+  <details class="box" id="attention-off-capture"><summary>Flash를 끈 비교 실행의 조건과 Vulkan API 원본 발췌</summary>
+    <p><a href="#attention-buffer-deps">A → B → C → CONT → Wo 의존 관계 그림 보기</a></p>
+    <p>같은 <code>llama-simple</code> 예제의 임시 사본에서 문맥 생성 전 <code>ctx_params.flash_attn_type = LLAMA_FLASH_ATTN_TYPE_DISABLED</code>를 설정했습니다. 원래 Debug DLL, <code>-ngl 99 -n 3</code>, 프롬프트 <code>The capital of South Korea is Seoul. The capital of France is</code>로 실행해 <code>flash_attn = disabled</code>와 13개 프롬프트 토큰을 확인했습니다. <code>GGML_VK_DEBUG_MARKERS=1</code>, <code>GGML_VK_PERF_LOGGER=1</code>과 Vulkan API Dump를 켜서 두 번째 decode의 0번 층을 캡처했습니다. 아래 발췌에는 A → B와 B → C 의존성에 걸린 배리어를 표시했습니다. 성능 타임스탬프 측정용 배리어도 별도로 기록됐습니다. 오프셋과 핸들은 이 실행의 값입니다.</p>
+    <pre class="block-rms-flow attn-capture" tabindex="0" role="region" aria-label="Flash를 끈 실측에서 발췌한 디스크립터, 배리어, dispatch"><code>A · 출력 슬롯 2에 scores 쓰기
+3206  pBufferInfo[2]: const VkDescriptorBufferInfo = 000000532D523AB0:
+3207  buffer: VkBuffer = 0000017FC80B8B60
+3208  offset: VkDeviceSize = 199920
+3209  range: VkDeviceSize = 12288
+3255  pLabelName: const char* = "mul_mat_vec_p021_f16_f326 (1,256,2)"
+3263  vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ) returns void:
+
+A의 쓰기 → B의 읽기
+3296  vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers) returns void:
+3297  commandBuffer: VkCommandBuffer = 0000017FBE8D1440
+3298  srcStageMask: VkPipelineStageFlags = 6144 (VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT)
+3299  dstStageMask: VkPipelineStageFlags = 6144 (VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT)
+
+B · 슬롯 0에서 읽고 슬롯 3에 확률 쓰기
+3341  pBufferInfo[0]: const VkDescriptorBufferInfo = 000000532D522D40:
+3342  buffer: VkBuffer = 0000017FC80B8B60
+3343  offset: VkDeviceSize = 199920
+3344  range: VkDeviceSize = 12288
+3353  pBufferInfo[3]: const VkDescriptorBufferInfo = 000000532D522D88:
+3354  buffer: VkBuffer = 0000017FC80B8B60
+3355  offset: VkDeviceSize = 199920
+3356  range: VkDeviceSize = 12288
+3394  pLabelName: const char* = "soft_max_f32 (12,1,1)"
+3402  vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ) returns void:
+
+B의 쓰기 → C의 읽기
+3435  vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers) returns void:
+
+C · 슬롯 1의 확률과 슬롯 0의 V로 가중합
+3480  pBufferInfo[0]: const VkDescriptorBufferInfo = 000000532D5237B0:
+3481  buffer: VkBuffer = 0000017FC80B8200
+3482  offset: VkDeviceSize = 131072
+3483  range: VkDeviceSize = 131072
+3484  pBufferInfo[1]: const VkDescriptorBufferInfo = 000000532D5237C8:
+3485  buffer: VkBuffer = 0000017FC80B8B60
+3486  offset: VkDeviceSize = 199920
+3487  range: VkDeviceSize = 12288
+3488  pBufferInfo[2]: const VkDescriptorBufferInfo = 000000532D5237E0:
+3489  buffer: VkBuffer = 0000017FC80B8B60
+3490  offset: VkDeviceSize = 120048
+3491  range: VkDeviceSize = 6144
+3537  pLabelName: const char* = "mul_mat_vec_f16_f32_f32 (64,12,1)"
+3545  vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ) returns void:
+
+CONT · 결과를 연속 구간에 쓰기
+3623  pBufferInfo[0]: const VkDescriptorBufferInfo = 000000532D523650:
+3624  buffer: VkBuffer = 0000017FC80B8B60
+3625  offset: VkDeviceSize = 120048
+3626  range: VkDeviceSize = 6144
+3627  pBufferInfo[1]: const VkDescriptorBufferInfo = 000000532D523668:
+3628  buffer: VkBuffer = 0000017FC80B8B60
+3629  offset: VkDeviceSize = 199920
+3630  range: VkDeviceSize = 6144
+
+Wo · 슬롯 1에서 연속 구간 읽기
+3758  pBufferInfo[1]: const VkDescriptorBufferInfo = 000000532D5237C8:
+3759  buffer: VkBuffer = 0000017FC80B8B60
+3760  offset: VkDeviceSize = 199920
+3761  range: VkDeviceSize = 6144</code></pre>
+    <p>A의 파이프라인 이름 끝 <code>6</code>은 한 KV 헤드를 공유하는 Q 헤드 수(12 ÷ 2)입니다. B의 슬롯 2에는 사용하지 않는 sinks 자리를 채울 디스크립터가 들어갑니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L6663-L6668" target="_blank" rel="noopener noreferrer">A의 GQA 비율 선택</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L9447-L9451" target="_blank" rel="noopener noreferrer">B의 디스크립터 배열</a></p>
+  </details>
+  <details class="box" id="attention-vk-calls" open><summary>CPU가 B의 입력을 연결하고 dispatch를 기록하는 호출 깊이</summary>
+    <p><code>ggml_build_forward_expand</code>가 <code>src[]</code>를 따라 연산을 그래프에 등록합니다. 실행 때 스케줄러가 Vulkan 구간의 그래프를 넘기면, 백엔드는 A → B → C 순서로 각 노드의 명령을 기록합니다. 아래 들여쓰기는 직접 호출입니다. 아래의 두 행렬곱 함수는 A와 C가 각각 선택한 가지입니다. B를 기록할 때는 softmax 가지로 들어갑니다.</p>
+    <pre class="block-rms-flow" tabindex="0" role="region" aria-label="Vulkan 구간 처리부터 softmax 명령 기록까지"><code>ggml_backend_graph_compute_async(Vulkan0, &amp;split-&gt;graph)
+└─ ggml_backend_vk_graph_compute(backend, cgraph)
+   └─ ggml_vk_build_graph(…, node_idx, …)  ·  노드마다
+      ├─ ggml_vk_sync_buffers(…)           ·  접근 범위 충돌 시
+      │  └─ cmd.pipelineBarrier(…)
+      ├─ ggml_vk_mul_mat(…, cgraph, node_idx)
+      │  ├─ ggml_vk_mul_mat_vec_p021_f16_f32(…) · A에서 선택
+      │  │  └─ ggml_vk_dispatch_pipeline(…, K·Q·scores 구간, …)
+      │  └─ ggml_vk_mul_mat_vec_q_f16(…)      · C에서 선택
+      │     └─ ggml_vk_dispatch_pipeline(…, V·probs·kqv 구간, …)
+      └─ ggml_vk_soft_max(…, scores, mask, sinks, probs)
+           B의 SOFT_MAX에서 선택 · 짧은 행의 일반 경로
+         └─ ggml_vk_op_f32(…, probs, GGML_OP_SOFT_MAX, pc)
+            ├─ ggml_vk_op_get_pipeline(…)  → softmax 파이프라인
+            └─ ggml_vk_dispatch_pipeline(…, pipeline, 버퍼들, pc, elements)
+               ├─ device.updateDescriptorSets(…)
+               ├─ cmd.pushConstants(…)
+               ├─ cmd.bindPipeline(…)
+               ├─ cmd.bindDescriptorSets(…)
+               └─ cmd.dispatch(wg0, wg1, wg2)</code></pre>
+    <dl class="attn-api">
+      <dt><code>updateDescriptorSets</code> · <code>vkUpdateDescriptorSets</code></dt><dd>CPU가 이번 셰이더의 슬롯별 버퍼 구간을 디스크립터 세트에 씁니다. 이때 B의 0번 슬롯에는 A가 결과를 쓸 위치만 있어도 됩니다.</dd>
+      <dt><code>pushConstants</code> · <code>vkCmdPushConstants</code></dt><dd>행 길이, 배율처럼 이번 계산에 필요한 작은 인자를 명령에 기록합니다.</dd>
+      <dt><code>bindPipeline</code> / <code>bindDescriptorSets</code></dt><dd><code>vkCmdBindPipeline</code>이 이번에 실행할 셰이더가 든 계산 파이프라인을 선택합니다. <code>vkCmdBindDescriptorSets</code>는 그 셰이더의 슬롯에 앞서 채운 디스크립터 세트를 연결합니다.</dd>
+      <dt><code>dispatch</code> / <code>queue.submit</code></dt><dd><code>vkCmdDispatch</code>로 CPU가 작업 그룹 수를 명령 버퍼에 기록합니다. 제출 조건이 되면 <code>ggml_vk_compute_forward → ggml_vk_submit → queue.submit</code>을 거쳐 명령 묶음이 큐로 갑니다. GPU가 각 명령을 실행할 때 해당 결과가 써집니다.</dd>
+    </dl>
+    <p><strong>B가 A보다 먼저 점수를 읽는 것을 어떻게 막을까?</strong> 백엔드는 같은 버퍼의 바이트 범위가 겹치고 한쪽이 쓸 때 접근 충돌을 검사합니다. 필요하면 <code>ggml_vk_sync_buffers</code>가 메모리 배리어를 기록해 앞 셰이더의 쓰기가 뒤 셰이더의 읽기에 보이게 합니다. 이 연결은 GPU 안에서 이루어지므로 CPU로 값을 읽어 다시 올리거나 노드마다 CPU가 기다릴 필요가 없습니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L11949-L12028" rel="noopener noreferrer" target="_blank">겹치는 범위 검사</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L1116-L1135" rel="noopener noreferrer" target="_blank">pipelineBarrier</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L9447-L9451" rel="noopener noreferrer" target="_blank">softmax 버퍼 전달</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-common.h#L249-L279" rel="noopener noreferrer" target="_blank">디스크립터 갱신과 명령 기록</a></p>
+  </details>
+  <section class="attn-flash" id="attention-flash-trace" aria-labelledby="attention-flash-title">
+    <h4 id="attention-flash-title">기존 로그에는 왜 softmax 한 줄이 없을까?</h4>
+    <p>강의의 13토큰 비교 실행에서는 Flash Attention이 켜졌습니다. 같은 <code>build_attn_mha</code>가 <code>ggml_flash_attn_ext(ctx0, q, k, v, mask, …)</code>를 호출해 <code>FLASH_ATTN_EXT</code> 노드 하나를 만듭니다. GPU는 점수 계산과 softmax, V 가중합을 타일 단위로 진행합니다. 전체 점수·확률 텐서를 A와 B 사이에 저장하는 단계가 생략됩니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L2626-L2650" rel="noopener noreferrer" target="_blank">Flash 분기와 노드 생성</a></p>
+    <pre class="block-rms-flow" tabindex="0" role="region" aria-label="실측한 Flash Attention의 두 dispatch"><code>ggml_vk_flash_attn(…)
+├─ ggml_vk_dispatch_pipeline(…, flash_attn_f32_f16_aligned, …)
+│    GPU가 Q·K·V·마스크를 읽어 분할별 부분 결과를 binding 5에 씀
+├─ ggml_vk_sync_buffers(…)
+└─ ggml_vk_dispatch_pipeline(…, fa_split_k_reduce, …)
+     GPU가 binding 0에서 부분 결과를 읽고 binding 2에 최종 벡터를 씀</code></pre>
+    <p>두 번째 decode의 0번 층에서 <strong>2403행</strong>은 <code>flash_attn_f32_f16_aligned (8,2,1)</code>, <strong>2405행</strong>은 <code>fa_split_k_reduce (12,4,1)</code>입니다. 첫 셰이더는 분할별 가중합·정규화 합·최댓값을 임시 버퍼에 씁니다. 두 번째 셰이더가 최댓값 기준을 맞춰 합치고 나누면 같은 어텐션 연산의 최종 벡터가 됩니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L8275-L8284" rel="noopener noreferrer" target="_blank">임시 버퍼와 두 dispatch</a> · <a href="#layer-dispatch-log">07장에서 0번 층 로그 행 보기</a></p>
+    <figure class="attn-dependency" id="flash-buffer-deps" aria-labelledby="flash-buffer-deps-title">
+      <figcaption><h4 id="flash-buffer-deps-title">Flash가 슬롯 5에 쓴 결과를 Reduce가 어떻게 읽을까?</h4>
+      <p>GPU는 <code>FLASH_ATTN_EXT node_24</code> 하나를 두 번의 dispatch로 계산합니다. 첫 셰이더의 <strong>출력 슬롯 5</strong>와 두 번째 셰이더의 <strong>입력 슬롯 0</strong>에 같은 임시 버퍼의 같은 구간을 연결합니다. 아래 행 번호는 Flash를 켜고 다시 캡처한 로그 기준입니다.</p></figcaption>
+      <svg xmlns="http://www.w3.org/2000/svg" class="dep-wide" viewBox="0 0 836 407" role="img" aria-labelledby="flash-deps-w-title flash-deps-w-desc"><title id="flash-deps-w-title">Flash 출력 슬롯 5 → Reduce 입력 슬롯 0 → Reduce 출력 슬롯 2 → Wo 입력 슬롯 1</title><desc id="flash-deps-w-desc">2775행 배리어가 Flash의 부분 결과 쓰기와 Reduce의 읽기를 동기화합니다. Reduce는 별도 버퍼에 최종 벡터 6,144바이트를 기록합니다.</desc><defs><marker id="flash-deps-w-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" class="dep-arrowhead"/></marker></defs>
+<text x="8" y="21" class="dep-hd">GPU에서 실행하는 셰이더</text><text x="436" y="21" class="dep-hd">출력 슬롯에 연결한 버퍼 구간</text>
+<g data-flash-step="0"><rect class="dep-op" x="7" y="35" width="334" height="90" rx="7"/><text x="20" y="58" class="dep-main">Flash · 분할별 결과 계산</text><text x="20" y="79" class="dep-small">flash_attn_f32_f16_aligned</text><text x="20" y="100" class="dep-small">Q·K·V·마스크를 읽어 슬롯 5에 씀</text><text x="20" y="117" class="dep-ref">2764행 · (8, 2, 1)</text></g>
+<g data-flash-step="1"><rect class="dep-result" x="435" y="35" width="395" height="90" rx="7"/><text x="448" y="58" class="dep-main">부분 가중합 O · 정규화 합 L · 최댓값 m</text><text x="448" y="79" class="dep-small">VkBuffer 000002711810C340</text><text x="448" y="100" class="dep-small">offset 0 B · range 243,360 B</text></g>
+<g data-flash-step="2"><rect class="dep-op" x="7" y="176" width="334" height="90" rx="7"/><text x="20" y="199" class="dep-main">Reduce · 분할 결과 합치기</text><text x="20" y="220" class="dep-small">fa_split_k_reduce</text><text x="20" y="241" class="dep-small">입력 슬롯 0에서 O, L, m을 읽음</text><text x="20" y="258" class="dep-ref">2864행 · (12, 4, 1)</text></g>
+<g data-flash-step="3"><rect class="dep-result" x="435" y="176" width="395" height="90" rx="7"/><text x="448" y="199" class="dep-main">블록 0의 어텐션 출력 · FP32 1,536개</text><text x="448" y="220" class="dep-small">VkBuffer 000002711810C1B0</text><text x="448" y="241" class="dep-small">offset 166,752 B · range 6,144 B</text></g>
+<g data-flash-step="4"><rect class="dep-op" x="7" y="317" width="334" height="86" rx="7"/><text x="20" y="340" class="dep-main">Wo · 출력 투영</text><text x="20" y="361" class="dep-small">mul_mat_vec_f16_f32_f32</text><text x="20" y="382" class="dep-small">입력 슬롯 1에서 어텐션 출력을 읽음</text><text x="20" y="399" class="dep-ref">3007행 · (768, 1, 1)</text></g>
+<g data-flash-edge="write-part"><path d="M341 80 H432" class="dep-flow" marker-end="url(#flash-deps-w-arrow)"/><text x="353" y="69" class="dep-edge-label">슬롯 5</text></g>
+<g data-flash-edge="read-part"><path d="M632 125 V154 H120 V173" class="dep-flow" marker-end="url(#flash-deps-w-arrow)"/><text x="202" y="148" class="dep-edge-label">2775행 · 메모리 배리어 → 같은 구간을 슬롯 0에서 읽기</text></g>
+<g data-flash-edge="write-final"><path d="M341 221 H432" class="dep-flow" marker-end="url(#flash-deps-w-arrow)"/><text x="353" y="210" class="dep-edge-label">슬롯 2</text></g>
+<g data-flash-edge="read-final"><path d="M632 266 V296 H120 V314" class="dep-flow" marker-end="url(#flash-deps-w-arrow)"/><text x="215" y="289" class="dep-edge-label">2946~2949행 · 같은 구간을 슬롯 1에서 읽기</text></g>
+</svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="dep-narrow" viewBox="0 0 320 673" role="img" aria-labelledby="flash-deps-m-title flash-deps-m-desc"><title id="flash-deps-m-title">Flash 출력 슬롯 5 → Reduce 입력 슬롯 0 → Reduce 출력 슬롯 2 → Wo 입력 슬롯 1</title><desc id="flash-deps-m-desc">2775행 배리어가 Flash의 부분 결과 쓰기와 Reduce의 읽기를 동기화합니다. Reduce는 별도 버퍼에 최종 벡터 6,144바이트를 기록합니다.</desc><defs><marker id="flash-deps-m-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" class="dep-arrowhead"/></marker></defs>
+<g data-flash-step="0"><rect class="dep-op" x="4" y="5" width="312" height="82" rx="7"/><text x="17" y="25" class="dep-main">Flash · 분할별 결과 계산</text><text x="17" y="44" class="dep-small">flash_attn_f32_f16_aligned</text><text x="17" y="64" class="dep-small">Q·K·V·마스크를 읽어 슬롯 5에 씀</text><text x="17" y="81" class="dep-ref">2764행 · (8, 2, 1)</text></g>
+<g data-flash-step="1"><rect class="dep-result" x="4" y="126" width="312" height="78" rx="7"/><text x="17" y="146" class="dep-main">부분 가중합 O · 정규화 합 L · 최댓값 m</text><text x="17" y="165" class="dep-small">VkBuffer 000002711810C340</text><text x="17" y="185" class="dep-small">offset 0 B · range 243,360 B</text></g>
+<g data-flash-step="2"><rect class="dep-op" x="4" y="274" width="312" height="82" rx="7"/><text x="17" y="294" class="dep-main">Reduce · 분할 결과 합치기</text><text x="17" y="313" class="dep-small">fa_split_k_reduce</text><text x="17" y="333" class="dep-small">입력 슬롯 0에서 O, L, m을 읽음</text><text x="17" y="350" class="dep-ref">2864행 · (12, 4, 1)</text></g>
+<g data-flash-step="3"><rect class="dep-result" x="4" y="402" width="312" height="78" rx="7"/><text x="17" y="422" class="dep-main">블록 0의 어텐션 출력 · FP32 1,536개</text><text x="17" y="441" class="dep-small">VkBuffer 000002711810C1B0</text><text x="17" y="461" class="dep-small">offset 166,752 B · range 6,144 B</text></g>
+<g data-flash-step="4"><rect class="dep-op" x="4" y="559" width="312" height="82" rx="7"/><text x="17" y="579" class="dep-main">Wo · 출력 투영</text><text x="17" y="598" class="dep-small">mul_mat_vec_f16_f32_f32</text><text x="17" y="618" class="dep-small">입력 슬롯 1에서 어텐션 출력을 읽음</text><text x="17" y="635" class="dep-ref">3007행 · (768, 1, 1)</text></g>
+<g data-flash-edge="write-part"><path d="M26 87 V123" class="dep-flow" marker-end="url(#flash-deps-m-arrow)"/><text x="39" y="110" class="dep-edge-label">출력 슬롯 5 · 분할별 결과 쓰기</text></g>
+<g data-flash-edge="read-part"><path d="M26 204 V271" class="dep-flow" marker-end="url(#flash-deps-m-arrow)"/><text x="39" y="230" class="dep-edge-label">2775행 · 메모리 배리어</text><text x="39" y="252" class="dep-small">같은 임시 구간 → 입력 슬롯 0</text></g>
+<g data-flash-edge="write-final"><path d="M26 356 V399" class="dep-flow" marker-end="url(#flash-deps-m-arrow)"/><text x="39" y="383" class="dep-edge-label">출력 슬롯 2 · 최종 벡터 쓰기</text></g>
+<g data-flash-edge="read-final"><path d="M26 480 V556" class="dep-flow" marker-end="url(#flash-deps-m-arrow)"/><text x="39" y="511" class="dep-edge-label">같은 최종 구간 → 입력 슬롯 1</text><text x="39" y="533" class="dep-ref">2946~2949행 · Wo의 디스크립터</text></g>
+</svg>
+      <p class="dep-caption"><strong>2775행의 배리어</strong>는 Flash가 쓴 부분 결과를 Reduce가 읽을 수 있게 합니다. Reduce는 전체 최댓값에 맞춰 각 분할의 부분 가중합과 정규화 합을 보정합니다. 보정된 가중합의 총합을 정규화 합의 총합으로 나눈 뒤, <strong>출력 슬롯 2</strong>를 통해 최종 벡터를 별도 버퍼에 씁니다. 임시 구간의 <code>range = 243,360 B</code>는 디스크립터가 허용하는 접근 범위입니다. <a href="#attention-on-capture">Flash·Reduce·Wo의 바인딩 원본 행 펼치기</a></p>
+    </figure>
+    <details class="box" id="attention-on-capture"><summary>Flash 실행의 임시 버퍼와 최종 출력 바인딩 보기</summary>
+      <p><a href="#flash-buffer-deps">Flash → Reduce → Wo 의존 관계 그림 보기</a></p>
+      <pre class="block-rms-flow attn-capture" tabindex="0" role="region" aria-label="Flash Attention 실측 버퍼와 배리어"><code>Flash · 분할별 결과의 목적지
+2665  pLabelName: const char* = "FLASH_ATTN_EXT node_24"
+2707  pBufferInfo[5]: const VkDescriptorBufferInfo = 000000B4BAAF2E38:
+2708  buffer: VkBuffer = 000002711810C340
+2709  offset: VkDeviceSize = 0
+2710  range: VkDeviceSize = 243360
+2756  pLabelName: const char* = "flash_attn_f32_f16_aligned (8,2,1)"
+2764  vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ) returns void:
+
+GPU 메모리 배리어
+2775  vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers) returns void:
+
+Reduce · 임시 구간을 읽고 최종 구간에 쓰기
+2807  pBufferInfo[0]: const VkDescriptorBufferInfo = 000000B4BAAF2ED0:
+2808  buffer: VkBuffer = 000002711810C340
+2809  offset: VkDeviceSize = 0
+2810  range: VkDeviceSize = 243360
+2815  pBufferInfo[2]: const VkDescriptorBufferInfo = 000000B4BAAF2F00:
+2816  buffer: VkBuffer = 000002711810C1B0
+2817  offset: VkDeviceSize = 166752
+2818  range: VkDeviceSize = 6144
+2856  pLabelName: const char* = "fa_split_k_reduce (12,4,1)"
+2864  vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ) returns void:
+
+Wo · Reduce의 최종 구간을 슬롯 1에서 읽기
+2946  pBufferInfo[1]: const VkDescriptorBufferInfo = 000000B4BAAF3248:
+2947  buffer: VkBuffer = 000002711810C1B0
+2948  offset: VkDeviceSize = 166752
+2949  range: VkDeviceSize = 6144
+2999  pLabelName: const char* = "mul_mat_vec_f16_f32_f32 (768,1,1)"
+3007  vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ) returns void:</code></pre>
+      <p>2707행과 2807행의 <code>pBufferInfo</code> 주소는 CPU 쪽 디스크립터 정보의 위치입니다. GPU에서 같은 구간인지 확인하려면 그 아래의 <code>buffer</code>, <code>offset</code>, <code>range</code> 세 값을 대조하세요.</p>
+    </details>
+  </section>
+</section>
+<script>
+(() => {
+  const demo = document.querySelector('#attention-vulkan .attn-demo');
+  const cells = demo.querySelectorAll('.attn-cells b');
+  const explanation = demo.querySelector('.attn-explain');
+  const moments = [
+  {
+    "values": [
+      "계산 전",
+      "계산 전",
+      "계산 전"
+    ],
+    "text": "CPU는 A·B·C의 모양과 op, src[]를 정합니다. B.src[0]은 벌써 A를 가리키고 있습니다."
+  },
+  {
+    "values": [
+      "계산 전",
+      "계산 전",
+      "계산 전"
+    ],
+    "text": "실행용 버퍼 구간이 정해졌습니다. CPU는 이 구간을 디스크립터에 지정해 A·B·C 명령을 기록합니다. 값을 계산하는 시점은 큐 제출 뒤 각 셰이더가 실행될 때입니다."
+  },
+  {
+    "values": [
+      "[0, ln 3]",
+      "계산 전",
+      "계산 전"
+    ],
+    "text": "A가 Q와 두 K의 내적을 계산해 scores에 씁니다. B는 배리어로 이 쓰기가 보장된 뒤 같은 구간을 입력으로 읽습니다."
+  },
+  {
+    "values": [
+      "B가 읽음",
+      "[0.25, 0.75]",
+      "계산 전"
+    ],
+    "text": "B가 scores를 지수화해 [1, 3]을 얻고 합 4로 나눕니다. 두 확률을 목적지에 쓴 뒤 C에서 읽을 수 있습니다."
+  },
+  {
+    "values": [
+      "B가 읽음",
+      "C가 읽음",
+      "7"
+    ],
+    "text": "C가 두 위치의 값 V를 해당 확률로 가중합합니다. 4 × 0.25 + 8 × 0.75 = 7이 이 예의 kqv입니다."
+  }
+];
+  function show(moment) {
+    moment.values.forEach((value, index) => { cells[index].textContent = value; });
+    explanation.textContent = moment.text;
+  }
+  demo.querySelector('.attn-steps').addEventListener('change', event => {
+    if (event.target.name === 'attn-moment') show(moments[Number(event.target.value)]);
+  });
+  window.addEventListener('pageshow', () => {
+    show(moments[Number(demo.querySelector('input:checked').value)]);
+  });
+})();
+</script>
+<section class="chapter-flow" aria-label="셰이더 바인딩 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-qkv-1" name="flow-qkv"><summary aria-label="1단계 ggml_vk_build_graph · 노드의 op 읽기 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>노드의 op 읽기</strong><code>ggml_<wbr>vk_<wbr>build_<wbr>graph</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>스케줄러가 Vulkan 구간을 실행하면 ggml_backend_vk_graph_compute가 담당 노드를 순회하며 직접 호출합니다.</dd><dt>호출 목적</dt><dd>Q 노드의 op를 읽어 알맞은 Vulkan 연산 함수로 보냅니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx</code></dt><dd>Vulkan 백엔드의 장치·명령 기록 상태</dd><dt><code>cgraph, node_idx</code></dt><dd>Vulkan 담당 그래프와 현재 Q 곱셈 노드 위치</dd><dt><code>node_begin, node_idx_begin</code></dt><dd>현재 명령 묶음의 시작 노드와 인덱스</dd><dt><code>last_node, almost_ready, submit</code></dt><dd>마지막 노드 여부와 제출·완료 통지 시점을 제어하는 값</dd></dl></dd><dt>실행 결과</dt><dd>op가 GGML_OP_MUL_MAT이므로 현재 노드 인덱스와 명령 기록 문맥을 ggml_vk_mul_mat에 넘깁니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L12391-L12393" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp:12391-12393</a></code></figcaption><pre tabindex="0"><code>case GGML_OP_MUL_MAT:
     ggml_vk_mul_mat(ctx, compute_ctx, cgraph, node_idx);</code></pre></figure></div></details><details class="flow-step" id="fn-qkv-2" name="flow-qkv"><summary aria-label="2단계 ggml_vk_mul_mat · 한 토큰 곱셈 경로 선택 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>한 토큰 곱셈 경로 선택</strong><code>ggml_<wbr>vk_<wbr>mul_<wbr>mat</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>ggml_vk_build_graph의 MUL_MAT 분기가 직접 호출합니다.</dd><dt>호출 목적</dt><dd>가중치 자료형과 입력 모양으로 이번 곱셈의 구현을 고릅니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx, subctx</code></dt><dd>장치 상태와 이번 명령 묶음의 기록 문맥</dd><dt><code>cgraph</code></dt><dd>Q 노드 및 연결된 두 입력을 가진 그래프</dd><dt><code>node_idx</code></dt><dd>Q 곱셈 노드의 인덱스</dd></dl></dd><dt>실행 결과</dt><dd>Q 노드의 src[0]은 FP16 Wq, src[1]은 FP32 attn_norm-0입니다. 토큰 한 열이므로 행렬·벡터 곱 경로로 들어갑니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L7046-L7048" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp:7046-7048</a></code></figcaption><pre tabindex="0"><code>} else if ((dst-&gt;ne[1] == 1 || (dst-&gt;ne[1] &lt;= mul_mat_vec_max_cols &amp;&amp; src1-&gt;ne[2] * src1-&gt;ne[3] == 1)) &amp;&amp;
            (src0-&gt;type == GGML_TYPE_F32 || src0-&gt;type == GGML_TYPE_F16 || src0-&gt;type == GGML_TYPE_BF16 || ggml_is_quantized(src0-&gt;type))) {
     ggml_vk_mul_mat_vec_q_f16(ctx, subctx, cgraph, node_idx);</code></pre></figure></div></details><details class="flow-step" id="fn-qkv-3" name="flow-qkv"><summary aria-label="3단계 ggml_vk_mul_mat_vec_q_f16 · 파이프라인과 버퍼 구간 선택 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>파이프라인과 버퍼 구간 선택</strong><code>ggml_<wbr>vk_<wbr>mul_<wbr>mat_<wbr>vec_<wbr>q_<wbr>f16</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>ggml_vk_mul_mat가 한 토큰 분기에서 직접 호출합니다.</dd><dt>호출 목적</dt><dd>곱셈 셰이더와 셰이더가 읽고 쓸 버퍼 구간을 결정합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>ctx, subctx</code></dt><dd>장치 상태와 명령 기록 문맥</dd><dt><code>cgraph, node_idx</code></dt><dd>가중치·입력·결과와 다음 bias 연산을 찾을 그래프 및 위치</dd><dt><code>swap_inputs</code></dt><dd>기본값 false. Q 곱셈에서는 두 입력의 순서를 유지</dd></dl></dd><dt>실행 결과</dt><dd>FP16 가중치·FP32 입력에 맞는 mul_mat_vec_f16_f32_f32를 고릅니다. binding 0은 Wq, 1은 정규화 입력, 2는 결과, 3은 Q bias입니다. 원문 중단점에서 Wq의 모델 버퍼 오프셋은 466,759,680이었습니다. 두 번째 bias가 없는 binding 4에는 결과 구간을 넣고 읽기를 끕니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L6616-L6624" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp:6616-6624</a></code></figcaption><pre tabindex="0"><code>ggml_vk_dispatch_pipeline(ctx, subctx, dmmv,
@@ -6436,7 +7483,116 @@ vkQueueSubmit(queue, submitCount, pSubmits, fence) returns VkResult VK_SUCCESS (
     fenceCount:                 Themain: decoded 3 tokens in 1.20 s, speed: 2.50 t/s
 llama_perf_context_print: prompt eval time =     549.14 ms /    13 tokens (   42.24 ms per token,    23.67 tokens per second)
 Exit code 0
-</pre></details></details></section><div class="chapter-bridge"><p>첫 층에서 본 셰이더 호출이 어텐션과 FFN 안에서 어떤 역할을 하는지 28개 블록으로 넓혀 봅니다.</p><a href="#layers">07 28개 블록 →</a></div></section><section id="layers" class="panel" role="tabpanel" aria-labelledby="tab-layers"><div class="chapter-head"><div class="chapter-label">07 / 09 · 28개 블록</div><h2>첫 블록의 출력이 둘째 블록의 입력이 된다</h2></div><section class="chapter-body" aria-label="28개 블록 강의 본문"><p class="intro">모델의 ‘층’은 어텐션과 FFN을 포함하는 트랜스포머 블록입니다. 각 블록의 가중치는 고정되어 있고, 토큰의 1,536차원 표현은 블록을 지날 때마다 갱신됩니다.</p><figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">ATTENTION</text><text x="19" y="59" class="svgTitle">Q + KV 캐시</text><text x="19" y="81" class="svgSub">앞의 5자리와 현재 자리</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">FFN</text><text x="324" y="59" class="svgTitle">gate · up → SwiGLU</text><text x="324" y="81" class="svgSub">down 투영 + 잔차</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">다음 블록</text><text x="629" y="59" class="svgTitle">1,536차원 벡터</text><text x="629" y="81" class="svgSub">자기 가중치로 같은 구조 반복</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">ATTENTION</text><text x="29" y="48" class="svgTitle">Q + KV 캐시</text><text x="29" y="70" class="svgSub">앞의 5자리와 현재 자리</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">FFN</text><text x="29" y="146" class="svgTitle">gate · up → SwiGLU</text><text x="29" y="168" class="svgSub">down 투영 + 잔차</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">다음 블록</text><text x="29" y="244" class="svgTitle">1,536차원 벡터</text><text x="29" y="266" class="svgSub">자기 가중치로 같은 구조 반복</text></svg></figure><section class="chapter-flow" aria-label="28개 블록 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-layers-1" name="flow-layers"><summary aria-label="1단계 llm_graph_context::build_norm · 블록에 들어온 벡터 정규화 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>블록에 들어온 벡터 정규화</strong><code>llm_<wbr>graph_<wbr>context::<wbr>build_<wbr>norm</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>그래프 생성 · Qwen2 그래프 생성자가 반복문 안에서 직접 호출합니다. 첫 층의 inpL은 임베딩이고 이후에는 앞 층의 출력입니다.</dd><dt>호출 목적</dt><dd>성분 제곱의 평균에 맞춰 입력 크기를 조절하고 이 층이 학습한 배율을 곱합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>cur</code></dt><dd>inpL. 현재 토큰의 1,536개 성분입니다.</dd><dt><code>mw, mb</code></dt><dd>attn_norm은 학습한 성분별 배율이고 편향 mb는 NULL입니다.</dd><dt><code>type, il</code></dt><dd>LLM_NORM_RMS와 층 번호 0~27입니다.</dd></dl></dd><dt>실행 결과</dt><dd>계산 결과 attn_norm은 Q·K·V 세 투영의 공통 입력이 됩니다. 원래 입력 inpSA도 보관해 뒤의 잔차 덧셈에 씁니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L71" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/models/qwen2.cpp:71</a></code></figcaption><pre tabindex="0"><code>for (int il = 0; il &lt; n_layer; ++il) {
+</pre></details></details></section><div class="chapter-bridge"><p>첫 층에서 본 셰이더 호출이 어텐션과 FFN 안에서 어떤 역할을 하는지 28개 블록으로 넓혀 봅니다.</p><a href="#layers">07 28개 블록 →</a></div></section><section id="layers" class="panel" role="tabpanel" aria-labelledby="tab-layers"><div class="chapter-head"><div class="chapter-label">07 / 09 · 28개 블록</div><h2>첫 블록의 출력이 둘째 블록의 입력이 된다</h2></div><section class="chapter-body" aria-label="28개 블록 강의 본문"><p class="intro">모델의 ‘층’은 어텐션과 FFN을 포함하는 트랜스포머 블록입니다. 각 블록의 가중치는 고정되어 있고, 토큰의 1,536차원 표현은 블록을 지날 때마다 갱신됩니다. <a href="#block-shader-example">블록 0에서 Q와 FFN 셰이더 따라가기</a> · <a href="#attention-vulkan">어텐션 버퍼와 Vulkan 호출 순서</a></p><figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">ATTENTION</text><text x="19" y="59" class="svgTitle">Q + KV 캐시</text><text x="19" y="81" class="svgSub">앞의 5자리와 현재 자리</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">FFN</text><text x="324" y="59" class="svgTitle">gate · up → SwiGLU</text><text x="324" y="81" class="svgSub">down 투영 + 잔차</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">다음 블록</text><text x="629" y="59" class="svgTitle">1,536차원 벡터</text><text x="629" y="81" class="svgSub">자기 가중치로 같은 구조 반복</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">ATTENTION</text><text x="29" y="48" class="svgTitle">Q + KV 캐시</text><text x="29" y="70" class="svgSub">앞의 5자리와 현재 자리</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">FFN</text><text x="29" y="146" class="svgTitle">gate · up → SwiGLU</text><text x="29" y="168" class="svgSub">down 투영 + 잔차</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">다음 블록</text><text x="29" y="244" class="svgTitle">1,536차원 벡터</text><text x="29" y="266" class="svgSub">자기 가중치로 같은 구조 반복</text></svg></figure><section class="measure" id="block-shader-example" aria-labelledby="block-shader-title">
+  <h3 id="block-shader-title">블록 0의 정규화 결과를 Q와 FFN 셰이더까지 따라가기</h3>
+  <p>13토큰 비교 실행의 두 번째 <code>llama_decode</code>를 보겠습니다. 위치 13에 들어온 <code>␠Paris</code>의 임베딩은 숫자 1,536개입니다. 0번 블록에서 이 벡터를 가리키는 변수가 <code>inpL</code>입니다.</p>
+  <pre class="block-rms-flow" tabindex="0" role="region" aria-label="블록 0의 RMSNorm 함수 흐름도"><code><strong>[CPU · 그래프 구성]</strong>
+
+qwen2.cpp · 블록 0
+  inpL = build_inp_embd(model.tok_embd)
+    │
+    ▼
+  cur = build_norm(inpL, attn_norm.weight, …)
+    ├─ ggml_rms_norm(ctx0, inpL, eps)
+    │   ├─ result-&gt;op = GGML_OP_RMS_NORM
+    │   └─ result-&gt;src[0] = inpL
+    └─ ggml_mul(ctx0, result, weight)
+        ├─ op = GGML_OP_MUL
+        └─ src[0] = result, src[1] = weight
+    │
+    ▼
+ggml_build_forward_expand(gf, …)
+    └─ src[]를 따라 입력부터 방문해
+       cgraph-&gt;nodes[]에 연산 노드 등록
+    │
+    ▼ 그래프에 버퍼를 배정하고 이번 토큰의 입력을 채움
+
+<strong>[CPU · Vulkan 명령 기록과 제출]</strong>
+
+ggml_backend_sched_graph_compute_async(sched, gf)
+    │
+    ▼ 스케줄러가 Vulkan 구간의 그래프를 넘김
+ggml_backend_vk_graph_compute(backend, cgraph)
+    ├─ cgraph-&gt;nodes[] 순회
+    ├─ RMS_NORM + MUL을 한 번에 실행할 수 있는지 검사
+    └─ ggml_vk_build_graph(…, node_idx, …)
+        │
+        ▼ case GGML_OP_RMS_NORM
+      ggml_vk_rms_norm(…)
+        └─ ggml_vk_op_f32(…)
+            ├─ ggml_vk_op_get_pipeline(…)
+            │   └─ pipeline_rms_norm_mul_f32 반환
+            └─ ggml_vk_dispatch_pipeline(…)
+                ├─ 입력·가중치·출력 버퍼 지정
+                ├─ pushConstants(…)   · epsilon 등
+                ├─ bindPipeline(…)
+                ├─ bindDescriptorSets(…)
+                └─ dispatch(1, 1, 1)  · 명령 기록
+    │
+    ▼ 제출 조건이 되면 ggml_vk_build_graph에서
+ggml_vk_compute_forward(…)
+    └─ ggml_vk_submit(…)
+        └─ queue.submit(…)  · 기록한 명령 버퍼 제출
+
+<strong>[GPU · 실제 연산]</strong>
+
+큐에서 이 dispatch를 실행할 차례
+    │
+    ▼
+rms_norm.comp · main()
+    ├─ inpL 버퍼에서 1,536개 값 읽기
+    ├─ 스레드 512개가 제곱합을 나눠 구하고 합치기
+    ├─ 각 값에 1 / √(제곱의 평균 + epsilon) 곱하기
+    ├─ 각 위치의 attn_norm.weight 곱하기
+    └─ 결과 1,536개를 attn_norm-0 버퍼에 쓰기
+    │
+    ▼
+다음 MUL_MAT 셰이더들이 이 버퍼를 binding 1에서 읽음
+    ├─ Wq로 Q 계산  · 2385행
+    ├─ Wv로 V 계산  · 2388행
+    └─ Wk로 K 계산  · 2391행</code></pre>
+  <details class="box" id="block-rms-shader"><summary>흐름도의 함수별 설명과 원본 코드</summary>
+    <ol>
+      <li><strong>모델이 그래프를 만들 때.</strong> <code>build_norm</code>이 <code>ggml_rms_norm(ctx0, inpL, eps)</code>을 호출합니다. 결과 텐서에는 <code>op = GGML_OP_RMS_NORM</code>, <code>src[0] = inpL</code>이 들어갑니다. 이어 <code>ggml_mul(ctx0, cur, mw)</code>가 이 노드와 <code>attn_norm.weight</code>를 입력으로 받습니다. <code>build_norm</code>이 반환하는 <code>cur</code>는 이 마지막 곱셈의 결과를 가리킵니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1583-L1615" target="_blank" rel="noopener noreferrer">build_norm</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml.c#L3159-L3186" target="_blank" rel="noopener noreferrer">op와 src[0]를 쓰는 곳</a></li>
+      <li><strong>노드가 실행 목록에 들어갈 때.</strong> <code>ggml_build_forward_expand</code>가 그래프를 확장하면 내부의 <code>ggml_visit_parents_graph</code>가 <code>src[]</code>를 따라 입력을 먼저 방문한 뒤 연산 노드를 <code>cgraph-&gt;nodes[]</code>에 넣습니다. <code>llama_decode</code>가 그래프 실행을 요청하면 스케줄러는 이 노드들이 속한 구간을 Vulkan 백엔드에 넘깁니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml.c#L7265-L7299" target="_blank" rel="noopener noreferrer">입력 방문과 노드 등록</a> · <a href="#decode-graph-calls">decode의 그래프 실행 호출 보기</a></li>
+      <li><strong>CPU가 명령을 기록할 때.</strong> <code>ggml_backend_vk_graph_compute</code>가 두 노드를 함께 실행할 수 있는지 검사해 <code>RMS_NORM_MUL</code>을 설정합니다. 이어 호출된 <code>ggml_vk_build_graph</code>는 <code>case GGML_OP_RMS_NORM</code>에서 <code>ggml_vk_rms_norm</code>을 부릅니다. 이 함수가 넘긴 입력·가중치·목적지로 <code>ggml_vk_op_f32</code>가 <code>ggml_vk_op_get_pipeline</code>을 호출해 <code>pipeline_rms_norm_mul_f32</code>를 고르고 dispatch를 기록합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L14121-L14128" target="_blank" rel="noopener noreferrer">두 노드를 묶는 조건</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L12195-L12197" target="_blank" rel="noopener noreferrer">op 분기</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L8571-L8576" target="_blank" rel="noopener noreferrer">파이프라인 선택</a></li>
+      <li><strong>GPU가 2382행의 dispatch를 실행할 때.</strong> <code>rms_norm.comp</code>의 <code>main()</code>에서 한 작업 그룹의 스레드 512개가 입력 1,536개를 나눠 읽습니다. 예를 들어 스레드 0은 0·512·1024번 원소의 제곱을 더합니다. 그룹이 부분합을 모으면 각 스레드는 담당 원소에 <code>1 / √(제곱의 평균 + ε)</code>와 해당 위치의 가중치를 곱해 결과 버퍼에 씁니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp#L76-L100" target="_blank" rel="noopener noreferrer">부분합과 정규화 계수</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp#L117-L130" target="_blank" rel="noopener noreferrer">가중치를 곱해 버퍼에 쓰기</a></li>
+    </ol>
+  </details>
+  <h4>Q에서 FFN으로 어떤 값이 건너갈까?</h4>
+  <p><a href="#attention-vulkan">06장에서 Q·K 점수가 softmax를 거쳐 V 가중합이 되는 과정 보기</a></p>
+  <p>Q는 K·V와 함께 어텐션 계산에 쓰입니다. 어텐션 결과를 출력 가중치 <code>Wo</code>로 투영하고 블록 입력 <code>inpL</code>을 더한 벡터가 <code>ffn_inp</code>입니다. 두 번째 <code>build_norm</code>은 여기에 <code>ffn_norm.weight</code>를 적용합니다. <strong>FFN의 gate와 up은 이 두 번째 정규화 결과를 함께 읽습니다.</strong> <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L102-L124" target="_blank" rel="noopener noreferrer">ffn_inp를 만들어 build_ffn에 넘기는 코드</a></p>
+  <div class="tabwrap" role="region" tabindex="0" aria-label="블록 0의 Q에서 FFN까지 모델 연산과 셰이더 대조"><table>
+    <caption>블록 0 · 한 토큰의 모델 연산과 실제 vkCmdDispatch 로그 행</caption>
+    <thead><tr><th scope="col">모델에서 연결한 계산</th><th scope="col">Vulkan 파이프라인 · 그룹 (X, Y, Z)</th><th scope="col">GPU가 쓰는 값</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">2385 · Q 투영<br><code>build_qkv</code></th><td><code>mul_mat_vec_f16_f32_f32</code><br>(768, 1, 1)</td><td><code>Wq × attn_norm-0 + Q bias</code>. Q의 1,536개 성분을 씁니다.</td></tr>
+      <tr><th scope="row">2408 · 어텐션 출력 투영 + 잔차</th><td><code>mul_mat_vec_f16_f32_f32</code><br>(768, 1, 1)</td><td>Q·K·V로 계산한 어텐션 결과에 <code>Wo</code>를 곱하고 <code>inpL</code>을 더해 <code>ffn_inp</code>를 씁니다.</td></tr>
+      <tr><th scope="row">2411 · FFN 입력 정규화<br><code>build_norm</code></th><td><code>rms_norm_mul_f32</code><br>(1, 1, 1)</td><td>이번에는 <code>ffn_inp</code>와 FFN의 정규화 가중치로 1,536개 값을 씁니다.</td></tr>
+      <tr><th scope="row">2414 · gate<br>2417 · up</th><td><code>mul_mat_vec_f16_f32_f32</code><br>각각 (4480, 1, 1)</td><td>같은 입력에 <code>ffn_gate.weight</code>와 <code>ffn_up.weight</code>를 각각 곱해 길이 8,960인 벡터 두 개를 씁니다.</td></tr>
+      <tr><th scope="row">2420 · 두 벡터 결합<br><code>ggml_swiglu_split</code></th><td><code>swiglu_f32</code><br>(1, 18, 1)</td><td>같은 위치끼리 <code>SiLU(gate[i]) × up[i]</code>를 계산해 8,960개 값을 씁니다.</td></tr>
+      <tr><th scope="row">2423 · down 투영 + 잔차</th><td><code>mul_mat_vec_f16_f32_f32</code><br>(768, 1, 1)</td><td><code>ffn_down.weight</code>로 1,536개 값으로 줄이고 앞에서 보관한 <code>ffn_inp</code>를 더합니다. 이 결과가 1번 블록의 <code>inpL</code>입니다.</td></tr>
+    </tbody>
+  </table></div>
+  <p>2420행의 SwiGLU는 어떻게 선택될까요? <code>ggml_swiglu_split</code>이 만든 노드에는 연산 <code>GGML_OP_GLU</code>와 종류 <code>GGML_GLU_OP_SWIGLU</code>가 기록됩니다. Vulkan의 <code>ggml_vk_glu</code> 경로가 이 종류와 FP32 출력 타입으로 <code>swiglu_f32</code>를 고릅니다. 셰이더는 gate와 up의 GPU 버퍼를 하나씩 읽습니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L8645-L8658" target="_blank" rel="noopener noreferrer">SwiGLU 파이프라인 선택</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/swiglu.comp#L3-L9" target="_blank" rel="noopener noreferrer">두 값을 곱하는 셰이더 코드</a></p>
+  <details class="box" id="block-matvec-shader"><summary>Q와 FFN의 행렬곱이 같은 셰이더에 도달하는 호출 순서</summary>
+    <p>Q의 <code>build_qkv</code>와 FFN의 <code>build_ffn</code>은 각각 자기 가중치로 <code>build_lora_mm</code>을 부릅니다. 그 안의 <code>ggml_mul_mat</code>가 <code>GGML_OP_MUL_MAT</code> 노드를 남깁니다. 아래는 그 노드를 Vulkan이 처리할 때의 직접 호출입니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1689-L1695" target="_blank" rel="noopener noreferrer">Q 노드</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1786-L1811" target="_blank" rel="noopener noreferrer">up·gate 노드</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/llama-graph.cpp#L1925-L1927" target="_blank" rel="noopener noreferrer">down 노드</a></p>
+    <ul>
+      <li><code>ggml_vk_build_graph</code>의 <code>case GGML_OP_MUL_MAT</code>
+        <ul><li><code>ggml_vk_mul_mat</code>가 이 한 토큰 입력에 행렬·벡터 곱 경로를 선택합니다.
+          <ul><li><code>ggml_vk_mul_mat_vec_q_f16</code>
+            <ol><li><code>ggml_vk_get_dequantize_mul_mat_vec</code>가 가중치·입력 타입과 크기를 보고 파이프라인 <code>dmmv</code>를 반환합니다.</li>
+            <li><code>ggml_vk_dispatch_pipeline</code>이 <code>dmmv</code>와 가중치·입력·출력 버퍼를 받아 명령을 기록합니다. Q에서는 출력 1,536행을 넘기고, 내부에서 두 행씩 묶어 <code>dispatch(768, 1, 1)</code>을 기록합니다. gate에서는 8,960행이어서 X가 4,480입니다.</li></ol>
+          </li></ul>
+        </li></ul>
+      </li>
+    </ul>
+    <p>셰이더가 2385행에서 읽는 가중치는 <code>blk.0.attn_q.weight</code>, 2414행에서는 <code>blk.0.ffn_gate.weight</code>입니다. 두 호출 모두 <code>mul_mat_vec.comp</code>의 <code>main()</code>에서 그룹별 출력 행을 정하고 <code>compute_outputs</code>로 계산합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L6445-L6452" target="_blank" rel="noopener noreferrer">dmmv 선택</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L6616-L6624" target="_blank" rel="noopener noreferrer">버퍼와 작업 범위 전달</a> · <a href="#vulkan-q-dispatch">06장에서 Q 한 값의 바인딩과 셰이더 보기</a></p>
+  </details>
+  <h4>블록 번호를 0에서 1, 27로 바꾸면</h4>
+  <p>반복문 끝의 <code>inpL = cur</code>가 방금 만든 출력을 다음 블록의 입력에 연결합니다. 1번 블록은 2426행에서 그 값을 정규화하고, 2429행에서는 <code>blk.1.attn_q.weight</code>, 2458행에서는 <code>blk.1.ffn_gate.weight</code>를 읽습니다. 마지막 27번 블록에서도 Q(3581행)와 gate(3619행)는 같은 행렬·벡터 셰이더를 씁니다. 이 블록에서는 출력할 행을 고르는 <code>GET_ROWS</code>도 나타나며, 3628행의 FFN 출력은 최종 정규화와 어휘 점수 계산으로 이어집니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L125-L153" target="_blank" rel="noopener noreferrer">다음 블록과 최종 출력 연결</a> · <a href="#layer-dispatch-log">0~27번 블록을 골라 원본 로그 행 비교하기</a></p>
+</section>
+<section class="chapter-flow" aria-label="28개 블록 함수 흐름"><h3>함수 흐름</h3><p class="flow-hint">화살표를 누르면 그 자리에서 인자와 코드가 열립니다. 각 설명에서 직접 호출과 후속 작업을 구분합니다.</p><div class="flow-list"><details class="flow-step" id="fn-layers-1" name="flow-layers"><summary aria-label="1단계 llm_graph_context::build_norm · 블록에 들어온 벡터 정규화 설명과 코드"><span class="flow-arrow"><svg viewBox="0 0 32 20" width="32" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h26m-7-6 7 6-7 6"/></svg></span><span class="flow-label"><strong>블록에 들어온 벡터 정규화</strong><code>llm_<wbr>graph_<wbr>context::<wbr>build_<wbr>norm</code></span></summary><div class="flow-detail"><dl class="fn-explain"><dt>앞 단계와의 관계</dt><dd>그래프 생성 · Qwen2 그래프 생성자가 반복문 안에서 직접 호출합니다. 첫 층의 inpL은 임베딩이고 이후에는 앞 층의 출력입니다.</dd><dt>호출 목적</dt><dd>성분 제곱의 평균에 맞춰 입력 크기를 조절하고 이 층이 학습한 배율을 곱합니다.</dd><dt>인자</dt><dd><dl class="fn-args"><dt><code>cur</code></dt><dd>inpL. 현재 토큰의 1,536개 성분입니다.</dd><dt><code>mw, mb</code></dt><dd>attn_norm은 학습한 성분별 배율이고 편향 mb는 NULL입니다.</dd><dt><code>type, il</code></dt><dd>LLM_NORM_RMS와 층 번호 0~27입니다.</dd></dl></dd><dt>실행 결과</dt><dd>계산 결과 attn_norm은 Q·K·V 세 투영의 공통 입력이 됩니다. 원래 입력 inpSA도 보관해 뒤의 잔차 덧셈에 씁니다.</dd></dl><figure class="code-clip"><figcaption>소스 발췌 · <code><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/src/models/qwen2.cpp#L71" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/src/models/qwen2.cpp:71</a></code></figcaption><pre tabindex="0"><code>for (int il = 0; il &lt; n_layer; ++il) {
     ggml_tensor * inpSA = inpL;
 
     // norm
@@ -6508,7 +7664,7 @@ cur = inpL;</code></pre></figure></div></details></div></section><details class=
   pick.addEventListener("change", showGroup);
   showGroup();
 })();
-</script><div class="box"><h3>13토큰 비교 실행 · 블록별 Vulkan dispatch 기록</h3><p>13토큰 프롬프트 뒤 위치 13의 ␠Paris를 넣은 두 번째 decode의 원본 API 로그에서 커널과 작업 그룹 수를 추출했습니다. 원본 행은 vkCmdDispatch 행 번호입니다. 같은 연산에 여러 커널이 붙을 수 있습니다.</p><div class="layercontrol"><label for="layer">실행 구간</label><select id="layer"><option value="0">블록 0 · 1번째 층</option><option value="1">블록 1 · 2번째 층</option><option value="2">블록 2 · 3번째 층</option><option value="3">블록 3 · 4번째 층</option><option value="4">블록 4 · 5번째 층</option><option value="5">블록 5 · 6번째 층</option><option value="6">블록 6 · 7번째 층</option><option value="7">블록 7 · 8번째 층</option><option value="8">블록 8 · 9번째 층</option><option value="9">블록 9 · 10번째 층</option><option value="10">블록 10 · 11번째 층</option><option value="11">블록 11 · 12번째 층</option><option value="12">블록 12 · 13번째 층</option><option value="13">블록 13 · 14번째 층</option><option value="14">블록 14 · 15번째 층</option><option value="15">블록 15 · 16번째 층</option><option value="16">블록 16 · 17번째 층</option><option value="17">블록 17 · 18번째 층</option><option value="18">블록 18 · 19번째 층</option><option value="19">블록 19 · 20번째 층</option><option value="20">블록 20 · 21번째 층</option><option value="21">블록 21 · 22번째 층</option><option value="22">블록 22 · 23번째 층</option><option value="23">블록 23 · 24번째 층</option><option value="24">블록 24 · 25번째 층</option><option value="25">블록 25 · 26번째 층</option><option value="26">블록 26 · 27번째 층</option><option value="27">블록 27 · 28번째 층</option><option value="28">최종 정규화와 출력</option></select><span id="layercaption" class="badgevalue" aria-live="polite"></span></div><div class="ledger"><table class="dispatch"><thead><tr><th>로그 행</th><th>그래프 연산</th><th>셰이더 파이프라인</th><th>그룹 (x,y,z)</th></tr></thead><tbody id="ledgerbody"><tr><td>2382</td><td>RMS_NORM+MUL norm-0</td><td>rms_norm_mul_f32</td><td>1,1,1</td></tr><tr><td>2385</td><td>MUL_MAT+ADD Qcur-0</td><td>mul_mat_vec_f16_f32_f32</td><td>768,1,1</td></tr><tr><td>2388</td><td>MUL_MAT+ADD Vcur-0</td><td>mul_mat_vec_f16_f32_f32</td><td>128,1,1</td></tr><tr><td>2391</td><td>MUL_MAT+ADD Kcur-0</td><td>mul_mat_vec_f16_f32_f32</td><td>128,1,1</td></tr><tr><td>2394</td><td>ROPE Qcur-0</td><td>rope_neox_f32</td><td>12,1,1</td></tr><tr><td>2397</td><td>SET_ROWS cache_v_l0 (view)</td><td>set_rows_f32_f16_i64</td><td>1,1,1</td></tr><tr><td>2400</td><td>ROPE+VIEW+SET_ROWS Kcur-0</td><td>rope_neox_f32_f16</td><td>2,1,1</td></tr><tr><td>2403</td><td>FLASH_ATTN_EXT node_24</td><td>flash_attn_f32_f16_aligned</td><td>8,2,1</td></tr><tr><td>2405</td><td>FLASH_ATTN_EXT node_24</td><td>fa_split_k_reduce</td><td>12,4,1</td></tr><tr><td>2408</td><td>MUL_MAT+ADD node_26</td><td>mul_mat_vec_f16_f32_f32</td><td>768,1,1</td></tr><tr><td>2411</td><td>RMS_NORM+MUL norm-0</td><td>rms_norm_mul_f32</td><td>1,1,1</td></tr><tr><td>2414</td><td>MUL_MAT ffn_gate-0</td><td>mul_mat_vec_f16_f32_f32</td><td>4480,1,1</td></tr><tr><td>2417</td><td>MUL_MAT ffn_up-0</td><td>mul_mat_vec_f16_f32_f32</td><td>4480,1,1</td></tr><tr><td>2420</td><td>GLU ffn_swiglu-0</td><td>swiglu_f32</td><td>1,18,1</td></tr><tr><td>2423</td><td>MUL_MAT+ADD ffn_out-0</td><td>mul_mat_vec_f16_f32_f32</td><td>768,1,1</td></tr></tbody></table></div></div><div class="call"><details><summary><strong>rms_norm → scale × x × 학습된 norm weight</strong><span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp#L53" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">rms_norm.comp · 53</a></span></summary><div class="srcfile"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp#L53" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp</a></div><pre class="snippet"><span class="line"><span class="ln">51</span>shared FLOAT_TYPE sumsh[BLOCK_SIZE];</span>
+</script><div class="box" id="layer-dispatch-log"><h3>13토큰 비교 실행 · 블록별 Vulkan dispatch 기록</h3><p>13토큰 프롬프트 뒤 위치 13의 ␠Paris를 넣은 두 번째 decode의 원본 API 로그에서 커널과 작업 그룹 수를 추출했습니다. 원본 행은 vkCmdDispatch 행 번호입니다. 같은 연산에 여러 커널이 붙을 수 있습니다.</p><div class="layercontrol"><label for="layer">실행 구간</label><select id="layer"><option value="0">블록 0 · 1번째 층</option><option value="1">블록 1 · 2번째 층</option><option value="2">블록 2 · 3번째 층</option><option value="3">블록 3 · 4번째 층</option><option value="4">블록 4 · 5번째 층</option><option value="5">블록 5 · 6번째 층</option><option value="6">블록 6 · 7번째 층</option><option value="7">블록 7 · 8번째 층</option><option value="8">블록 8 · 9번째 층</option><option value="9">블록 9 · 10번째 층</option><option value="10">블록 10 · 11번째 층</option><option value="11">블록 11 · 12번째 층</option><option value="12">블록 12 · 13번째 층</option><option value="13">블록 13 · 14번째 층</option><option value="14">블록 14 · 15번째 층</option><option value="15">블록 15 · 16번째 층</option><option value="16">블록 16 · 17번째 층</option><option value="17">블록 17 · 18번째 층</option><option value="18">블록 18 · 19번째 층</option><option value="19">블록 19 · 20번째 층</option><option value="20">블록 20 · 21번째 층</option><option value="21">블록 21 · 22번째 층</option><option value="22">블록 22 · 23번째 층</option><option value="23">블록 23 · 24번째 층</option><option value="24">블록 24 · 25번째 층</option><option value="25">블록 25 · 26번째 층</option><option value="26">블록 26 · 27번째 층</option><option value="27">블록 27 · 28번째 층</option><option value="28">최종 정규화와 출력</option></select><span id="layercaption" class="badgevalue" aria-live="polite"></span></div><div class="ledger"><table class="dispatch"><thead><tr><th>로그 행</th><th>그래프 연산</th><th>셰이더 파이프라인</th><th>그룹 (x,y,z)</th></tr></thead><tbody id="ledgerbody"><tr><td>2382</td><td>RMS_NORM+MUL norm-0</td><td>rms_norm_mul_f32</td><td>1,1,1</td></tr><tr><td>2385</td><td>MUL_MAT+ADD Qcur-0</td><td>mul_mat_vec_f16_f32_f32</td><td>768,1,1</td></tr><tr><td>2388</td><td>MUL_MAT+ADD Vcur-0</td><td>mul_mat_vec_f16_f32_f32</td><td>128,1,1</td></tr><tr><td>2391</td><td>MUL_MAT+ADD Kcur-0</td><td>mul_mat_vec_f16_f32_f32</td><td>128,1,1</td></tr><tr><td>2394</td><td>ROPE Qcur-0</td><td>rope_neox_f32</td><td>12,1,1</td></tr><tr><td>2397</td><td>SET_ROWS cache_v_l0 (view)</td><td>set_rows_f32_f16_i64</td><td>1,1,1</td></tr><tr><td>2400</td><td>ROPE+VIEW+SET_ROWS Kcur-0</td><td>rope_neox_f32_f16</td><td>2,1,1</td></tr><tr><td>2403</td><td>FLASH_ATTN_EXT node_24</td><td>flash_attn_f32_f16_aligned</td><td>8,2,1</td></tr><tr><td>2405</td><td>FLASH_ATTN_EXT node_24</td><td>fa_split_k_reduce</td><td>12,4,1</td></tr><tr><td>2408</td><td>MUL_MAT+ADD node_26</td><td>mul_mat_vec_f16_f32_f32</td><td>768,1,1</td></tr><tr><td>2411</td><td>RMS_NORM+MUL norm-0</td><td>rms_norm_mul_f32</td><td>1,1,1</td></tr><tr><td>2414</td><td>MUL_MAT ffn_gate-0</td><td>mul_mat_vec_f16_f32_f32</td><td>4480,1,1</td></tr><tr><td>2417</td><td>MUL_MAT ffn_up-0</td><td>mul_mat_vec_f16_f32_f32</td><td>4480,1,1</td></tr><tr><td>2420</td><td>GLU ffn_swiglu-0</td><td>swiglu_f32</td><td>1,18,1</td></tr><tr><td>2423</td><td>MUL_MAT+ADD ffn_out-0</td><td>mul_mat_vec_f16_f32_f32</td><td>768,1,1</td></tr></tbody></table></div></div><div class="call"><details><summary><strong>rms_norm → scale × x × 학습된 norm weight</strong><span class="loc"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp#L53" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">rms_norm.comp · 53</a></span></summary><div class="srcfile"><a class="github-source" href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/08a508f516515cf124a09f6f13f26aee2d0281cf/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp#L53" target="_blank" rel="noopener noreferrer" title="GitHub에서 소스 보기 (새 탭)">llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/rms_norm.comp</a></div><pre class="snippet"><span class="line"><span class="ln">51</span>shared FLOAT_TYPE sumsh[BLOCK_SIZE];</span>
 <span class="line"><span class="ln">52</span></span>
 <span class="sel"><span class="ln">53</span>void rms_norm(uint num_iters) {</span>
 <span class="line"><span class="ln">54</span>    const uint ncols     = p.ne00;</span>
@@ -6947,6 +8103,10 @@ revealArchiveTarget(location.hash);
 })();
 </script><script id="rep-index" type="application/json">{"load": 1, "upload": 1, "prompt": 0, "graph": 0, "embedding": 1, "qkv": 3, "layers": 3, "readback": 2, "sample": 4}</script><script>(() => {
   'use strict';
+  const embeddingMap = document.getElementById('embedding-split-map');
+  const splitMap = document.getElementById('graph-split-map').cloneNode(true);
+  splitMap.removeAttribute('id');
+  embeddingMap.replaceChildren(splitMap);
   const tabs = [...document.querySelectorAll('.chapter-tabs [role="tab"]')];
   const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
   const map = document.querySelector('.overview-map');
