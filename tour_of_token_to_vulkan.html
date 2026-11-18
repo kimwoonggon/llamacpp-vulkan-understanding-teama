@@ -139,6 +139,21 @@
 @media(max-width:820px){.gx-pair{grid-template-columns:minmax(0,1fr)}.gx-pointers svg{max-width:410px}}
 @media(max-width:500px){.gx-pointers,.gx-reg{padding:.5rem}.gx-pointers svg .gx-op,.gx-ports text{font-size:15px!important}.gx-controls label{font-size:.82rem}}
 @media print{.gx-controls{display:none}.gx-pair{break-inside:avoid}.gx-real{break-inside:avoid}}
+
+/* Matrix-vector shader walkthrough in the existing layer chapter. */
+.mm28 { margin: 28px 0; padding: 22px 0; border-block: 1px solid var(--rule-strong); }
+.mm28 h3 { margin: 0 0 16px; font-size: clamp(21px,2vw,30px); }
+.mm28 h4 { margin: 30px 0 10px; font-size: 19px; line-height: 1.6; }
+.mm28 p { margin: 12px 0; }
+.mm28 .mm28-source { margin: 16px 0; }
+.mm28 .mm28-source figcaption { padding: 8px 12px; background: var(--tint); }
+.mm28 .snippet { font-size: 14px; line-height: 1.7; }
+.mm28 .snippet .ln { display: inline-block; min-width: 2.5em; user-select: none; }
+.mm28 .mm28-table { min-width: 930px; }
+.mm28 .mm28-table caption { text-align: left; font-weight: 700; padding-bottom: 8px; }
+.mm28 .mm28-table tbody th { background: var(--surface); }
+.mm28 .mm28-diagram svg { min-width: 720px; }
+@media print { .mm28 .mm28-table { min-width: 0; font-size: 9pt; } .mm28 .mm28-diagram svg { min-width: 0; } }
 </style><style>/* Page and reading measure from the team's llama.cpp design guide. */
 :root {
   color-scheme: light;
@@ -7610,7 +7625,218 @@ vkQueueSubmit(queue, submitCount, pSubmits, fence) returns VkResult VK_SUCCESS (
     fenceCount:                 Themain: decoded 3 tokens in 1.20 s, speed: 2.50 t/s
 llama_perf_context_print: prompt eval time =     549.14 ms /    13 tokens (   42.24 ms per token,    23.67 tokens per second)
 Exit code 0
-</pre></details></details></section><div class="chapter-bridge"><p>첫 층에서 본 셰이더 호출이 어텐션과 FFN 안에서 어떤 역할을 하는지 28개 블록으로 넓혀 봅니다.</p><a href="#layers">07 28개 블록 →</a></div></section><section id="layers" class="panel" role="tabpanel" aria-labelledby="tab-layers"><div class="chapter-head"><div class="chapter-label">07 / 09 · 28개 블록</div><h2>첫 블록의 출력이 둘째 블록의 입력이 된다</h2><a class="chapter-shortcut" href="#flow-layers">함수 흐름으로 이동</a></div><section class="chapter-body" aria-label="28개 블록 강의 본문"><p class="intro">모델의 ‘층’은 어텐션과 FFN을 포함하는 트랜스포머 블록입니다. 각 블록의 가중치는 고정되어 있고, 토큰의 1,536차원 표현은 블록을 지날 때마다 갱신됩니다. <a href="#block-shader-example">블록 0에서 Q와 FFN 셰이더 따라가기</a> · <a href="#attention-vulkan">어텐션 버퍼와 Vulkan 호출 순서</a></p><figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">ATTENTION</text><text x="19" y="59" class="svgTitle">Q + KV 캐시</text><text x="19" y="81" class="svgSub">앞의 5자리와 현재 자리</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">FFN</text><text x="324" y="59" class="svgTitle">gate · up → SwiGLU</text><text x="324" y="81" class="svgSub">down 투영 + 잔차</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">다음 블록</text><text x="629" y="59" class="svgTitle">1,536차원 벡터</text><text x="629" y="81" class="svgSub">자기 가중치로 같은 구조 반복</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">ATTENTION</text><text x="29" y="48" class="svgTitle">Q + KV 캐시</text><text x="29" y="70" class="svgSub">앞의 5자리와 현재 자리</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">FFN</text><text x="29" y="146" class="svgTitle">gate · up → SwiGLU</text><text x="29" y="168" class="svgSub">down 투영 + 잔차</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">다음 블록</text><text x="29" y="244" class="svgTitle">1,536차원 벡터</text><text x="29" y="266" class="svgSub">자기 가중치로 같은 구조 반복</text></svg></figure><section class="measure" id="block-shader-example" aria-labelledby="block-shader-title">
+</pre></details></details></section><div class="chapter-bridge"><p>첫 층에서 본 셰이더 호출이 어텐션과 FFN 안에서 어떤 역할을 하는지 28개 블록으로 넓혀 봅니다.</p><a href="#layers">07 28개 블록 →</a></div></section><section id="layers" class="panel" role="tabpanel" aria-labelledby="tab-layers"><div class="chapter-head"><div class="chapter-label">07 / 09 · 28개 블록</div><h2>첫 블록의 출력이 둘째 블록의 입력이 된다</h2><a class="chapter-shortcut" href="#flow-layers">함수 흐름으로 이동</a></div><section class="chapter-body" aria-label="28개 블록 강의 본문"><p class="intro">모델의 ‘층’은 어텐션과 FFN을 포함하는 트랜스포머 블록입니다. 각 블록의 가중치는 고정되어 있고, 토큰의 1,536차원 표현은 블록을 지날 때마다 갱신됩니다. <a href="#matmul-28-shader">28개 블록의 행렬곱 셰이더 코드 보기</a> · <a href="#block-shader-example">블록 0에서 Q와 FFN 셰이더 따라가기</a> · <a href="#attention-vulkan">어텐션 버퍼와 Vulkan 호출 순서</a></p>
+
+<section id="matmul-28-shader" class="mm28" aria-labelledby="matmul-28-title">
+  <h3 id="matmul-28-title">28개 블록의 행렬곱을 셰이더 코드로 따라가기</h3>
+  <p>두 번째 <code>llama_decode</code>에 들어온 <code>␠Paris</code> 한 토큰을 기준으로 봅니다. 이 실습의 Q·K·V·Wo·gate·up·down 투영은 <code>mul_mat_vec_f16_f32_f32</code> 파이프라인을 사용합니다. 코드의 출발점은 <code>mul_mat_vec.comp</code>이고, 버퍼 선언은 <code>mul_mat_vec_iface.glsl</code>, 부분합 병합과 출력은 <code>mul_mat_vec_base.glsl</code>에 있습니다.</p>
+  <p>가중치 투영은 한 블록에 7개, 28개 블록에 196개입니다. 블록 내부에는 정규화·RoPE·KV 기록·attention·SwiGLU도 있고, 블록 반복 뒤에는 최종 정규화와 어휘 투영이 이어집니다. 여러 입력 토큰을 평가하는 prefill에서는 행렬 크기에 맞춰 다른 행렬곱 파이프라인을 선택할 수 있습니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/src/models/qwen2.cpp#L69" target="_blank" rel="noopener noreferrer">28개 블록을 구성하는 코드</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan.cpp#L2732" target="_blank" rel="noopener noreferrer">FP16 × FP32 파이프라인 설정</a></p>
+
+  <figure class="diagram mm28-diagram">
+    <svg viewBox="0 0 960 247" role="img" aria-labelledby="mm28-diagram-title mm28-diagram-desc">
+      <title id="mm28-diagram-title">블록이 바뀔 때 같은 셰이더의 버퍼 연결을 바꾼다</title>
+      <desc id="mm28-diagram-desc">CPU가 28개 블록의 그래프를 구성한다. 블록 0, 1, 27은 동일한 행렬·벡터 커널을 사용하며 각자의 가중치와 중간 결과 버퍼를 연결한다. 한 블록의 마지막 잔차 결과를 다음 블록이 정규화한 후 투영의 입력으로 읽는다.</desc>
+      <defs><marker id="mm28-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 L9 5 L1 9" fill="none" stroke="var(--accent-text)" stroke-width="1.6"/></marker></defs>
+      <rect x="15" y="10" width="930" height="45" rx="6" fill="var(--tint)" stroke="var(--rule-strong)"/>
+      <text x="32" y="38" class="svgTitle">CPU 그래프 구성 · for (il = 0; il &lt; 28; ++il) · 입력 참조와 각 층 가중치 연결</text>
+      <g fill="var(--surface)" stroke="var(--rule-strong)"><rect x="15" y="80" width="275" height="106" rx="7"/><rect x="341" y="80" width="275" height="106" rx="7"/><rect x="669" y="80" width="275" height="106" rx="7"/></g>
+      <text x="31" y="105" class="svgTop">블록 0</text><text x="31" y="131" class="svgTitle">blk.0.*.weight</text><text x="31" y="155" class="svgSub">각 투영의 입력 · 출력 구간</text><text x="31" y="176" class="svgSub">끝에서 잔차 합 → l_out-0</text>
+      <text x="357" y="105" class="svgTop">블록 1</text><text x="357" y="131" class="svgTitle">blk.1.*.weight</text><text x="357" y="155" class="svgSub">l_out-0 정규화 → Q·K·V 입력</text><text x="357" y="176" class="svgSub">끝에서 잔차 합 → l_out-1</text>
+      <text x="685" y="105" class="svgTop">블록 27</text><text x="685" y="131" class="svgTitle">blk.27.*.weight</text><text x="685" y="155" class="svgSub">l_out-26 정규화 → Q·K·V 입력</text><text x="685" y="176" class="svgSub">최종 정규화 · 어휘 투영으로</text>
+      <path d="M292 132 H331 M618 132 H659" fill="none" stroke="var(--accent-text)" stroke-width="2" marker-end="url(#mm28-arrow)"/>
+      <text x="630" y="114" class="svgSub">…</text>
+      <text x="23" y="224" class="svgTitle">GPU · mul_mat_vec.comp → main() → compute_outputs() → 출력 버퍼에 쓰기</text>
+    </svg>
+    <figcaption>셰이더 한 번은 지정된 투영의 출력 행들을 계산합니다. CPU는 그래프 순서에 따라 파이프라인과 버퍼 구간을 지정해 여러 dispatch를 기록합니다.</figcaption>
+  </figure>
+
+  <h4>① binding이 행렬곱의 A·B·D를 정한다</h4>
+  <p><code>D[row] = Σ A[row, k] × B[k] + addend[row]</code>로 읽으면 됩니다. 아래 shape는 수학 표기 <strong>출력 M × 입력 K</strong>입니다. GGML의 연속 가중치는 <code>ne[0] = K</code>, <code>ne[1] = M</code>이며, 한 행 안에서 K개의 원소가 연속입니다. <code>i</code>는 CPU가 선택한 0~27의 블록 번호입니다.</p>
+  <div class="tabwrap"><table class="mm28-table"><caption>한 토큰 실행의 7개 가중치 투영과 버퍼 연결</caption><thead><tr><th scope="col">투영</th><th scope="col">binding 0 · A<br>FP16 가중치 M × K</th><th scope="col">binding 1 · B<br>FP32 입력</th><th scope="col">binding 3 · Fuse0<br>함께 더할 값</th><th scope="col">binding 2 · D<br>FP32 출력</th><th scope="col">관측된 그룹 수<br>X, Y, Z</th></tr></thead><tbody><tr><th scope="row">Q</th><td><code>blk.i.attn_q.weight</code><br>1,536 × 1,536</td><td>attn_norm 결과<br>길이 1,536</td><td>Q bias</td><td>Q → RoPE<br>길이 1,536</td><td><code>(768, 1, 1)</code></td></tr><tr><th scope="row">K</th><td><code>blk.i.attn_k.weight</code><br>256 × 1,536</td><td>attn_norm 결과<br>길이 1,536</td><td>K bias</td><td>K → RoPE → KV 캐시<br>길이 256</td><td><code>(128, 1, 1)</code></td></tr><tr><th scope="row">V</th><td><code>blk.i.attn_v.weight</code><br>256 × 1,536</td><td>attn_norm 결과<br>길이 1,536</td><td>V bias</td><td>V → KV 캐시<br>길이 256</td><td><code>(128, 1, 1)</code></td></tr><tr><th scope="row">Wo</th><td><code>blk.i.attn_output.weight</code><br>1,536 × 1,536</td><td>attention 결과<br>길이 1,536</td><td>블록 입력 x</td><td>y = Wo·attention + x<br>길이 1,536</td><td><code>(768, 1, 1)</code></td></tr><tr><th scope="row">gate</th><td><code>blk.i.ffn_gate.weight</code><br>8,960 × 1,536</td><td>ffn_norm 결과<br>길이 1,536</td><td>사용 안 함</td><td>SiLU에 넣을 gate<br>길이 8,960</td><td><code>(4480, 1, 1)</code></td></tr><tr><th scope="row">up</th><td><code>blk.i.ffn_up.weight</code><br>8,960 × 1,536</td><td>ffn_norm 결과<br>길이 1,536</td><td>사용 안 함</td><td>SiLU(gate)에 곱할 up<br>길이 8,960</td><td><code>(4480, 1, 1)</code></td></tr><tr><th scope="row">down</th><td><code>blk.i.ffn_down.weight</code><br>1,536 × 8,960</td><td>SiLU(gate) × up<br>길이 8,960</td><td>FFN 입력 y</td><td>다음 블록의 x<br>길이 1,536</td><td><code>(768, 1, 1)</code></td></tr></tbody></table></div>
+  <p>Q·K·V의 binding 3에는 학습된 bias를 연결합니다. 이 추적에서 Wo와 down의 덧셈은 각각 잔차 벡터 x와 y를 연결해 함께 계산합니다. gate·up은 덧셈 융합 플래그를 끈 상태로 실행합니다. 실제 인터페이스에는 두 번째 추가 연산용 <code>binding 4 · Fuse1</code>도 있습니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec_iface.glsl#L8" target="_blank" rel="noopener noreferrer">실제 GLSL binding 선언</a></p>
+
+  <h4>② GPU가 담당할 두 행을 고르고 내적을 나눠 계산한다</h4>
+  <p>실제 <code>main()</code>은 <code>NUM_ROWS</code>와 작업 그룹 ID로 첫 출력 행을 정합니다. 이번 FP16 파이프라인은 <code>NUM_ROWS = 2</code>를 specialization constant로 설정합니다. Q의 그룹 0은 행 0·1, 그룹 1은 행 2·3을 맡고, 그룹 767은 행 1534·1535를 맡습니다. 그룹 안 스레드들은 각 행의 입력 열을 나눠 읽습니다.</p>
+  <figure class="mm28-source"><figcaption><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp#L248-L263" target="_blank" rel="noopener noreferrer">mul_mat_vec.comp · 248–263행</a></figcaption><pre class="snippet"><code><span class="line"><span class="ln">248</span>void main() {</span>
+<span class="line"><span class="ln">249</span>    const uint first_row = NUM_ROWS * (gl_WorkGroupID.x + gl_NumWorkGroups.x * gl_WorkGroupID.z);</span>
+<span class="line"><span class="ln">250</span></span>
+<span class="line"><span class="ln">251</span>#ifdef NEEDS_INIT_IQ_SHMEM</span>
+<span class="line"><span class="ln">252</span>    init_iq_shmem(gl_WorkGroupSize);</span>
+<span class="line"><span class="ln">253</span>#endif</span>
+<span class="line"><span class="ln">254</span></span>
+<span class="line"><span class="ln">255</span>    // do NUM_ROWS at a time, unless there aren&#x27;t enough remaining rows</span>
+<span class="line"><span class="ln">256</span>    if (first_row + NUM_ROWS &lt;= p.stride_d) {</span>
+<span class="line"><span class="ln">257</span>        compute_outputs(first_row, NUM_ROWS);</span>
+<span class="line"><span class="ln">258</span>    } else {</span>
+<span class="line"><span class="ln">259</span>        if (first_row &gt;= p.stride_d) {</span>
+<span class="line"><span class="ln">260</span>            return;</span>
+<span class="line"><span class="ln">261</span>        }</span>
+<span class="line"><span class="ln">262</span>        compute_outputs(first_row, min(NUM_ROWS, p.stride_d - first_row));</span>
+<span class="line"><span class="ln">263</span>    }</span></code></pre></figure>
+  <p>다음은 입력 길이와 주소가 정렬된 FP16 × FP32 경로의 실제 내적입니다. <code>b</code>는 입력 원소 네 개, <code>v</code>는 같은 열의 가중치 네 개입니다. <code>dot(v, b)</code>를 스레드별 <code>temp[j][n]</code>에 누적합니다. 여기서 <code>j</code>는 함께 처리하는 입력 벡터, <code>n</code>은 그 그룹이 맡은 출력 행입니다. 한 토큰 예제는 입력 벡터 하나를 사용합니다.</p>
+  <figure class="mm28-source"><figcaption><a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp#L120-L136" target="_blank" rel="noopener noreferrer">mul_mat_vec.comp · 120–136행</a></figcaption><pre class="snippet"><code><span class="line"><span class="ln">120</span>    [[unroll]] for (uint j = 0; j &lt; NUM_COLS; ++j) {</span>
+<span class="line"><span class="ln">121</span>        const uint col = i*BLOCK_SIZE + K_PER_ITER*tid;</span>
+<span class="line"><span class="ln">122</span>        const uint iqs = 0; // quant index</span>
+<span class="line"><span class="ln">123</span>        const uint iybs = col; // y block start index</span>
+<span class="line"><span class="ln">124</span></span>
+<span class="line"><span class="ln">125</span>        const vec4 b = data_b_v4[(j*p.batch_stride_b + b_offset + iybs + iqs) / 4];</span>
+<span class="line"><span class="ln">126</span></span>
+<span class="line"><span class="ln">127</span>        uint ibi = first_row*p.ncols;</span>
+<span class="line"><span class="ln">128</span>        [[unroll]] for (uint n = 0; n &lt; num_rows; ++n) {</span>
+<span class="line"><span class="ln">129</span>            const uint ib = (ibi + col)/QUANT_K; // block index</span>
+<span class="line"><span class="ln">130</span>            ibi += p.ncols;</span>
+<span class="line"><span class="ln">131</span></span>
+<span class="line"><span class="ln">132</span>            const vec4 v = dequantize4_2aligned(ib, iqs, a_offset);</span>
+<span class="line"><span class="ln">133</span></span>
+<span class="line"><span class="ln">134</span>            // matrix multiplication</span>
+<span class="line"><span class="ln">135</span>            temp[j][n] += dot(v, b);</span>
+<span class="line"><span class="ln">136</span>        }</span></code></pre></figure>
+  <p><code>dequantize4_2aligned</code>의 FP16 분기는 저장된 half 값 네 개를 FP32 <code>vec4</code>로 읽습니다. <code>reduce_result</code>가 스레드별 부분합을 합쳐 한 행의 값을 완성하고, 융합 플래그에 따라 bias 또는 잔차를 더한 뒤 <code>data_d[…]</code>에 씁니다. 부분합을 모으는 구현은 장치에 맞춰 subgroup 연산이나 shared memory를 사용합니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl#L27" target="_blank" rel="noopener noreferrer">FP16 값을 읽는 함수</a> · <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/vulkan-shaders/mul_mat_vec_base.glsl#L100" target="_blank" rel="noopener noreferrer">부분합 병합과 결과 쓰기</a></p>
+
+  <details class="box mm28-full-code"><summary>같은 수식을 처음부터 읽는 학습용 GLSL 전체 코드</summary>
+    <p>이 학습용 구현은 연속 FP16 가중치·FP32 입력 한 벡터·그룹당 두 출력 행을 처리합니다. 스레드 수는 설명을 위해 64개로 고정했고, 부분합은 shared memory에 모읍니다. 실제 커널은 위 원본의 벡터 읽기·장치별 specialization·stride·융합 처리를 사용합니다.</p>
+    <pre class="snippet"><code id="mm28-teaching-shader">#version 450
+#extension GL_EXT_shader_16bit_storage : require
+
+// Teaching example: one token, contiguous row-major weights.
+layout(local_size_x = 64) in;
+layout(set = 0, binding = 0, std430) readonly buffer Weights {
+    float16_t weights[];
+};
+layout(set = 0, binding = 1, std430) readonly buffer Input {
+    float input_values[];
+};
+layout(set = 0, binding = 2, std430) writeonly buffer Output {
+    float output_values[];
+};
+layout(set = 0, binding = 3, std430) readonly buffer Addend {
+    float addend[];
+};
+layout(push_constant) uniform Params {
+    uint input_size;   // K
+    uint output_size;  // M
+    uint add_enabled;
+} p;
+
+shared float partial[2][64];
+
+void main() {
+    uint lane = gl_LocalInvocationID.x;
+    uint first_row = 2u * gl_WorkGroupID.x;
+
+    // Each group computes two output values.
+    for (uint r = 0u; r &lt; 2u; ++r) {
+        uint row = first_row + r;
+        float sum = 0.0;
+        if (row &lt; p.output_size) {
+            for (uint k = lane; k &lt; p.input_size; k += 64u) {
+                sum += float(weights[row * p.input_size + k])
+                       * input_values[k];
+            }
+        }
+        partial[r][lane] = sum;
+    }
+    barrier();
+
+    // All invocations participate, including an incomplete last row.
+    for (uint step = 32u; step &gt; 0u; step &gt;&gt;= 1u) {
+        if (lane &lt; step) {
+            partial[0][lane] += partial[0][lane + step];
+            partial[1][lane] += partial[1][lane + step];
+        }
+        barrier();
+    }
+
+    if (lane == 0u) {
+        for (uint r = 0u; r &lt; 2u; ++r) {
+            uint row = first_row + r;
+            if (row &lt; p.output_size) {
+                float value = partial[r][0];
+                if (p.add_enabled != 0u) value += addend[row];
+                output_values[row] = value;
+            }
+        }
+    }
+}
+</code></pre>
+    <p>Q에서 스레드 0은 열 0·64·128…을, 스레드 1은 열 1·65·129…을 읽습니다. 64개의 부분합을 32→16→8→4→2→1 순서로 합치면 한 행의 1,536개 곱의 합이 됩니다. <code>barrier()</code>는 같은 작업 그룹의 스레드가 shared memory의 부분합을 함께 사용하도록 동기화합니다.</p>
+    <p>예제의 <code>input_size</code>·<code>output_size</code>·<code>add_enabled</code>는 이 학습용 파이프라인의 push constant 규약입니다. 실제 커널은 <code>ncols</code>·<code>stride_d</code>·<code>fusion_flags</code>와 배치 stride 등을 받습니다. Q의 대응값은 K=1536, M=1536, bias 덧셈 켜짐입니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-push-constants.h#L18" target="_blank" rel="noopener noreferrer">실제 C++ push constant 구조체</a></p>
+    <p>실행 환경에는 <code>storageBuffer16BitAccess</code> 기능이 필요합니다. host는 유효한 storage buffer descriptor 네 개를 채우고 12바이트 push constant 범위를 준비합니다. 덧셈을 끄는 투영에도 binding 3에 유효한 더미 버퍼를 연결할 수 있습니다.</p>
+  </details>
+
+  <h4>③ CPU에서 VkBuffer·offset·range를 바꾸면 같은 셰이더가 다른 투영을 한다</h4>
+  <p>Q의 가중치 범위는 <code>1536 × 1536 × 2 = 4,718,592</code>바이트, 입력과 출력은 각각 <code>1536 × 4 = 6,144</code>바이트입니다. descriptor의 offset·range는 바이트 단위이고, 셰이더 배열의 <code>weights[row * K + k]</code>는 해당 descriptor가 가리키는 구간 안에서 원소 단위로 접근합니다. 메모리 할당자는 Vulkan의 storage buffer offset 정렬 조건을 맞춥니다.</p>
+  <details class="box"><summary>Q 투영의 Vulkan 기록 예시 · buffer에서 dispatch까지</summary>
+    <p>다음 C++ 예시는 위 학습용 셰이더에 대응합니다. 모델 로드와 메모리 배치는 완료됐으며, <code>layer.q_weight_offset</code> 등은 백엔드가 찾아낸 바이트 위치입니다. 실제 백엔드는 각 dispatch에 사용할 descriptor set을 준비하고 텐서 범위들을 연결합니다.</p>
+    <pre class="snippet"><code>// Illustrative recording for the teaching shader&#x27;s Q projection.
+// Pipeline, layout, descriptor set, and command buffer are prepared.
+VkDescriptorBufferInfo buffers[4] = {
+    { modelBuffer, layer.q_weight_offset, 1536ull * 1536 * 2 },
+    { workBuffer,  attn_norm_offset,      1536ull * 4 },
+    { workBuffer,  q_output_offset,      1536ull * 4 },
+    { modelBuffer, layer.q_bias_offset,  1536ull * 4 }
+};
+VkWriteDescriptorSet writes[4] = {};
+for (uint32_t slot = 0; slot &lt; 4; ++slot) {
+    writes[slot].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writes[slot].dstSet = descriptorSet;  // Distinct set for this dispatch.
+    writes[slot].dstBinding = slot;
+    writes[slot].descriptorCount = 1;
+    writes[slot].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    writes[slot].pBufferInfo = &amp;buffers[slot];
+}
+vkUpdateDescriptorSets(device, 4, writes, 0, nullptr);
+
+struct Params { uint32_t input_size, output_size, add_enabled; };
+Params pc = { 1536, 1536, 1 };
+vkCmdPushConstants(cmd, pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT,
+                   0, sizeof(pc), &amp;pc);
+vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, matvecPipeline);
+vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_COMPUTE,
+                       pipelineLayout, 0, 1, &amp;descriptorSet, 0, nullptr);
+vkCmdDispatch(cmd, (pc.output_size + 1) / 2, 1, 1);  // 768 groups
+
+// Before another dispatch consumes this output on the same queue.
+VkMemoryBarrier dependency = {};
+dependency.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+dependency.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+dependency.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                     VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0,
+                     1, &amp;dependency, 0, nullptr, 0, nullptr);
+// After all required commands are recorded: EndCommandBuffer, QueueSubmit.</code></pre>
+    <p>기록된 여러 dispatch가 서로 다른 버퍼 구간을 보도록 각 dispatch의 descriptor set을 유지합니다. 실제 공통 함수도 <code>ctx-&gt;descriptor_sets[ctx-&gt;descriptor_set_idx++]</code>를 꺼내 씁니다. 이후 제출된 작업이 끝나면 해당 set을 재사용할 수 있습니다. 셰이더 내부 <code>barrier()</code>는 작업 그룹 내부를, 위 <code>vkCmdPipelineBarrier</code>는 연속 dispatch의 GPU 메모리 의존성을 다룹니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/ggml/src/ggml-vulkan/ggml-vulkan-common.h#L266" target="_blank" rel="noopener noreferrer">실제 descriptor 업데이트와 dispatch</a></p>
+  </details>
+
+  <h4>④ 0번에서 27번 블록까지 CPU가 연결하는 순서</h4>
+  <p>아래는 Qwen2 그래프 빌더를 발표용으로 줄인 의사코드입니다. 각 함수는 결과 텐서와 입력 참조를 구성합니다. <code>matmul</code>이 만든 노드를 Vulkan 백엔드가 나중에 해석해 위 커널의 dispatch를 기록합니다. attention 출력은 <code>Wo</code> 투영, 잔차 덧셈, FFN 정규화, gate·up 투영을 차례로 거칩니다.</p>
+  <pre class="snippet"><code>// Graph-construction pseudocode on the CPU.
+// matmul(), norm(), attention(), ... stand for GGML node builders.
+Tensor x = embedding(tokens);
+for (int layer = 0; layer &lt; 28; ++layer) {
+    const auto &amp; w = model.layers[layer];
+    Tensor n = norm(x, w.attn_norm);
+    Tensor q = matmul(w.wq, n) + w.bq;
+    Tensor k = matmul(w.wk, n) + w.bk;
+    Tensor v = matmul(w.wv, n) + w.bv;
+
+    q = rope(q, positions);
+    k = rope(k, positions);
+    store_kv(kv_cache[layer], k, v);
+    Tensor a = attention(q, kv_cache[layer], causal_mask);
+    Tensor y = matmul(w.wo, a) + x;
+
+    Tensor f = norm(y, w.ffn_norm);
+    Tensor gate = matmul(w.ffn_gate, f);
+    Tensor up   = matmul(w.ffn_up, f);
+    Tensor z = silu(gate) * up;
+    x = matmul(w.ffn_down, z) + y;
+}
+Tensor logits = matmul(model.output, norm(x, model.output_norm));</code></pre>
+  <p>블록 0의 down 결과에 y를 더한 구간이 <code>l_out-0</code>입니다. 블록 1의 RMSNorm이 이 구간을 읽고, Q 투영은 그 정규화 결과와 <code>blk.1.attn_q.weight</code>를 바인딩합니다. 같은 방식으로 27번까지 이어집니다. 그래프 구성에서 <code>inpL = cur</code>가 이 의존성을 연결하고, GPU에서는 앞 연산의 출력 구간이 뒤 연산의 입력 descriptor로 연결됩니다. <a href="https://github.com/kimwoonggon/llamacpp-vulkan-understanding-teama/blob/912f7a2a0d7c5943e5e74dcf9ff260a665d4a510/llama.cpp/src/models/qwen2.cpp#L127" target="_blank" rel="noopener noreferrer">다음 블록에 결과 텐서를 연결하는 실제 코드</a></p>
+  <p class="miniNote">발표에서는 “CPU가 28개 블록의 입력·가중치·출력 연결을 만들고, GPU는 각 dispatch에서 받은 행렬과 벡터의 내적을 수행한다. 블록 번호가 바뀌면 descriptor의 가중치와 중간 버퍼 구간이 바뀐다”로 설명하면 됩니다.</p>
+</section>
+<figure class="diagram"><svg class="wideDiag" viewBox="0 0 900 115" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="5" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="19" y="34" class="svgTop">ATTENTION</text><text x="19" y="59" class="svgTitle">Q + KV 캐시</text><text x="19" y="81" class="svgSub">앞의 5자리와 현재 자리</text><path d="M287 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="310" y="7" width="280" height="100" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="324" y="34" class="svgTop">FFN</text><text x="324" y="59" class="svgTitle">gate · up → SwiGLU</text><text x="324" y="81" class="svgSub">down 투영 + 잔차</text><path d="M592 58 h18" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersh)"/><rect x="615" y="7" width="280" height="100" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="629" y="34" class="svgTop">다음 블록</text><text x="629" y="59" class="svgTitle">1,536차원 벡터</text><text x="629" y="81" class="svgSub">자기 가중치로 같은 구조 반복</text></svg><svg class="mobileDiag" viewBox="0 0 365 290" role="img" aria-label="Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터"><title>Q + KV 캐시 → gate · up → SwiGLU → 1,536차원 벡터</title><defs><marker id="layersv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--accent)" stroke-width="1.7"/></marker></defs><rect x="15" y="4" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="23" class="svgTop">ATTENTION</text><text x="29" y="48" class="svgTitle">Q + KV 캐시</text><text x="29" y="70" class="svgSub">앞의 5자리와 현재 자리</text><path d="M180 84 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="102" width="335" height="79" rx="8" fill="var(--surface)" stroke="var(--rule-strong)"/><text x="29" y="121" class="svgTop">FFN</text><text x="29" y="146" class="svgTitle">gate · up → SwiGLU</text><text x="29" y="168" class="svgSub">down 투영 + 잔차</text><path d="M180 182 v14" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#layersv)"/><rect x="15" y="200" width="335" height="79" rx="8" fill="var(--tint)" stroke="var(--rule-strong)"/><text x="29" y="219" class="svgTop">다음 블록</text><text x="29" y="244" class="svgTitle">1,536차원 벡터</text><text x="29" y="266" class="svgSub">자기 가중치로 같은 구조 반복</text></svg></figure><section class="measure" id="block-shader-example" aria-labelledby="block-shader-title">
   <h3 id="block-shader-title">블록 0의 정규화 결과를 Q와 FFN 셰이더까지 따라가기</h3>
   <p>13토큰 비교 실행의 두 번째 <code>llama_decode</code>를 보겠습니다. 위치 13에 들어온 <code>␠Paris</code>의 임베딩은 숫자 1,536개입니다. 0번 블록에서 이 벡터를 가리키는 변수가 <code>inpL</code>입니다.</p>
   <pre class="block-rms-flow" tabindex="0" role="region" aria-label="블록 0의 RMSNorm 함수 흐름도"><code><strong>[CPU · 그래프 구성]</strong>
